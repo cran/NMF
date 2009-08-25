@@ -50,8 +50,12 @@ to provide implementation for some standard algorithms, while allowing the user
 to easily implement new methods readily integrated into the package's framework.
 
 \medskip
-Package \nmfpack\ can be downloaded from \url{http://web.cbio.uct.ac.za/~renaud/nmf/}.
-It loads with the following call:
+The last stable version of the NMF package can be installed from any
+\href{http://cran.r-project.org}{CRAN} repository mirror via:
+<<install_library, eval=FALSE>>=
+install.packages('NMF')
+@
+It loads with the following standard call:
 <<load_library>>=
 library(NMF)
 @

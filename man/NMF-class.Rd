@@ -2,6 +2,9 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{NMF-class}
+
+\alias{[,NMF-method}
+
 \alias{dim,NMF-method}
 \alias{distance}
 \alias{distance,matrix,NMF-method}
@@ -124,6 +127,14 @@ See \code{\link{newNMF}} for more details.
 \section{Methods}{
   \describe{
 
+   \item{[}{\code{signature(object = "NMF")}: 
+    sub-setting method for object of class \code{NMF}.
+    Row subsets are applied to the basis matrix rows, while column subsets are 
+    applied to the mixture coefficient matrix.
+    It returns an object of class \code{NMF} whose basis matrix and/or mixture 
+    coefficient matrix have been subset accordingly.
+    }
+
    \item{basis}{\code{signature(object = "NMF")}: 
     returns the matrix of basis vectors according to the model defined in 
     \code{object}. 
@@ -139,11 +150,6 @@ See \code{\link{newNMF}} for more details.
     for the sub-classes of class \code{NMF} that implements concrete models.
     See also \code{\link{basis}}.
     }
-
-    \item{clusters}{\code{signature(x = "NMF")}: 
-    returns a \code{factor} that gives the cluster number for each observation or 
-    features based on NMF factorization \code{x}.
-    See \code{\link{clusters}}.} 
 
     \item{coef}{\code{signature(object = "NMF")}:
     returns the matrix of mixture coefficients according to the model defined 
@@ -242,6 +248,14 @@ See \code{\link{newNMF}} for more details.
     \item{nbasis}{\code{signature(x = "NMF")}: 
     returns the number of basis vectors used in NMF model \code{x}. 
     It is the number of columns of the matrix of basis vectors.}
+
+    \item{predict}{\code{signature(object = "NMF")}: 
+    returns a \code{factor} that gives the predicted cluster index for each sample 
+    (resp. for each feature) based on NMF factorization \code{object}.
+    The index correspond to the basis vector that most contribute to the sample 
+    (resp. to which the feature contribute the most).
+    See \code{\link{predict}} details on extra arguments.
+    } 
 
     \item{purity}{\code{signature(x = "NMF", class = "factor")}: 
     computes the purity of NMF model \code{x} given a priori known groups of samples. 

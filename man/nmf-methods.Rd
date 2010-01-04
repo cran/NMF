@@ -125,7 +125,8 @@
   for more details on the possible classes and types for argument \code{seed}.}
   
   \item{x}{The target object to estimate. It can be a \code{matrix}, 
-  a \code{data.frame}, an \code{\link[Biobase]{ExpressionSet-class}}. 
+  a \code{data.frame}, an \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}} object 
+  (this requires the \code{Biobase} package to be installed). 
   See section \emph{Methods} for more details.}
   
   \item{\dots}{Extra parameters passed to the NMF algorithm's \code{run} method.  
@@ -148,7 +149,13 @@ algorithm on object \code{x}.}
 \code{as.matrix(x)} }
 
 \item{x = "ExpressionSet", rank = "ANY", method = "ANY"}{ Performs NMF on an 
-\code{ExpressionSet}: the target matrix is the expression matrix \code{exprs(x)}. }
+\code{ExpressionSet}: the target matrix is the expression matrix \code{exprs(x)}.
+  
+ This method requires the \code{Biobase} package to be installed.
+ Special methods for bioinformatics are provided in an optional layer, 
+ which is automatically loaded when the \code{Biobase} is installed.
+ See \code{\link{NMF-bioc}}.
+}
 
 \item{x = "matrix", rank = "numeric", method = "character"}{ Performs NMF on a 
 \code{matrix} using an algorithm whose name is given by parameter \code{method}.
@@ -270,7 +277,7 @@ Learning spatially localized, parts-based representation.
 
 \examples{
 
-# generate a synthetic dataset with known classes
+# generate a synthetic dataset with known classes: 100 features, 23 samples (10+5+8)
 n <- 100; counts <- c(10, 5, 8);
 V <- syntheticNMF(n, counts, noise=TRUE)
 
@@ -279,6 +286,11 @@ groups <- as.factor(do.call('c', lapply(seq(3), function(x) rep(x, counts[x]))))
 
 # run default algorithm
 res <- nmf(V, 3)
+res
+summary(res, class=groups)
+
+# run default algorithm multiple times (only keep the best fit)
+res <- nmf(V, 3, nrun=20)
 res
 summary(res, class=groups)
 
@@ -292,7 +304,7 @@ res <- nmf(V, 3, list('brunet', 'lee', 'nsNMF'))
 res
 compare(res, class=groups)
 
-# run on an ExpressionSet
+# run on an ExpressionSet (requires package Biobase)
 \dontrun{
 data(esGolub)
 nmf(esGolub, 3)

@@ -300,8 +300,8 @@ function(x, rank, method, seed=nmf.getOption('default.seed'), nrun=1, model=list
 						else NA
 						, "'")
 						
-			seed <- do.call(getGeneric('seed', package='NMF')
-			#seed <- do.call(getGeneric('seed')
+			#seed <- do.call(getGeneric('seed', package='NMF')
+			seed <- do.call(getGeneric('seed')
 					, list(x=x, model=init, method=seed.method, parameters=parameters.seed))
 			
 			# check the validity of the seed

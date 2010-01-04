@@ -1,5 +1,6 @@
 \name{Internals}
 \Rdversion{1.1}
+\alias{NMF-internals}
 \alias{nmfAlgorithm}
 \alias{nmfSeed}
 \alias{algorithm,NMFStrategyFunction-method}

@@ -11,6 +11,9 @@
 \alias{dispersion,NMFSet-method}
 \alias{entropy,NMFSet,ANY-method}
 \alias{errorPlot,NMFSet-method}
+
+\alias{featureNames,NMFSet-method}
+
 \alias{fit,NMFSet-method}
 \alias{join}
 \alias{join,list-method}
@@ -18,9 +21,13 @@
 \alias{nrun}
 \alias{nrun,NMFSet-method}
 \alias{purity,NMFSet,ANY-method}
+\alias{predict,NMFSet-method}
 \alias{residuals,NMFSet-method}
 \alias{rss,NMFSet-method}
 \alias{runtime,NMFSet-method}
+
+\alias{sampleNames,NMFSet-method}
+
 \alias{show,NMFSet-method}
 \alias{summary,NMFSet-method}
 
@@ -86,6 +93,12 @@ The elements are of class \code{NMF}.
     \item{entropy}{\code{signature(x = "NMFSet", class = "ANY")}: computes the 
     mean entropy of the set of NMF results. See \code{\link{entropy}}.}
     
+    \item{featureNames}{\code{signature(object = "NMFSet")}: 
+    returns the row names of the basis matrix from the best fit of the set of results.
+    If BioConductor is installed this method is defined for the generic function 
+    \code{\link[Biobase]{featureNames}} from the \code{Biobase} package.
+    }
+    
     \item{fit}{\code{signature(object = "NMFSet")}: returns the element that 
     achieves the lowest residual approximation error. }
     
@@ -117,6 +130,15 @@ The elements are of class \code{NMF}.
     \item{metaHeatmap}{ Produces a heatmap of the consensus matrix using 
 	function \code{\link[gplots]{heatmap.2}}. See \code{\link{metaHeatmap}}.}
 	
+	\item{predict}{\code{signature(object = "NMFSet")}: 
+    returns a \code{factor} that gives the predicted cluster index for each sample 
+    (resp. for each feature) based on the \emph{best} NMF factorization in the set 
+    of results \code{object}.
+    The index correspond to the basis vector that most contribute to the sample 
+    (resp. to which the feature contribute the most).
+    See \code{\link{predict}} details on extra arguments.
+    } 
+	
     \item{purity}{\code{signature(x = "NMFSet", class = "ANY")}:  computes the 
     mean purity of the set of NMF results. See \code{\link{purity}}.}
     
@@ -128,6 +150,13 @@ The elements are of class \code{NMF}.
     
     \item{runtime}{\code{signature(object = "NMFSet")}: 
     returns the time spent to compute all the runs.
+    }
+    
+    \item{sampleNames}{\code{signature(object = "NMFSet")}: 
+    returns the column names of the mixture coefficient matrix from the best fit 
+    of the set of results.
+    If BioConductor is installed this method is defined for the generic function 
+    \code{\link[Biobase]{featureNames}} from the \code{Biobase} package.
     }
     
     \item{show}{\code{signature(object = "NMFSet")}: \code{show} method for class 

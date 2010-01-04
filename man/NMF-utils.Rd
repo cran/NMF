@@ -3,11 +3,6 @@
 \docType{methods}
 \alias{NMF-utils}
 
-\alias{clusters}
-\alias{clusters-methods}
-\alias{clusters,NMF-method}
-\alias{clusters,matrix-method}
-
 \alias{cophcor}
 \alias{cophcor-methods}
 \alias{cophcor,matrix-method}
@@ -37,6 +32,15 @@
 \alias{metaHeatmap-methods}
 \alias{metaHeatmap,matrix-method}
 \alias{metaHeatmap,NMF-method}
+
+\alias{nmfApply}
+\alias{nmfApply,NMF-method}
+
+\alias{predict.nmf}
+\alias{predict}
+\alias{predict-methods}
+\alias{predict,NMF-method}
+\alias{predict,matrix-method}
 
 \alias{purity}
 \alias{purity-methods}
@@ -68,8 +72,6 @@ within package NMF's framework.
 
 \usage{
 
-\S4method{clusters}{NMF}(x, what = c('samples', 'features'), ...)
-
 \S4method{connectivity}{NMF}(x, ...)
 
 cophcor(object, ...)
@@ -83,11 +85,15 @@ dispersion(object, ...)
 rss(object, ...)
 \S4method{rss}{NMF}(object, target)
 
-\S4method{featureScore}{NMF}(x, ...)
+\S4method{featureScore}{NMF}(object, method=c('kim', 'max'))
 
-\S4method{extractFeatures}{NMF}(x, ...)
+\S4method{extractFeatures}{NMF}(object, method=c('kim', 'max'), format=c('list', 'combine', 'subset'))
 
 \S4method{metaHeatmap}{NMF}(object, what=c('samples', 'features'), filter=FALSE, ...)
+
+\S4method{nmfApply}{NMF}(object, MARGIN, FUN, ...)
+
+\S4method{predict}{NMF}(object, what = c('samples', 'features'), prob=FALSE)
 
 \S4method{purity}{NMF,factor}(x, class, ...)
 
@@ -102,7 +108,62 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	\item{class}{ A \code{factor} giving a known class membership for each sample.}
 	
 	\item{filter}{ if \code{TRUE}, only the features that are basis-specific are used. 
-	Those features are those returned by function \code{extractFeatures}. }		
+	Those features are those returned by function \code{extractFeatures}. }
+	
+	\item{format}{ the output format of the extracted features.
+	Possible values are:
+	
+	\itemize{
+	
+	\item \code{list} (default) a list with one element per basis vector, each containing
+	the indices of the basis-specific features. 
+	\item \code{combine} a single integer vector containing the indices of the basis-specific 
+	features for ALL the basis.
+	\item \code{subset} the object \code{object} subset to contain only the basis-specific 
+	features.
+	}
+	
+	}
+	
+	\item{FUN}{ the function to be applied: see 'Details'. In the case of
+	functions like \code{+}, \code{\%*\%}, etc., the function name must be
+	backquoted or quoted.
+	See \code{link[base]{apply}} for more details.}
+
+	\item{MARGIN}{ a vector giving the subscripts which the function will be
+		applied over. \code{1} indicates rows, \code{2}' indicates columns,
+		\code{c(1,2)} indicates rows and columns.
+		See \code{link[base]{apply}} for more details.
+		}
+
+	
+	\item{method}{ Method used to compute the feature scores and selecting the features.
+	
+	Possible values are:
+		\itemize{
+		
+		\item \code{kim} (default) to use Kim and Park (2007) scoring schema and feature selection 
+		method.
+		The features are first scored using the function \code{featureScore}. 
+		Then only the features that fulfil both following criteria are retained:
+	 	
+	 	- score greater than \eqn{\hat{\mu} + 3 \hat{\sigma}}, where \eqn{\hat{\mu}} 
+	 	and \eqn{\hat{\sigma}} are the median and the median absolute deviation (MAD) 
+	 	of the scores respectively;
+	 	
+	 	- the maximum contribution to a basis component is greater than the median 
+	 	of all contributions (i.e. of all elements of W)
+	
+		See \emph{Kim and Park (2007)}.
+					
+		\item \code{max} where the score is the maximum contribution of each feature 
+		to the basis vectors and the selection method is the one described in \emph{Carmona-Saez (2006)}.
+		Briefly, for each basis vector, the features are first sorted in descending order by their 
+		contribution to the basis vector. Then, one selects only the first consecutive features from 
+		the sorted list whose highest contribution in the basis matrix is found in 
+		the considered basis (see section \emph{References}).
+		}
+	}
 	
 	\item{n}{ Number of rows of the synthetic target matrix. }	
 	
@@ -113,6 +174,10 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	
 	\item{offset}{ a vector giving the offset to add to the synthetic target matrix. 
 	Its length should be equal to the number of rows \code{n}.}
+	
+	\item{prob}{ Should the probability associated with each cluster prediction be 
+	computed and returned.
+	}
 	
 	\item{p}{ Number of columns of the synthetic target matrix. Not used if parameter 
 	\code{r} is a vector (see description of argument \code{r}).}
@@ -143,17 +208,18 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	
 	\item{x}{ An object that inherits from class \code{\linkS4class{NMF}}. }	
 	
-	\item{...}{ Graphical parameters passed to function \code{\link[gplots]{heatmap.2}} }
+	\item{...}{ Used to pass extra parameters to subsequent calls:
+		\itemize{
+			\item in \code{metaHeatmap}: Graphical parameters passed to function \code{\link[gplots]{heatmap.2}}
+			\item in \code{nmfApply}: optional arguments to function \code{FUN}.
+		}
+	}
 }
 
 
 \details{
 
 \describe{
-	
-	\item{clusters}{ Computes the dominant basis component for each sample (resp. feature) 
-	based on the corresponding coefficient in the mixture coefficient matrix (i.e in \eqn{H}) 
-	(resp. basis component matrix matrix (i.e in \eqn{W})). }
 	
 	\item{connectivity}{
 	Computes the connectivity matrix for the samples based on their mixture coefficients.
@@ -227,19 +293,8 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	}
 
 	\item{extractFeatures}{
-	Identify the most basis-specific feature as suggested in \emph{Kim and Park (2007)}.
-
-	The features are first scored using the function \code{featureScore}. 
-	Then only the features that fulfil both following criteria are retained:
- 	
- 	- score greater than \eqn{\hat{\mu} + 3 \hat{\sigma}}, where \eqn{\hat{\mu}} 
- 	and \eqn{\hat{\sigma}} are the median and the median absolute deviation (MAD) 
- 	of the scores respectively;
- 	
- 	- the maximum contribution to a basis component is greater than the median 
- 	of all contributions (i.e. of all elements of W)
-
-	See \emph{Kim and Park (2007)}.
+	Identify the most basis-specific features, using different methods.
+	See details of argument \code{method}.
 	}
 	
 	\item{featureScore}{
@@ -267,6 +322,36 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	 See \code{\link[gplots]{heatmap.2}} and \code{\link[heatmap.plus]{heatmap.plus}}.
 	}
 
+	\item{nmfApply}{ \code{apply}-like method for objects of class \code{NMF}.
+	
+	When argument \code{MARGIN=1}, it calls the base method \code{apply} to apply 
+	function \code{FUN} to the \emph{rows} of the basis component matrix.
+	
+	When \code{MARGIN=2}, it calls the base method \code{apply} to apply 
+	function \code{FUN} on the \emph{columns} of the mixture coefficient matrix.
+	
+	See \code{\link[base]{apply}} for more details on the output format.
+	}
+
+	\item{predict}{ Computes the dominant basis component for each sample (resp. feature) 
+	based on its associated entries in the mixture coefficient matrix (i.e in \eqn{H}) 
+	(resp. basis component matrix (i.e in \eqn{W})).
+	
+	When \code{what='samples'} the computation is performed on the mixture 
+	coefficient matrix, or on the transposed basis matrix when \code{what='features'}.
+	
+	For each column, the dominant basis component is computed as the row index 
+	 for which the entry is the maximum within the column.
+	 
+	If argument \code{prob=FALSE} (default), the result is a \code{factor}. 
+	Otherwise it returns a list with two elements: element \code{predict} contains 
+	the computed indexes ( as a \code{factor}) and element \code{prob} contains 
+	the vector of the associated probabilities, that is the relative contribution 
+	of the maximum entry within each column.
+	
+	}
+
+	
 	\item{purity}{
 	Computes the purity of a clustering given a known factor.
 
@@ -342,7 +427,7 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 }
 
 \seealso{	
-	\code{\linkS4class{NMF}}  
+	\code{\linkS4class{NMF}, \link[=summary,NMF-method]{summary}}  
 }
 
 \references{
@@ -357,9 +442,14 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	Bioinformatics. 
 	\url{http://dx.doi.org/10.1093/bioinformatics/btm134}.
 	
+	\emph{Non-negative Matrix Factorization with Sparseness Constraints}
 	Hoyer, P. O. (2004)
-	Non-negative Matrix Factorization with Sparseness Constraints
 	\emph{Journal of Machine Learning Research} 5 (2004) 1457--1469
+	
+	\emph{Biclustering of gene expression data by non-smooth non-negative matrix factorization}
+	Carmona-Saez, Pedro and Pascual-Marqui, Roberto and Tirado, F and Carazo, Jose and Pascual-Montano, Alberto (2006)
+	BMC Bioinformatics
+	7(1), 78
 }
 
 \author{ Renaud Gaujoux \email{renaud@cbio.uct.ac.za} }
@@ -367,7 +457,7 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 \examples{
 
 
-# generate a synthetic dataset with known classes
+# generate a synthetic dataset with known classes: 50 features, 18 samples (5+5+8)
 n <- 50; counts <- c(5, 5, 8);
 V <- syntheticNMF(n, counts, noise=TRUE)
 \dontrun{metaHeatmap(V)}
@@ -381,7 +471,9 @@ res
 
 \dontrun{metaHeatmap(res, class=groups)}
 \dontrun{metaHeatmap(res, 'features')}
-clusters(res)
+# see the predicted clusters of samples
+predict(res)
+# compute entropy and purity
 entropy(res, class=groups)
 purity(res, class=groups)
 
@@ -392,7 +484,6 @@ res <- nmf(V, 3)
 \dontrun{metaHeatmap(res, 'features')}
 entropy(res, class=groups)
 purity(res, class=groups)
-
 
 }
 

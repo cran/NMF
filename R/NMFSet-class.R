@@ -155,14 +155,16 @@ setMethod('consensus', signature(object='NMFSet'),
 		}
 		
 		# compute mean connectivity matrix
-		tmp.cl <- clusters(object[[1]], ...)
-		n <- length(tmp.cl)
-		c <- sapply(object, function(obj) connectivity(obj, ...)) # c is a matrix whose each column is the connectivity matrices (stored as a vector) for a single run
-		stopifnot( n^2 == nrow(c) ) # the connectivity matrices should be square
+		c <- sapply(object, function(obj) connectivity(obj, ...)) 
+		#-> c should be a matrix whose each column is the connectivity matrices (stored as a vector) for a single run
+		if( is.list(c) ) stop('NMFSet::consensus : consensus matrix can only be computed for NMF results of the same dimension.')
+		# the connectivity matrices should be square
+		n <- trunc(sqrt(nrow(c)))
+		if( n^2 != nrow(c) ) stop('NMFSet::consensus : connectivity matrices are not squared')
 		con <- matrix( apply(c, 1, mean), n, n )
 		
-		# name the rows and columns appropriately
-		rownames(con) <- colnames(con) <- names(tmp.cl)
+		# name the rows and columns appropriately: use the sample names of the first fit
+		rownames(con) <- colnames(con) <- sampleNames(object[[1]])
 		
 		# return result
 		con
@@ -239,6 +241,13 @@ setMethod('fit', signature(object='NMFSet'),
 		
 		# return the run with the lower
 		object[[ which.min(e) ]]
+	}
+)
+
+#' Returns the cluster prediction defined by the best fit
+setMethod('predict', signature(object='NMFSet'),
+	function(object, ...){
+		predict(fit(object), ...)
 	}
 )
 

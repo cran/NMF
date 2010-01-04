@@ -203,7 +203,7 @@ Objects can still be created by calls of the usual form:
 	
 	Class \code{NMFstd} inherits from all the methods defined on class \code{NMF} 
 	to manipulate and interpret NMF models. 
-	Some useful are: \code{dim}, \code{nbasis}, \code{clusters}, \code{sparseness}. 
+	Some useful are: \code{dim}, \code{nbasis}, \code{predict}, \code{sparseness}. 
 	See \code{\linkS4class{NMF}} for more details.
 	
 }

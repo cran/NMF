@@ -1,6 +1,6 @@
 \name{advanced}
 \Rdversion{1.1}
-\alias{Advanced Usage}
+\alias{NMF-advanced}
 \alias{nmf.options}
 \alias{nmf.getOption}
 \alias{nmf.options.reset}

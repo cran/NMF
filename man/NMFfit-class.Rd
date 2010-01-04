@@ -258,7 +258,7 @@ However, there is usually no need to directly create such an object, as interfac
 	Class \code{NMFfit} inherits from all the methods defined on class \code{NMF} 
 	to manipulate and interpret NMF models. For those methods, class \code{NMFfit} 
 	act as a wrapper class, dispatching the calls to slot \code{fit}.
-	Some useful methods are: \code{dim}, \code{nbasis}, \code{clusters}, \code{sparseness}. 
+	Some useful methods are: \code{dim}, \code{nbasis}, \code{predict}, \code{sparseness}. 
 	See \code{\linkS4class{NMF}} for more details.
 }
 

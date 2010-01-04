@@ -21,7 +21,7 @@
 
 \title{ Layer to use the NMF package within Bioconductor}
 \description{
- The package NMF provides a layer for working with common objects defined in the
+ The package NMF provides an optional layer for working with common objects defined in the
  Bioconductor platform.
  
  It provides:

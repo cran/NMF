@@ -43,7 +43,10 @@
 		
 		## 2. INITIALIZE THE NMF MODELS
 		.init.nmf.models()		
-				
+		
+		## 3. INITIALIZE BIOC LAYER
+		if( .init.nmf.bioc() )
+			message("NMF :: BioConductor layer loaded\n")
 	}
 	
 	# run intialization sequence suppressing messages or not depending on verbosity options

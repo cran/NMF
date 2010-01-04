@@ -240,9 +240,9 @@ setMethod('show', signature(object='NMF'),
 		function(object)
 		{
 			cat("<Object of class:", class(object), ">\n")
-			cat("genes:", nrow(object), "\n")
-			cat("basis:", nbasis(object), "\n")
-			cat("coefficients:", ncol(object), "\n")
+			cat("features:", nrow(object), "\n")
+			cat("basis/rank:", nbasis(object), "\n")
+			cat("samples:", ncol(object), "\n")
 		}
 )
 
@@ -285,6 +285,34 @@ setMethod('nbasis', signature(x='NMF'),
 	}
 )
 
+
+#' Subsetting method for NMF objects
+setMethod('[', 'NMF', 
+	function (x, i, j, ..., drop = FALSE)
+	{
+		if( missing(drop) )
+			drop <- FALSE
+		
+		if (missing(i) && missing(j)) {
+			# check if there is other arguments
+			if (length(list(...)) != 0) 
+				stop("NMF::[] method: specify which features or samples to subset")
+			# otherwise return the untouched object
+			return(x)
+		}
+		
+		# subset the columns of mixture coefficient matrix
+		if (!missing(j)) 
+			coef(x) <- coef(x)[, j, ..., drop = drop]
+		
+		# subset the rows of the basis matrix
+		if (!missing(i)) 
+			basis(x) <- basis(x)[i, , ..., drop = drop]
+		
+		# return subset object
+		return(x)
+	}
+)
 
 #' Checks whether an \code{NMF} object describes an empty NMF.
 #'
@@ -444,7 +472,7 @@ setMethod('metaHeatmap', signature(object='matrix'),
 					# only if there is less than 9 metagenes 
 					# cf. limitation of brewer color palette
 					if( nrow(object) <= 9 ){
-						prediction <- clusters(object)
+						prediction <- .predict.nmf(object)
 						prediction.num <- as.numeric(prediction)
 						pal.pred <- brewer.pal(max(3,nrow(object)),'Set2')[1:nrow(object)]
 						col.matrix <- cbind(pal.pred[prediction.num], col.matrix)
@@ -524,7 +552,7 @@ setMethod('metaHeatmap', signature(object='NMF'),
 			# set default graphical parameters for type 'coefficients'
 			graphical.params <- .set.list.defaults(graphical.params
 					, distfun = d.fun
-					#, Colv= order(clusters(object))
+					#, Colv= order(predict(object))
 					, main="Sample view\n[mixture coefficients]"
 					, Rowv = FALSE, Colv=TRUE
 					# custom parameters
@@ -538,7 +566,7 @@ setMethod('metaHeatmap', signature(object='NMF'),
 				if( length(filter) == nrow(object) ) # use only the features specified in filter
 					x <- basis(object)[filter,]
 				else if( length(filter) == 1 ){ # use Kim and Park scoring scheme for filtering
-					x <- if( filter ) extractFeatures(object) else basis(object)
+					x <- if( filter ) basis(extractFeatures(object, format='subset')) else basis(object)
 				}
 				else stop("NMF::metaHeatmap - invalid logical value for argument 'filter' [must be either single or be of length the number of features in the target matrix]")
 			}
@@ -749,7 +777,7 @@ setMethod('purity', signature(x='factor', class='factor'),
 setMethod('purity', signature(x='NMF', class='factor'), 
 	function(x, class, ...){
 		# compute the purity for the samples clusters defined by the profiles
-		purity(clusters(x, what='samples'), class)
+		purity(predict(x, what='samples'), class)
 	}
 )
 
@@ -795,7 +823,7 @@ setMethod('entropy', signature(x='factor', class='factor'),
 setMethod('entropy', signature(x='NMF', class='factor'), 
 	function(x, class, ...){
 		# compute the entropy for the samples clusters defined by the metagenes expression matrix
-		entropy(clusters(x, what='samples'), class)
+		entropy(predict(x, what='samples'), class)
 	}
 )
 
@@ -848,22 +876,35 @@ setMethod('entropy', signature(x='NMF', class='factor'),
 #'	Bioinformatics (2007). 
 #'	\url{http://dx.doi.org/10.1093/bioinformatics/btm134}.
 #'	
-if ( is.null(getGeneric("featureScore")) ) setGeneric('featureScore', function(x, ...) standardGeneric('featureScore') )
-setMethod('featureScore', signature(x='matrix'), 
-	function(x, ...){
-		#for each row compute the score
-		s <- apply(x, 1, function(g){
-			p_i <- g/sum(g)
-			p_i %*% log2(p_i)
-		})
-		# scale, translate and return the result
-		1 + s / log2(ncol(x))		
+if ( is.null(getGeneric("featureScore")) ) setGeneric('featureScore', function(object, ...) standardGeneric('featureScore') )
+setMethod('featureScore', signature(object='matrix'), 
+	function(object, method=c('kim', 'max')){
+		
+		method <- match.arg(method)
+		score <- switch(method,
+		
+		kim = {
+			#for each row compute the score
+			s <- apply(object, 1, function(g){
+				p_i <- g/sum(g)
+				crossprod(p_i, log2(p_i))
+			})
+			# scale, translate and return the result
+			1 + s / log2(ncol(object))		
+			}
+		, max = {
+			apply(object, 1, max)
+			}
+		)
+		
+		# return the computed score
+		return(score)
 	}
 )
 
-setMethod('featureScore', signature(x='NMF'), 
-	function(x, ...){
-		featureScore(basis(x))
+setMethod('featureScore', signature(object='NMF'), 
+	function(object, method=c('kim', 'max')){
+		featureScore(basis(object), method)
 	}
 )
 
@@ -879,39 +920,162 @@ setMethod('featureScore', signature(x='NMF'),
 #'	Bioinformatics (2007). 
 #'	\url{http://dx.doi.org/10.1093/bioinformatics/btm134}.
 #'	
-if ( is.null(getGeneric("extractFeatures")) ) setGeneric('extractFeatures', function(x, ...) standardGeneric('extractFeatures') )
-setMethod('extractFeatures', signature(x='NMF'), 
-	function(x, ...){
-		# first score the genes
-		s <- featureScore(x)
+if ( is.null(getGeneric("extractFeatures")) ) setGeneric('extractFeatures', function(object, ...) standardGeneric('extractFeatures') )
+setMethod('extractFeatures', signature(object='NMF'), 
+	function(object, method=c('kim', 'max'), format=c('list', 'combine', 'subset')){
 		
-		# filter for the genes whose score is greater than \mu + 3 \sigma
-		th <- median(s) + 3 * mad(s)
-		sel <- s >= th
-		#print(sum(sel))
+		res <- method <- match.arg(method)
+		res <- switch(method,
+			kim = { # KIM & PARK method
+				
+				# first score the genes
+				s <- featureScore(object, method='kim')
+				
+				# filter for the genes whose score is greater than \mu + 3 \sigma
+				th <- median(s) + 3 * mad(s)
+				sel <- s >= th
+				#print(sum(sel))
+				
+				# build a matrix with:
+				#-> row#1=max column index, row#2=max value in row, row#3=row index
+				temp <- 0;
+				g.mx <- nmfApply(object, 1, 
+						function(x){
+							temp <<- temp +1
+							i <- which.max(x);
+							#i <- sample(c(1,2), 1)
+							c(i, x[i], temp)
+						}
+				)
+				
+				# test the second criteria
+				med <- median(basis(object))
+				sel2 <- g.mx[2,] >= med
+				#print(sum(sel2))
+				
+				# subset the indices
+				g.mx <- g.mx[, sel & sel2] 
+				
+				# return the indexes of the features that fullfil both criteria
+				#Note: make sure there is an element per basis
+				cl <- factor(g.mx[1,], levels=seq(nbasis(object))) 
+				res <- split(g.mx[3,], cl)
+				res <- lapply(res, function(ind){ if(length(ind)==0) ind<-NA; as.integer(ind)} )
+				
+				# add the threshold used
+				attr(res, 'threshold') <- th
+				
+				# return result
+				res
+				
+			},
+			max = { # MAX method from bioNMF
+				
+				# determine the specific genes for each basis vector
+				res <- lapply(1:nbasis(object), 
+					function(i){
+						mat <- basis(object)
+						vect <- mat[,i]
+						#order by decreasing contribution to factor i
+						index.sort <- order(vect, decreasing=TRUE)		
+						
+						for( k in seq_along(index.sort) )
+						{
+							index <- index.sort[k]
+							#if the feature contributes more to any other factor then return the features above it
+							if( any(mat[index,-i] >= vect[index]) )
+							{
+								if( k == 1 ) return(as.integer(NA))
+								else return( index.sort[1:(k-1)] )
+							}
+						}
+						
+						# all features meet the criteria
+						seq_along(vect)
+					}
+				)
+				
+				# return res
+				res
+			}
+		)
 		
-		# test the second criteria
-		med <- median(basis(x))
-		g.mx <- apply(basis(x), 1, max)
-		sel2 <- g.mx >= med
-		#print(sum(sel2))
+		# apply the desired format
+		format <- match.arg(format)
+		res <- switch(format
+				#combine: return all the indices in a single vector
+				, combine = res <- unique(unlist(res, use.names=FALSE)) 
+				#subset: return the object subset with the selected indices
+				, subset = {ind <- unique(unlist(res, use.names=FALSE));  object[ind,] }
+				#else: leave as a list
+				, res
+				)
 		
-		# return the genes that fullfil both criteria
-		res <- basis(x)[sel & sel2, ]
-		#FIXME: remove next line it was only for testing
-		#res <- clusters(s)
-		attr(res, 'threshold') <- th
-		res
+		# return result
+		return( res )
 	}
+)
+
+#' 'apply' method for NMF objects
+#' When MARGIN = 1, the apply is performed on the lines of the basis matrix
+#' When MARGIN = 2, the apply is performed on the columns of the mixture coefficient matrix
+if ( is.null(getGeneric("nmfApply")) ) setGeneric('nmfApply', function(object, ...) standardGeneric('nmfApply') )
+setMethod('nmfApply', signature(object='NMF'),
+	function(object, MARGIN, FUN, ...){
+		if( MARGIN == 1 )
+			apply(basis(object), 1, FUN, ...)
+		else if( MARGIN == 2 )
+			apply(coef(object), 2, FUN, ...)
+		else stop('NMF::nmfApply : invalid argument MARGIN (expected value is 1 or 2)')
+	}
+)
+
+#' Utility function to compute the dominant column for each row for a matrix.
+.predict.nmf <- function(x, prob=FALSE){
+	
+	if( !is.matrix(x) ) stop('NMF:::.predict.nmf : only works on matrices')
+	if( !prob ){
+		#for each column return the (row) index of the maximum
+		return( as.factor(apply(x, 2, which.max)) )
+	}
+	else{
+		#for each column return the (row) index of the maximum AND the associated probaility
+		res <- apply(x, 2,
+				function(p){
+					i <- which.max(p)
+					c(i, p[i]/sum(p))
+				}
+		)
+		# return the result as a list of two elements
+		return( list(predict=as.factor(res[1,]), prob=res[2,]) )
+	}
+}
+
+#' Compute the dominant column for each row for an NMF object.
+#'
+#' @param x an NMF object
+#' @return a factor of length the number of columns, giving the dominant column for each row
+setGeneric('predict', package='stats')
+setMethod('predict', signature(object='NMF'),
+		function(object, what=c('samples', 'features'), prob=FALSE){
+			# determine which matrix to use for the prediction
+			what <- match.arg(what)
+			x <- if( what=='features' ) t(basis(object)) else coef(object)
+			
+			# compute the indice of the dominant row for each column
+			return( .predict.nmf(x, prob) )
+		}
 )
 
 #' Compute the dominant column for each row.
 #'
 #' @param x a matrix containing the mixture coefficients (basis vector in rows, samples in columns)
 #' @return a factor of length the number of columns, giving the dominant column for each row
+#' @note This function is now deprecated
 if ( is.null(getGeneric("clusters")) ) setGeneric('clusters', function(x, ...) standardGeneric('clusters') )
 setMethod('clusters', signature(x='matrix'), 
 	function(x){
+		.Deprecated('.predict.nmf', 'NMF')
 		#for each column return the (row) index of the maximum
 		as.factor(apply(x, 2, function(p) which.max(p)))
 	}
@@ -919,12 +1083,14 @@ setMethod('clusters', signature(x='matrix'),
 
 #' Compute the dominant metagene for each sample.
 #'
-#' @param x a NMFout object
+#' @param x a NMF object
 #' @return a factor of length the number of samples, giving the dominant metagene for each sample
+#' @note This function is now deprecated
 setMethod('clusters', signature(x='NMF'), 
-	function(x, what=c('samples', 'features'), ...){
+	function(x, what=c('samples', 'features')){
+		.Deprecated('predict', 'NMF')
 		what <- match.arg(what)		
-		clusters(if( what=='features' ) t(basis(x)) else coef(x), ...)
+		clusters(if( what=='features' ) t(basis(x)) else coef(x))
 	}
 )
 
@@ -936,7 +1102,7 @@ setMethod('clusters', signature(x='NMF'),
 if ( is.null(getGeneric("connectivity")) ) setGeneric('connectivity', function(x, ...) standardGeneric('connectivity') )
 setMethod('connectivity', signature(x='NMF'), 
 	function(x, ...){
-		c <- clusters(x, what='samples');
+		c <- predict(x, what='samples');
 		outer(c, c, function(x,y) ifelse(x==y, 1,0));
 	}
 )
@@ -944,8 +1110,18 @@ setMethod('connectivity', signature(x='NMF'),
 if( !isGeneric('rss') ) setGeneric('rss', function(object, ...) standardGeneric('rss'))
 setMethod('rss', 'NMF', 
 	function(object, target){
+		
+		# make sure the target is provided
+		if( missing(target) ) stop("NMF::rss - Argument 'target' is missing and required to compute the residual sum of squares.")
+		
 		# use the expression matrix if necessary
-		if( inherits(target, 'ExpressionSet') ) target <- Biobase::exprs(target)
+		if( inherits(target, 'ExpressionSet') ){
+			# requires Biobase
+			if( !suppressWarnings(require(Biobase, quietly=TRUE)) ) 
+				stop("NMF::rss - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
+			
+			target <- Biobase::exprs(target)
+		}
 		
 		return( sum( (fitted(object) - target)^2 ) )
 	}

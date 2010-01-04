@@ -16,6 +16,7 @@
 \SweaveOpts{keep.source=TRUE}
 <<options, echo=FALSE>>=
 #options(prompt=' ')
+options(continue=' ')
 set.seed(123456)
 @
 
@@ -70,9 +71,12 @@ denoted $X \geq 0$), and $r > 0$ an integer. Non-negative Matrix Factorization
 \times r$ and $r \times p$ non-negative matrices, respectively. In practice,
 the factorization rank $r$ is often chosen such that $r \ll \min(n, p)$. The
 objective behind this choice is to summarize and split the information
-containned in $X$ into $r$ factors: the columns of $W$. Depending on the
-application field, these factors are given different names: basis images,
-metagenes, source signals.
+containned in $X$ into $r$ factors: the columns of $W$. 
+
+Depending on the application field, these factors are given different names: basis images,
+metagenes, source signals. In this vignette we equivalenty and alternatively use the terms 
+\emph{basis matrix} or \emph{metagenes} to refer to matrix $W$, and \emph{mixture coefficient matrix} 
+and \emph{metagene expression profiles} to refer to matrix $H$.
 
 The main approach to NMF is to estimate matrices $W$ and $H$ as a local minimum:
 \begin{equation}\label{nmf_min}
@@ -184,15 +188,42 @@ esGolub
 esGolub <- esGolub[1:1000,]
 @
 
+\paragraph{Note:} To run this example, the \code{Biobase} package from BioConductor 
+should be installed.
 
-\subsection{Single run}
+\subsection{Single run}\label{sec:single_run}
+
+\subsubsection{Performing a single run}
 The following code runs the default NMF algorithm on data \code{esGolub} 
 with factorization rank equal to 3: 
 
 <<algo_default>>=
 # using default algorithm
 res <- nmf(esGolub, 3) 
-res
+@
+
+\subsubsection{Handling the result}
+
+The result of a single NMF run is an object of class \code{NMFfit}, that holds both the fitted 
+model and data about the run:
+
+<<single_show>>=
+res 
+@
+
+The fitted model can be retrieved via method \code{fit}, which returns an object of 
+class \code{NMF}:
+
+<<single_show_model>>=
+fit(res)
+@
+
+The estimated target matrix can be retrieved via the generic method \code{fitted}, 
+which returns a -- generally big -- \code{matrix}:
+
+<<single_show_estimate>>=
+V.hat <- fitted(res)
+dim(V.hat)
 @
 
 Quality and performance measures about the factorization are computed by 
@@ -209,6 +240,55 @@ Here we use the phenotypic variable \code{Cell} that gives the samples' cell-typ
 
 <<singlerun_summary_factor>>=
 summary(res, class=esGolub$Cell)
+@
+
+The basis matrix (i.e. matrix $W$ or the metagenes) and the mixture coefficient 
+matrix (i.e matrix $H$ or the metagene expression profiles) are retrieved using 
+methods \code{basis} and \code{coef} respectively:
+
+<<get_matrices>>=
+# get matrix W
+w <- basis(res)
+dim(w)
+
+# get matrix H
+h <- coef(res)
+dim(h)
+@
+
+
+If one wants to keep only part of the result, one can directly subset on the \code{NMF}
+object on features and samples (separately or simultaneously):
+<<subset>>=
+# keep only the first 100 features 
+res[1:100,]
+# keep only the first 10 samples 
+res[,1:10]
+# subset both features and samples:
+dim(res[1:100,1:10])
+@ 
+
+
+\subsubsection{Selecting the features}
+
+In general NMF matrix factors are sparse, so that the metagenes can usually be 
+characterized by a relatively small set of genes. Those are determined based on 
+their relative contribution to each metagene.
+
+Kim and Park \cite{Kim2007} defined a procedure to extract the relevant genes for each 
+metagene, based on a gene scoring schema.
+
+The NMF package implements this procedure in methods \code{featureScore} and 
+\code{extractFeature}:
+
+<<single_extract>>=
+# only compute the scores
+s <- featureScore(res)
+summary(s)
+
+# compute the scores and characterize each metagene
+s <- extractFeatures(res)
+str(s)
 @
 
 \subsection{Specifying the algorithm}  
@@ -313,7 +393,6 @@ metaHeatmap(res)
 \caption{Heatmap of metaprofiles}
 \label{fig:heatmap_profiles}
 \end{figure}
-
 
 The metagenes matrix can be plotted specifying the second argument
 \code{what} (see result Figure~\ref{fig:heatmap_genes}). 

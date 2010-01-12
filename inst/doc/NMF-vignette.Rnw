@@ -585,6 +585,27 @@ nmf(V, 3, my.algorithm, scale.factor=10
 %\item 
 %\end{enumerate}
 
+\subsection{Handling mixed sign data}
+Some NMF algorithms work with relaxed constraints, where the input data and one of the matrix factors are allowed to have negative entries (eg. semi-NMF).
+One can plug such algorithms into the framework defined by package NMF, by specifying argument \code{mixed=TRUE}.
+The default value for argument \code{mixed} is \code{FALSE}, so that method \code{nmf} throws an error if applied to a matrix with some negative entries.
+Note that the sign of the factors is not checked, so that one can always return factors with negative entries, independently of the value of argument \code{mixed}.
+Here we reuse the previously defined custom algorithm\footnote{As it is defined here, the custom algorithm still returns nonnegative factors, which would not be desirable in a real example.}:
+
+
+<<custom_algo_run_mixed>>=
+# put some negative input data 
+V.neg <- V; V.neg[1,] <- -1;
+
+# this generates an error
+err <- try( nmf(V.neg, 3, my.algorithm, scale.factor=10) )
+err
+
+# this runs my.algorithm without error
+nmf(V.neg, 3, my.algorithm, mixed=TRUE, scale.factor=10)
+@
+
+
 \subsection{Custom seeding method}
 
 The user can also define custom seeding method as a function of the form:

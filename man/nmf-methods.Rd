@@ -25,7 +25,7 @@
 
 \usage{
 
-\S4method{nmf}{matrix,numeric,function}(x, rank, method, name, objective='euclidean', model='NMFstd', ...)
+\S4method{nmf}{matrix,numeric,function}(x, rank, method, name, objective='euclidean', model='NMFstd', mixed=FALSE, ...)
 \S4method{nmf}{matrix,numeric,character}(x, rank, method=nmf.getOption("default.algorithm"), ...)
 \S4method{nmf}{matrix,numeric,NMFStrategy}(x, rank, method, seed=nmf.getOption('default.seed'), nrun=1, model=list(), .options=list(), ...)
 
@@ -36,6 +36,15 @@
   \item{method}{The algorithm to use to perform NMF on \code{x}.
   Different formats are allowed: \code{character}, \code{function}. 
   See section \emph{Methods} for more details on how each format is used.}
+  
+  \item{mixed}{Boolean that states if the algorithm requires a nonnegative input
+   matrix (\code{mixed=FALSE} which is the default value) or accepts mixed sign 
+   input matrices (\code{mixed=TRUE}). An error is thrown if the sign required 
+   is not fulfilled. 
+   This parameter is useful to plug-in algorithms such as semi-NMF, that 
+   typically does not impose nonnegativity constraints on both the input and 
+   the basis component matrices.
+  }
    
   \item{model}{  When \code{method} is a \code{function}, argument \code{model} must be a single 
   	\code{character} string	or a \code{list} that specifies the NMF model to use. A NMF model is 

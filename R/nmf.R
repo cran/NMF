@@ -74,7 +74,7 @@ function(x, rank, method, ...)
 #' Performs NMF on a matrix using a given function.
 #'
 setMethod('nmf', signature(x='matrix', rank='numeric', method='function'),
-	function(x, rank, method, name, objective='euclidean', model='NMFstd', ...){
+	function(x, rank, method, name, objective='euclidean', model='NMFstd', mixed=FALSE, ...){
 
 		# build a NMFStrategyFunction object on the fly to wrap function 'method'
 		model.name <- model
@@ -92,9 +92,16 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='function'),
 		if( existsNMFAlgorithm(name) )
 			stop("Invalid name for custom NMF algorithm: '",name,"' is already a registered NMF algorithm")
 		
+		# only use first element of mixed
+		if( length(mixed) > 1 ){
+			mixed <- mixed[1]
+			warning("NMF::nmf : Only the first element of argument 'mixed' will be used [val=",mixed,"]")
+		}
+				
 		strategy <- new('NMFStrategyFunction'
 						, name=name, objective=objective, model=model.name
-						, algorithm=method)
+						, algorithm=method
+						, mixed=mixed)
 		# valid the strategy
 		validObject(strategy)
 		
@@ -217,8 +224,10 @@ function(x, rank, method, seed=nmf.getOption('default.seed'), nrun=1, model=list
 	if( verbose ) message("NMF algorithm: '", name(method), "'")
 	
 	# CHECK PARAMETERS:	
-	if( min(x) < 0 ) stop('Matrix x [some entries are negative]'); # test for negative values in x
-	if( min(rowSums(x)) == 0) stop('Matrix x [at least one row is null]'); # test if one row contains only zero entries
+	# test for negative values in x only if the method is not mixed
+	if( !is.mixed(method) && min(x) < 0 ) stop('Input matrix ', substitute(x),' contains some negative entries.');
+	# test if one row contains only zero entries
+	if( min(rowSums(x)) == 0) stop('Input matrix ', substitute(x),' contains at least one null row.');	
 
 	# a priori the parameters for the run are all the one in '...'
 	parameters.method <- list(...)

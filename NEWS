@@ -1,4 +1,16 @@
 *************************************************************************
+* 						Changes in version 0.2.4						*
+*************************************************************************
+
+CHANGES
+	
+	o Class 'NMFStrategy' has a new slot 'mixed', that specify if the algorithm 
+	can handle mixed signed input matrices.
+	
+	o Method 'nmf-matrix,numeric,function' accepts a new parameter 'mixed' to 
+	specify if the custom algorithm can handle mixed signed input matrices.
+
+*************************************************************************
 * 						Changes in version 0.2.3						*
 *************************************************************************
 

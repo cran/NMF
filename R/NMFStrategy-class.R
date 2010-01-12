@@ -15,8 +15,9 @@ setClass('NMFStrategy'
 				name = 'character' # name of the method (also key)
 				, objective = '.functionSlot' # the objective function used to compute the error (defined by name or function)
 				, model = 'character' # NMF model to use
+				, mixed = 'logical' # can the input data be negative?
 	)
-	, prototype=prototype(name='', objective='euclidean', model='NMFstd')
+	, prototype=prototype(name='', objective='euclidean', model='NMFstd', mixed=FALSE)
 	, validity=function(object){
 		
 		# slot 'name' must be a non-empty character string
@@ -31,8 +32,13 @@ setClass('NMFStrategy'
 			
 		# slot 'model' must be the name of a class that extends class 'NMF'
 		obj <- model(object)
-		if( !extends(obj, 'NMF') )
-			return("Slot 'model' must be the name of a classe that extends class 'NMF'.")
+		if( obj == 'NMF' || !extends(obj, 'NMF') )
+			return("Slot 'model' must be the name of a class that STRICTLY extends class 'NMF'.")
+		
+		# slot 'mixed' must be a single logical		
+		obj <- slot(object, 'mixed')
+		if( length(obj) != 1 )
+			return( paste("Slot 'mixed' must be a single logical [length=", length(obj), "]", sep='') )
 	}
 	, contains = 'VIRTUAL'
 )
@@ -120,6 +126,13 @@ setReplaceMethod('model', signature(object='NMFStrategy', value='character'),
 	}
 )
 
+#' Accessor methods to slot \code{mixed}
+if ( is.null(getGeneric('is.mixed')) ) setGeneric('is.mixed', function(object, ...) standardGeneric('is.mixed'))
+setMethod('is.mixed', signature(object='NMFStrategy'),
+		function(object){
+			return( slot(object, 'mixed') )
+		}
+)
 
 ###########################################################################
 # REGISTRY METHODS FOR ALGORITHMS

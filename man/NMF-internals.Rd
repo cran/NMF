@@ -14,6 +14,7 @@
 \alias{objective,NMFStrategy-method}
 \alias{objective<-,NMFStrategy,character-method}
 \alias{objective<-,NMFStrategy,function-method}
+
 \alias{name,NMFSeed-method}
 \alias{name<-,NMFSeed,character-method}
 \alias{show,NMFSeed-method}

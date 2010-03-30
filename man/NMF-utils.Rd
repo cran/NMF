@@ -3,17 +3,9 @@
 \docType{methods}
 \alias{NMF-utils}
 
-\alias{cophcor}
-\alias{cophcor-methods}
-\alias{cophcor,matrix-method}
-
 \alias{connectivity}
 \alias{connectivity-methods}
 \alias{connectivity,NMF-method}
-
-\alias{dispersion}
-\alias{dispersion-methods}
-\alias{dispersion,matrix-method}
 
 \alias{entropy}
 \alias{entropy-methods}
@@ -21,6 +13,7 @@
 \alias{entropy,NMF,factor-method}
 \alias{entropy,NMF,factor-method}
 \alias{entropy,table,missing-method}
+\alias{entropy,NMF,ANY-method}
 
 \alias{evar}
 \alias{evar-methods}
@@ -40,7 +33,10 @@
 \alias{nmfApply}
 \alias{nmfApply,NMF-method}
 
-\alias{predict.nmf}
+\alias{plot,NMFfit,missing-method}
+\alias{plot,NMFfit-method}
+
+%\alias{predict.nmf}
 \alias{predict}
 \alias{predict-methods}
 \alias{predict,NMF-method}
@@ -51,6 +47,7 @@
 \alias{purity,factor,factor-method}
 \alias{purity,NMF,factor-method}
 \alias{purity,table,missing-method}
+\alias{purity,NMF,ANY-method}
 
 \alias{randomize}
 
@@ -80,10 +77,6 @@ within package NMF's framework.
 
 \S4method{connectivity}{NMF}(x, ...)
 
-cophcor(object, ...)
-
-dispersion(object, ...)
-
 \S4method{entropy}{NMF,factor}(x, class, ...)
 
 \S4method{evar}{NMF}(object, target)
@@ -95,11 +88,14 @@ rss(object, ...)
 
 \S4method{featureScore}{NMF}(object, method=c('kim', 'max'))
 
-\S4method{extractFeatures}{NMF}(object, method=c('kim', 'max'), format=c('list', 'combine', 'subset'))
+\S4method{extractFeatures}{NMF}(object, method=c('kim', 'max')
+								, format=c('list', 'combine', 'subset'))
 
 \S4method{metaHeatmap}{NMF}(object, what=c('samples', 'features'), filter=FALSE, ...)
 
 \S4method{nmfApply}{NMF}(object, MARGIN, FUN, ...)
+
+\S4method{plot}{NMFfit}(x, ...)
 
 \S4method{predict}{NMF}(object, what = c('samples', 'features'), prob=FALSE)
 
@@ -115,7 +111,11 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 
 \arguments{
 
-	\item{class}{ A \code{factor} giving a known class membership for each sample.}
+	\item{class}{ A \code{factor} giving a known class membership for each sample.
+	
+	In methods \code{entropy} and \code{purity}, argument \code{class} is coerce to a 
+	factor if necessary.
+	}
 	
 	\item{filter}{ if \code{TRUE}, only the features that are basis-specific are used. 
 	Those features are those returned by function \code{extractFeatures}. }
@@ -221,6 +221,8 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 		for \code{randomize}: the \code{matrix} or \code{ExpressionSet} object whose 
 		entries will be randomised.
 		
+		for \code{plot}: An object that inherits from class \code{\linkS4class{NMFfit}}.
+		
 		otherwise: An object that inherits from class \code{\linkS4class{NMF}}. 
 				
 		}	
@@ -249,47 +251,7 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
  	C_{ij} = 1 if sample i belongs to the same cluster as sample j, 0 otherwise}
 	
 	}
-	
-	\item{cophcor}{
-	Computes the cophenetic correlation coefficient of consensus matrix \code{object}, 
-	generally obtained from multiple NMF runs.
-	
-	The cophenetic correlation coeffificient is based on the consensus matrix 
-	(i.e. the average of connectivity matrices) and was proposed by 
-	\emph{Brunet et al. (2004)} to measure the stability of the clusters obtained 
-	from NMF.
-	
-	It is defined as the Pearson correlation between the samples' distances 
-	induced by the consensus matrix (seen as a similarity matrix) and their 
-	cophenetic distances from a hierachical clustering based on these very 
-	distances (by default an average linkage is used).
-	See \emph{Brunet et al. (2004)}.
-	
-	Note that argument \code{...} is not used.
-	}
-	
-	\item{dispersion}{
-	Computes the dispersion coefficient of consensus matrix \code{object}, 
-	generally obtained from multiple NMF runs.
-	
-	The dispersion coeffificient is based on the consensus matrix (i.e. the average 
-	of connectivity matrices) and was proposed by \emph{Kim and Park (2007)} to 
-	measure the reproducibility of the clusters obtained from NMF
-	.
-	It is defined as:
-	\deqn{\rho = \sum_{i,j=1}^n 4 (C_{ij} - \frac{1}{2})^2 .}
-	, where \eqn{n} is the total number of samples.
-
- 	We have \eqn{0 \leq \rho \leq 1} and \eqn{\rho = 1} only for a perfect 
- 	consensus matrix, where all entries 0 or 1. 
- 	A perfect consensus matrix is obtained only when all the connectivity 
- 	matrices are the same, meaning that the algorithm gave the same 
- 	clusters at each run.
- 	See \emph{Kim and Park (2007)}
- 	
- 	Note that argument \code{...} is not used.
-	}
-	
+		
 	\item{entropy}{
 	The entropy is a measure of performance of a clustering method, in 
 	recovering classes defined by factor a priori known	(i.e. one knows the 
@@ -315,8 +277,7 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	Computes the explained variance of the NMF model \code{object}.
 	
  	For a target \eqn{V} It is defined as:
- 	\deqn{evar = 1 - \frac{RSS}{\sum_{i,j} v_{ij}^2}}
- 	{ evar = 1 - RSS/sum v_{ij}^2},
+ 	\deqn{evar = 1 - \frac{RSS}{\sum_{i,j} v_{ij}^2}}{ evar = 1 - RSS/sum v_{ij}^2},
  	
  	where RSS is the residual sum of squares.
 	
@@ -349,7 +310,7 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	coefficients using a \code{heatmap}-like custom function, 
 	with parameters tuned for displaying NMF results.
 	
-	The used to draw the heatmap is a mixture of the function \code{heatmap.2} 
+	The function used to draw the heatmap is a mixture of the function \code{heatmap.2} 
 	from the \code{gplots} package, and the function \code{heatmap.plus}
 	 from the \code{heatmap.plus} package. It allows to add extra annotation rows 
 	 using the \code{ColSideColor} argument.
@@ -367,6 +328,9 @@ syntheticNMF(n, r, p, offset=NULL, noise=FALSE, return.factors=FALSE)
 	See \code{\link[base]{apply}} for more details on the output format.
 	}
 
+	\item{plot}{ plots the residuals track of the run that computed object \code{x}. 
+    See function \code{\link{nmf}} for details on how to enable the tracking of residuals.}
+    
 	\item{predict}{ Computes the dominant basis component for each sample (resp. feature) 
 	based on its associated entries in the mixture coefficient matrix (i.e in \eqn{H}) 
 	(resp. basis component matrix (i.e in \eqn{W})).

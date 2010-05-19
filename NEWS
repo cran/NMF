@@ -1,4 +1,34 @@
 *************************************************************************
+*                       Changes in version 0.4.3                        *
+*************************************************************************
+
+CHANGES
+
+    o function 'nmfEstimateRank' has been enhanced: 
+       -run options can be passed to each internal call to the 'nmf' function. 
+       See ?nmfEstiamteRank and ?nmf for details on the supported options.
+       
+       - a new argument 'stop' allows to run the estimation with fault tolerance,
+       skipping runs that throw an error. Summary measures for these runs are set 
+       to NAs and a warning is thrown with details about the errors.
+       
+    o in function  'plot.NMF.rank': a new argument 'na.rm' allows to remove from 
+    the plots the ranks for which the measures are NAs (due to errors during the 
+    estimation process with 'nmfEstimateRank').
+    
+BUG FIX
+    
+    o Method 'consensus' is now exported in the NAMESPACE file.
+    Thanks to Gang Su for reporting this.
+    
+    o Warnings and messages about loading packages are now suppressed.
+    This was particularly confusing for users that do not have the packages 
+    and/or platform required for parallel computation: warnings were printed 
+    whereas the computation was -- sequentially -- performed without 
+    problem.
+    Thanks to Joe Maisog for reporting this.
+
+*************************************************************************
 *                       Changes in version 0.4.1                        *
 *************************************************************************
 

@@ -1275,7 +1275,7 @@ setMethod('rss', 'NMF',
 		# use the expression matrix if necessary
 		if( inherits(target, 'ExpressionSet') ){
 			# requires Biobase
-			if( !suppressWarnings(require(Biobase, quietly=TRUE)) ) 
+			if( !require.quiet(Biobase) ) 
 				stop("NMF::rss - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
 			
 			target <- Biobase::exprs(target)
@@ -1296,7 +1296,7 @@ setMethod('evar', 'NMF',
 			# use the expression matrix if necessary
 			if( inherits(target, 'ExpressionSet') ){
 				# requires Biobase
-				if( !suppressWarnings(require(Biobase, quietly=TRUE)) ) 
+				if( !require.quiet(Biobase) ) 
 					stop("NMF::evar - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
 				
 				target <- Biobase::exprs(target)

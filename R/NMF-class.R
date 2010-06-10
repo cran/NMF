@@ -271,6 +271,15 @@ setMethod('nmfModel', signature(rank='numeric', target='matrix'),
 		}	
 )
 
+#' Swapped arguments rank/target when rank is a matrix 
+setMethod('nmfModel', signature(rank='matrix', target='ANY'),
+		function(rank, target, ...){
+			# call nmfModel with swapping the arguments
+			nmfModel(target, rank, ...)
+			
+		}	
+)
+
 #' Show method for an object of class \code{NMF}.
 if ( is.null(getGeneric('show')) ) setGeneric('show', function(object) standardGeneric('show')) 
 setMethod('show', signature(object='NMF'), 
@@ -717,6 +726,11 @@ setMethod('metaHeatmap', signature(object='NMF'),
 					if( length(graphical.params$Rowv) !=  nrow(object) )
 						stop("NMF::metaHeatmap - Wrong length for argument 'Rowv' [should be of length ", nrow(object),']')
 					graphical.params$Rowv <- graphical.params$Rowv[rowInd]
+				}
+				if( !is.null(graphical.params$RowSideColors) ){
+					if( length(graphical.params$RowSideColors) !=  nrow(object) )
+						stop("NMF::metaHeatmap - Wrong length for argument 'RowSideColors' [should be of length ", nrow(object),']')
+					graphical.params$RowSideColors <- graphical.params$RowSideColors[rowInd]
 				}
 				
 				# filter the data

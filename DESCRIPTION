@@ -2,8 +2,8 @@ Package: NMF
 Type: Package
 Title: Algorithms and framework for Nonnegative Matrix Factorization
         (NMF).
-Version: 0.4.4
-Date: 2010-06-10
+Version: 0.4.6
+Date: 2010-06-18
 Author: Renaud Gaujoux
 Maintainer: Renaud Gaujoux <renaud@cbio.uct.ac.za>
 Description: This package provides a framework to perform Non-negative
@@ -24,6 +24,6 @@ Collate: utils.R options.R NMF-class.R NMFstd-class.R NMFOffset-class.R
         NMFStrategy-class.R NMFStrategyFunction-class.R
         NMFStrategyIterative-class.R snmf.R lnmf.R pe-nmf.R ica.R
         nndsvd.R seed.R nmf.R Bioc-layer.R nmf-package.R
-Packaged: 2010-06-10 07:18:04 UTC; renaud
+Packaged: 2010-06-18 13:42:20 UTC; renaud
 Repository: CRAN
-Date/Publication: 2010-06-10 14:05:01
+Date/Publication: 2010-06-18 15:13:20

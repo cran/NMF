@@ -1,4 +1,15 @@
 *************************************************************************
+*                       Changes in version 0.4.7                        *
+*************************************************************************
+BUG FIX
+
+    o When computing the cophenetic correlation coefficient of a diagonal 
+    matrix, the 'cophcor' method was returning 'NA' with a warning from 
+    the 'cor' function. It now correctly returns 1.
+    Thanks to Joe Maisog for reporting this.
+
+
+*************************************************************************
 *                       Changes in version 0.4.4                        *
 *************************************************************************
 

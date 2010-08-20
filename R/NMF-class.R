@@ -1362,7 +1362,8 @@ setMethod('rss', 'NMF',
 				stop("NMF::rss - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
 			
 			target <- Biobase::exprs(target)
-		}
+		}else if( is.data.frame(target) )
+			target <- as.matrix(target)
 		
 		# return rss using the optimized C function
 		.rss(fitted(object),target)

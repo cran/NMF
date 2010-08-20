@@ -1,4 +1,16 @@
 *************************************************************************
+*                       Changes in version 0.5.1                        *
+*************************************************************************
+
+BUG FIX
+
+    o fix a small bug in method 'rss' to allow argument 'target' to be a 
+    'data.frame'. This was generating errors when computing the summary 
+    measures and especially when the function 'nmfEstimateRank' was called 
+    on a 'data.frame'. Thanks to Pavel Goldstein for reporting this.
+
+
+*************************************************************************
 *                       Changes in version 0.5                          *
 *************************************************************************
 NEW FEATURES

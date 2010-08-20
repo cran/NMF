@@ -1118,7 +1118,7 @@ nmfEstimateRank <- function(x, range, method=nmf.getOption('default.algorithm')
 		if( length(err) == length(measures) ){ # all runs produced an error
 		
 			# build an warning using the error messages
-			msg <- paste(paste('Run ', seq_along(range), ' [r=', range, '] -> ', measures, sep=''), collapse="\n\t-")
+			msg <- paste(paste('#', seq_along(range),' ', measures, sep=''), collapse="\n\t-")
 			stop("All the runs produced an error:\n\t-", msg)
 		
 		}else if( length(err) > 0 ){ # some of the runs returned an error
@@ -1136,7 +1136,7 @@ nmfEstimateRank <- function(x, range, method=nmf.getOption('default.algorithm')
 			# set only the rank for the error results 
 			tmp.res['rank', err] <- range[err]
 			# build an warning using the error messages
-			msg <- paste(paste('Run ', err, ' [r=', range[err], '] -> ', measures[err], sep=''), collapse="\n\t-")
+			msg <- paste(paste('#', err, measures[err], ' ', sep=''), collapse="\n\t-")
 			warning("NAs were produced due to errors in some of the runs:\n\t-", msg)
 			
 			# return full matrix
@@ -1181,13 +1181,15 @@ nmfEstimateRank <- function(x, range, method=nmf.getOption('default.algorithm')
 				measures
 			} #END_TRY
 	
-			, error = function(e) {					
+			, error = function(e) {
+					mess <- if( is.null(e$call) ) e$message else paste(e$message, " [in call to '", e$call[1],"']", sep='')
+					mess <- paste('[r=', r, '] -> ', mess, sep='')
 					if( stop ){ # throw the error
 						if( verbose ) cat("\n")
-						stop(e$message, call.=FALSE)
+						stop(mess, call.=FALSE)
 					} # pass the error message
 					if( verbose ) message("ERROR")					
-					return(e$message)
+					return(mess)
 				}
 			)
 			

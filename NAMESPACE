@@ -9,6 +9,7 @@ useDynLib(NMF
 			, KL_divergence # compute the KL divergence (with no memory duplication)
 			)
 
+import(methods)
 importFrom(graphics, plot)
 importFrom(stats, coefficients, coef, fitted, offset, predict, residuals)
 

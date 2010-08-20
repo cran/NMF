@@ -49,11 +49,11 @@
 		env <- if( !is.null(pkgname) ) asNamespace(pkgname) else .GlobalEnv
 		bioc.loaded <- eval(b, envir=env)
 		if( is(bioc.loaded, 'try-error') )
-			message("NMF:load: loading BioConductor layer ... ERROR")
+			packageStartupMessage("NMF:load: loading BioConductor layer ... ERROR")
 		else if ( bioc.loaded )
-			message("NMF:load: loading BioConductor layer ... OK")
+			packageStartupMessage("NMF:load: loading BioConductor layer ... OK")
 		else
-			message("NMF:load: loading BioConductor layer ... SKIPPED")
+			packageStartupMessage("NMF:load: loading BioConductor layer ... SKIPPED")
 	}
 	
 	# run intialization sequence suppressing messages or not depending on verbosity options

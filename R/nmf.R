@@ -354,7 +354,7 @@ function(x, rank, method
 					}
 					else if( require.quiet(doMC) ){
 						
-						ncores.machine <- multicore:::detectCores()
+						ncores.machine <- parallel::detectCores()
 						if( ncores.machine == 1 ){
 							if( opt.parallel.required )
 								stop("NMF::nmf - multicore computation aborted : single core detected"

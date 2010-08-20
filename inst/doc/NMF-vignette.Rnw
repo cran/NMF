@@ -1466,7 +1466,7 @@ Kim H, Park H.
 Original \MATLAB code available from: \url{http://www.cc.gatech.edu/~hpark/software/nmfsh_comb.m} 
 and \url{http://www.cc.gatech.edu/~hpark/software/fcnnls.m}
 
-\bibitem[Le Roux {\em et al.}, 2008]{Roux2008} Le Roux, J., de Cheveigné, A., Parra, L.~C.
+\bibitem[Le Roux {\em et al.}, 2008]{Roux2008} Le Roux, J., de Cheveign\'e, A., Parra, L.~C.
 \textbf{Adaptive Template Matching with Shift-Invariant Semi-NMF}. 
 In {\it NIPS} 2008, 921-928.
 \url{[http://dblp.uni-trier.de/db/conf/nips/nips2008.html#RouxCP08]} 

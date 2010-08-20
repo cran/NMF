@@ -1,4 +1,4 @@
-\name{basis/coef}
+\name{basis-coef}
 \docType{methods}
 \alias{basis-methods}
 \alias{basis}

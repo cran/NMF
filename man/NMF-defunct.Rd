@@ -1,33 +1,38 @@
+\docType{methods}
 \name{NMF-defunct}
+\alias{metaHeatmap}
+\alias{metaHeatmap,matrix-method}
+\alias{metaHeatmap-methods}
+\alias{metaHeatmap,NMFfitX-method}
+\alias{metaHeatmap,NMF-method}
 \alias{NMF-defunct}
-\title{Defunct Functions in NMF Package}
-
-\alias{extra}
-\alias{extra-methods}
-\alias{extra,NMFfit-method}
-
-
-\description{
-
-The functions or variables listed here are no longer part of package NMF as 
-they are not needed (any more).
-
-}
-
+\title{Defunct Functions and Classes in the NMF Package}
 \usage{
-
-% Removed in 0.3
-extra(object, name)
-% </Removed in 0.3>
-
+  metaHeatmap(object, ...)
 }
+\arguments{
+  \item{object}{an R object}
 
-\details{
-
-	\code{extra} was used to access slot \code{extra} in class \code{NMFfit}.
-	It has been replaced in version 0.3 by methods \code{$} and \code{$<-}. 
-	See \code{\link[=$,NMFfit-method]{$}}.
-
+  \item{...}{other arguments}
 }
+\description{
+  Defunct Functions and Classes in the NMF Package
+}
+\section{Methods}{
+  \describe{
 
-\keyword{internal}
+  \item{metaHeatmap}{\code{signature(object = "matrix")}:
+  Defunct method substituted by \code{\link{aheatmap}}. }
+
+  \item{metaHeatmap}{\code{signature(object = "NMF")}:
+  Deprecated method that is substituted by
+  \code{\link{coefmap}} and \code{\link{basismap}}. }
+
+  \item{metaHeatmap}{\code{signature(object = "NMFfitX")}:
+  Deprecated method subsituted by
+  \code{\link{consensusmap}}. }
+
+  }
+}
+\keyword{methods}
+

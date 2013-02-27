@@ -1,12 +1,12 @@
 ## R >= 2.8.0 passes package metadata to citation().
 if( !exists('meta') || is.null(meta) ) meta <- packageDescription("NMF")
 
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
 vers <- paste("R package version", meta$Version)
 author <- as.personList(meta$Author)
 url <- sprintf("http://cran.r-project.org/package=%s", meta$Package)
 
-citHeader(sprintf("To cite package '%s' in publications use:", meta$Package))
+citHeader(sprintf("To cite the package '%s' in publications use:", meta$Package))
 
 citEntry(entry="Article"
 		, title = "A flexible R package for nonnegative matrix factorization"
@@ -19,7 +19,6 @@ citEntry(entry="Article"
 		, url = "http://www.biomedcentral.com/1471-2105/11/367"
 		, doi = "10.1186/1471-2105-11-367"
 		, issn = "1471-2105"
-		, note = vers
 		, textVersion =
 				paste("Renaud Gaujoux, Cathal Seoighe (2010)"
 					, "A flexible R package for nonnegative matrix factorization"
@@ -40,7 +39,7 @@ citEntry(entry="Manual"
 )
 
 citEntry(entry="Manual"
-		, title = meta$Title
+		, title = "The package NMF: manual pages"
     	, author = author
     	, publisher = "CRAN"
     	, year = year

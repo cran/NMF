@@ -1,77 +1,25 @@
-\name{advanced}
-\alias{NMF-advanced}
-\alias{isNMFfit}
-
-\title{ Advanced usage of package NMF }
-\description{
-	The functions documented here provide advanced functionalities useful when developing 
-	within the framework implemented in the NMF package. 
-	
-}
+\name{advanced-NMF}
+\alias{advanced-NMF}
+\alias{which.best}
+\title{Advanced Usage of the Package NMF}
 \usage{
-
-isNMFfit(object, recursive=TRUE)
-
+  which.best(object, FUN = deviance, ...)
 }
-
 \arguments{
+  \item{object}{an NMF model fitted by multiple runs.}
 
-	\item{object}{ any R object.}
-	
-	\item{recursive}{ if \code{TRUE} and \code{object} is a list then the check is performed on each 
-	element of the list. Note that the recursivity only applies in the case of lists that are not 
-	themselves NMFfit objects, unlike \code{NMFfitXn} objects for which the result of \code{isNMFfit} 
-	will always be \code{TRUE} (a single logical value).  
-	 
-	}
-		
-}
-\details{
+  \item{FUN}{the function that computes the quantitative
+  measure.}
 
-\describe{
+  \item{...}{extra arguments passed to \code{FUN}.}
+}
+\description{
+  The functions documented here provide advanced
+  functionalities useful when developing within the
+  framework implemented in the NMF package.
 
-	\item{isNMFfit}{ tells if an object results from an NMF fit. That is it checks if \code{object} 
-	inherits from class \code{\linkS4class{NMFfit}} or form class \code{\linkS4class{NMFfitX}}, which 
-	are returned by the function \code{\link{nmf}}.
-	If \code{object} is a \code{list} and \code{recursive=TRUE}, then the check is performed on each 
-	element of the list, and the return value is a vector (or a list if \code{object} is a list of list) 
-	of the same length as \code{object}. 
-	}
-		
-}
-}
-\value{
-	For \code{isNMFfit}, a \code{logical} vector (or a list if \code{object} is a list of list) 
-	of the same length as \code{object}.  
-	    
+  \code{which.best} returns the index of the best fit in a
+  list of NMF fit, according to some quantitative measure.
+  The index of the fit with the lowest measure is returned.
 }
 
-\author{ Renaud Gaujoux \email{renaud@cbio.uct.ac.za} }
-
-\seealso{
-	\code{\linkS4class{NMFfit}}, \code{\linkS4class{NMFfitX}}
-}
-
-\examples{
-
-	# generate a random 50 x 10 matrix
-	V <- rmatrix(50, 10)
-	
-	# single run
-	res <- nmf(V, 3)
-	isNMFfit(res)
-	
-	# multiple runs - keeping single fit
-	resm <- nmf(V, 3, nrun=3)
-	isNMFfit(resm)
-	
-	# multiple runs - keeping all fits
-	resM <- nmf(V, 3, nrun=3, .opt='k') 
-	isNMFfit(resM)
-	
-	# with a list of results
-	isNMFfit(list(res, resm, resM, 'not a result'))
-	isNMFfit(list(res, list(resm, resM), 'not a result')) # list of list
-	isNMFfit(list(res, resm, resM, 'not a result'), recursive=FALSE)
-	
-}

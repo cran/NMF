@@ -1,113 +1,121 @@
-\name{NMFOffset-class}
-\Rdversion{1.1}
 \docType{class}
-\alias{NMFOffset-class}
-\alias{fitted,NMFOffset-method}
+\name{NMFOffset-class}
 \alias{initialize,NMFOffset-method}
-\alias{offset,NMFOffset-method}
-\alias{rnmf,NMFOffset,numeric-method}
-\alias{show,NMFOffset-method}
+\alias{NMFOffset-class}
+\title{NMF Model - Nonnegative Matrix Factorization with Offset}
+\usage{
+  \S4method{initialize}{NMFOffset}(.Object, ..., offset)
+}
+\arguments{
+  \item{offset}{optional numeric vector used to initialise
+  slot \sQuote{offset}.}
 
-\title{Nonnegative Matrix Factorization  with Offset}
+  \item{.Object}{ An object: see the Details section.}
+
+  \item{...}{data to include in the new object.  Named
+  arguments correspond to slots in the class definition.
+  Unnamed arguments must be objects from classes that this
+  class extends.}
+}
 \description{
-Class that implements the \emph{Nonnegative Matrix Factorization with Offset} 
-model, required by the NMF with Offset algorithm.
-
-The NMF with Offset algorithm is defined by Badea (2008) as a modification of 
-Lee & Seung's euclidean based NMF algorithm (see section Details and references 
-below). 
-It aims at obtaining 'cleaner' factor matrices, by the introduction of an offset 
-matrix, explicitly modelling a feature specific baseline -- constant across samples.  
-
+  This class implements the \emph{Nonnegative Matrix
+  Factorization with Offset} model, required by the NMF
+  with Offset algorithm.
 }
-
-\section{Objects from the Class}{
-
-Object of class \code{NMFOffset} can be created using the standard way with 
-operator \code{\link{new}}
-
-However, as for all the classes that extend class \code{\linkS4class{NMFstd}}, 
-objects of class \code{NMFOffset} should be created using factory method 
-\code{\link{nmfModel}} :
-
-\code{new('NMFOffset')}
-
-\code{nmfModel(model='NMFOffset')}
-
-\code{nmfModel(model='NMFOffset', W=w, offset=rep(1, nrow(w)))}
-
-See \code{\link{nmfModel}} for more details on how to use the factory method.
-}
-
-\section{Slots}{
-	Class \code{NMFOffset} extends \code{\linkS4class{NMF}} adding a single slot:
-
-	 \describe{
-    \item{\code{offset}:}{A \code{"numeric"} vector to handle the common baseline 
-    for each feature. Its length will always be equal to the number of features, 
-    i.e. the number of rows in slot \code{W}.}
-  }
-}
-\section{Extends}{
-Class \code{"\linkS4class{NMF}"}, directly.
+\details{
+  The NMF with Offset algorithm is defined by \cite{Badea
+  (2008)} as a modification of the euclidean based NMF
+  algorithm from \code{Lee2001} (see section Details and
+  references below). It aims at obtaining 'cleaner' factor
+  matrices, by the introduction of an offset matrix,
+  explicitly modelling a feature specific baseline --
+  constant across samples.
 }
 \section{Methods}{
   \describe{
-    \item{fitted}{\code{signature(object = "NMFOffset")}:
-    returns the estimated target matrix according to the NMF with Offset model 
-    \code{object}:
-    \deqn{\hat{V} = W H + offset}
-    
-    Note that this method is part of the minimum interface for NMF model, as 
-    defined by class \code{\linkS4class{NMF}}.
-    }
-    
-    \item{initialize}{ \code{initialize} method for class \code{NMFOffset}. It 
-    ensures consistency between slots \code{W} and slot \code{offset}. }
-    
-    \item{offset}{\code{signature(object = "NMFOffset")}: return the value of 
-    slot \code{offset}.}
-    
-    \item{rnmf}{ returns the object with slots \code{W}, \code{H} and 
-    \code{offset} filled with random values drawn from a uniform distribution.
-    This method first calls method \code{rnmf} for \code{NMF} object to set the 
-    entries of slots \code{W} and \code{H}, then sets the entries in slot 
-    \code{offset} within the interval \code{[0, max(max(W),max(H))]}. }
-        
-    \item{show}{\code{signature(object = "NMFOffset")}: standard generic \code{show} 
-    method for objects of class \code{NMFOffset}. It calls the parent class \code{show} method 
-    (i.e. for class \code{NMF}) and add the value of vector \code{offset} to the display (only the first 
-    five elements are displayed).}
-    
-    }
+
+  \item{fitted}{\code{signature(object = "NMFOffset")}:
+  Computes the target matrix estimate for an NMFOffset
+  object.
+
+  The estimate is computed as: \deqn{ W H + offset } }
+
+  \item{offset}{\code{signature(object = "NMFOffset")}: The
+  function \code{offset} returns the offset vector from an
+  NMF model that has an offset, e.g. an \code{NMFOffset}
+  model. }
+
+  \item{rnmf}{\code{signature(x = "NMFOffset", target =
+  "numeric")}: Generates a random NMF model with offset,
+  from class \code{NMFOffset}.
+
+  The offset values are drawn from a uniform distribution
+  between 0 and the maximum entry of the basis and
+  coefficient matrices, which are drawn by the next
+  suitable \code{\link{rnmf}} method, which is the
+  workhorse method \code{rnmf,NMF,numeric}. }
+
+  \item{show}{\code{signature(object = "NMFOffset")}: Show
+  method for objects of class \code{NMFOffset} }
+
+  }
+}
+\section{Creating objects from the Class}{
+  Object of class \code{NMFOffset} can be created using the
+  standard way with operator \code{\link{new}}
+
+  However, as for all NMF model classes -- that extend
+  class \code{\linkS4class{NMF}}, objects of class
+  \code{NMFOffset} should be created using factory method
+  \code{\link{nmfModel}} :
+
+  \code{new('NMFOffset')}
+
+  \code{nmfModel(model='NMFOffset')}
+
+  \code{nmfModel(model='NMFOffset', W=w, offset=rep(1,
+  nrow(w)))}
+
+  See \code{\link{nmfModel}} for more details on how to use
+  the factory method.
 }
 
-\references{ 
-	Badea (2008). 
-	Extracting Gene Expression Profiles Common To Colon And Pancreatic Adenocaricinoma Using Simultaneous Nonnegative Matrix Factorization. 
-	In \emph{Pacific Symposium on Biocomputing}
-	, \bold{13}, 279-290
-}
-\author{ Renaud Gaujoux \email{renaud@cbio.uct.ac.za} }
-
-\seealso{
-	\code{\linkS4class{NMF}}, \code{\link{nmf-methods}}
+\section{Initialize method}{
+  The initialize method for \code{NMFOffset} objects tries
+  to correct the initial value passed for slot
+  \code{offset}, so that it is consistent with the
+  dimensions of the \code{NMF} model: it will pad the
+  offset vector with NA values to get the length equal to
+  the number of rows in the basis matrix.
 }
 \examples{
-
 # create a completely empty NMF object
 new('NMFOffset')
 
 # create a NMF object based on random (compatible) matrices
 n <- 50; r <- 3; p <- 20
-w <- matrix(runif(n*r), n, r) 
-h <- matrix(runif(r*p), r, p)
+w <- rmatrix(n, r)
+h <- rmatrix(r, p)
 nmfModel(model='NMFOffset', W=w, H=h, offset=rep(0.5, nrow(w)))
 
 # apply Nonsmooth NMF algorithm to a random target matrix
-V <- matrix(runif(n*p), n, p)
+V <- rmatrix(n, p)
 \dontrun{nmf(V, r, 'offset')}
 
-
+# random NMF model with offset
+rnmf(3, 10, 5, model='NMFOffset')
 }
-\keyword{classes}
+\references{
+  Badea L (2008). "Extracting gene expression profiles
+  common to colon and pancreatic adenocarcinoma using
+  simultaneous nonnegative matrix factorization." _Pacific
+  Symposium on Biocomputing. Pacific Symposium on
+  Biocomputing_, *290*, pp. 267-78. ISSN 1793-5091, <URL:
+  http://www.ncbi.nlm.nih.gov/pubmed/18229692>.
+}
+\seealso{
+  Other NMF-model: \code{\link{NMFns-class}},
+  \code{\link{NMFstd-class}}
+}
+\keyword{methods}
+

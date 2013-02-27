@@ -1,149 +1,126 @@
-\name{options}
-\Rdversion{1.1}
-\alias{NMF-options}
-\alias{nmf.options}
+\name{options-NMF}
 \alias{nmf.getOption}
-\alias{nmf.options.reset}
-\alias{nmf.options.runtime}
-
-\title{ Package Specific Option Management }
-\description{
-	Allow the user to get/set/define package NMF specific options in the same way as with
-	base functions \code{\link[base]{options}} and \code{\link[base]{getOption}}.
-	
-}
+\alias{nmf.options}
+\alias{nmf.printOptions}
+\alias{nmf.resetOptions}
+\alias{options-NMF}
+\title{NMF Package Specific Options}
 \usage{
+  nmf.options(...)
 
-nmf.options(..., runtime = FALSE)
-nmf.getOption(name)
-nmf.options.reset()
-nmf.options.runtime()
+  nmf.getOption(x, default = NULL)
 
+  nmf.resetOptions(..., ALL = FALSE)
+
+  nmf.printOptions()
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{...}{option specifications. For \code{nmf.options}
+  this can be named arguments or a single unnamed argument
+  that is a named list (see \code{\link{options}}.
 
-	\item{\dots}{ any options can be defined, using 'name = value' or by
-	   passing a list of such tagged values.  However, only the ones below are 
-	   used in package NMF. Further, 'nmf.options('name') == nmf.options()['name']', 
-	   see the example.
-	}
-		
-	\item{name}{ a character string holding an option name.
-	}
-  	
-  	\item{runtime}{ a boolean used to specify if main interface function \code{\link{nmf}} 
-	  should store the option into the initial \code{\linkS4class{NMF}} object before performing
-	  the computation.
-	}
-		
-}
-\details{
+  For \code{nmf.resetOptions}, this must be the names of
+  the options to reset. Note that \pkg{pkgmaker} version >=
+  0.9.1 is required for this to work correctly, when
+  options other than the default ones have been set after
+  the package is loaded.}
 
-\describe{
+  \item{ALL}{logical that indicates if options that are not
+  part of the default set of options should be removed.
+  Note that in \pkg{pkgmaker <= 0.9} this argument is only
+  taken into account when no other argument is present.
+  This is fixed in version 0.9.1.}
 
-	\item{nmf.getOption}{ get the value of a single option.
-	}
-		
-	\item{nmf.options}{ gets/sets/defines options in the way of base function \code{\link[base]{options}}.
-	Invoking 'nmf.options()' with no arguments returns a list with the current values of the options. 
-	To access the value of a single option, one should use \code{nmf.getOption("error.track")}, e.g., 
-	rather than \code{nmf.options("error.track")} which is a \code{list} of length one.	
-	}
-		
-	\item{nmf.options.reset}{ Reset all \emph{built-in options} to their default values. 
-	Note that only built-in are reset. The options defined by the user during the current session 
-	will keep their values.	
-	}
-	
-}
-}
-\value{
-	For \code{nmf.getOption}, the current value set for option \code{name}, or \code{NULL}
-    if the option is unset.
-	
-    For \code{nmf.options()}, a list of all set options sorted by name.  For
-    \code{options(name)}, a list of length one containing the set value, or
-    \code{NULL} if it is unset.  For uses setting one or more options, a
-    list with the previous values of the options changed (returned
-    invisibly).
-        
-}
+  \item{x}{a character string holding an option name.}
 
-\section{Options set in package NMF}{
-
-\describe{
-
-\item{debug}{ logical. Similar to option \code{'verbose'} (see below), but reports more information.
+  \item{default}{if the specified option is not set in the
+  options list, this value is returned.  This facilitates
+  retrieving an option and checking whether it is set and
+  setting it separately if not.}
 }
-\item{default.algorithm}{ \code{character}. The default NMF algorithm used by the \code{\link{nmf}} 
-method when called without argument \code{method}.
-}
-\item{default.seed}{ \code{character}. The default seeding method used by the \code{\link{nmf}} 
-method when called without argument \code{seed}.
-}
-\item{error.track}{ logical. Should the estimation error be tracked during the computations?
-If set to \code{TRUE} then the error track can be plotted using method \code{\link{plot}}. 
-The step size of the error track is set via option \code{track.interval} (see below).
-}
-\item{parallel.backend}{ \code{character} or \code{numeric}. 
-The default parallel backend used by the \code{\link{nmf}} 
-method when called with argument \code{nrun} greater than 1.
+\description{
+  NMF Package Specific Options
 
-Currently it accepts the following values: \code{'mc'} or a number that specifies 
-the number of cores to use, \code{'seq'} or \code{NULL} to use sequential backend for \code{foreach}, 
-and the empty string \code{''} to completely disable the parallel computation. 
+  \code{nmf.options} sets/get single or multiple options,
+  that are specific to the NMF package. It behaves in the
+  same way as \code{\link[base]{options}}.
 
+  \code{nmf.getOption} returns the value of a single
+  option, that is specific to the NMF package. It behaves
+  in the same way as \code{\link[base]{getOption}}.
+
+  \code{nmf.resetOptions} reset all NMF specific options to
+  their default values.
+
+  \code{nmf.printOptions} prints all NMF specific options
+  along with their default values, in a relatively compact
+  way.
 }
-\item{track.interval}{ numeric. The number of iterations performed between two consecutive error points. 
-For performance reason, this value should be too small, as the computation of the estimation error can be  
-time consuming (Default value is 30).
+\section{Available options}{
+  \describe{
+
+  \item{default.algorithm}{Default NMF algorithm used by
+  the \code{nmf} function when argument \code{method} is
+  missing. The value should the key of one of the
+  registered NMF algorithms or a valid specification of an
+  NMF algorithm. See \code{?nmfAlgorithm}.}
+
+  \item{default.seed}{Default seeding method used by the
+  \code{nmf} function when argument \code{seed} is missing.
+  The value should the key of one of the registered seeding
+  methods or a vallid specification of a seeding method.
+  See \code{?nmfSeed}.}
+
+  \item{track}{Toggle default residual tracking. When
+  \code{TRUE}, the \code{nmf} function compute and store
+  the residual track in the result -- if not otherwise
+  specified in argument \code{.options}. Note that tracking
+  may significantly slow down the computations.}
+
+  \item{track.interval}{Number of iterations between two
+  points in the residual track. This option is relevant
+  only when residual tracking is enabled. See \code{?nmf}.}
+
+  \item{error.track}{this is a symbolic link to option
+  \code{track} for backward compatibility.}
+
+  \item{pbackend}{Default loop/parallel foreach backend
+  used by the \code{nmf} function when argument
+  \code{.pbackend} is missing. Currently the following
+  values are supported: \code{'par'} for multicore,
+  \code{'seq'} for sequential, \code{NA} for standard
+  \code{sapply} (i.e. do not use a foreach loop),
+  \code{NULL} for using the currently registered foreach
+  backend.}
+
+  \item{parallel.backend}{this is a symbolic link to option
+  \code{pbackend} for backward compatibility.}
+
+  \item{gc}{Interval/frequency (in number of runs) at which
+  garbage collection is performed.}
+
+  \item{verbose}{Default level of verbosity.}
+
+  \item{debug}{Toogles debug mode. In this mode the console
+  output may be very -- very -- messy, and is aimed at
+  debugging only.}
+
+  } % end description
 }
-\item{verbose}{ logical. Should R report extra information about the computations?
-}
-
-
-}
-
-}
-
-\author{ Renaud Gaujoux \email{renaud@cbio.uct.ac.za} }
-
-\seealso{
-	\code{\link{options}}
-}
-
 \examples{
+# show all NMF specific options
+nmf.printOptions()
 
-	# save all options value 
-	op <- nmf.options(); 
-	utils::str(op) # op may contain functions.
+# get some options
+nmf.getOption('verbose')
+nmf.getOption('pbackend')
+# set new values
+nmf.options(verbose=TRUE)
+nmf.options(pbackend='mc', default.algorithm='lee')
+nmf.printOptions()
 
-    nmf.getOption("track.interval") == nmf.options()$track.interval # the latter needs more memory
-    
-    x <- matrix(runif(50*10), 50, 10) # create a random target matrix
-    # or define a synthetic data with a hidden pattern using function syntheticNMF (see ?syntheticNMF) 
-    \dontrun{x <- syntheticNMF(50, 5, 10, noise=TRUE)}
-    
-    # perform default NMF computation
-    res <- nmf(x, 3)
-    
-    # Toogle on verbose mode
-    nmf.options(verbose = TRUE)    
-    res <- nmf(x, 3)    
-
-	# Toogle on debug mode
-    nmf.options(debug = TRUE)    
-    res <- nmf(x, 3)
-
-    # set the error track step size, and save previous value
-    old.o <- nmf.options(track.interval = 5)
-    old.o
-    
-    # check options
-    utils::str(nmf.options())
-    # reset to default values
-    nmf.options.reset()
-    utils::str(nmf.options())
-	
+# reset to default
+nmf.resetOptions()
+nmf.printOptions()
 }
+

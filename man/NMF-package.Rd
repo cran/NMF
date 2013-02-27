@@ -1,79 +1,40 @@
-\name{NMF-package}
-\Rdversion{1.1}
-\alias{NMF-package}
-\alias{NMF}
 \docType{package}
-\title{NMF Package Overview}
+\name{NMF-package}
+\alias{NMF}
+\alias{NMF-package}
+\title{Algorithms and framework for Nonnegative Matrix Factorization (NMF).}
 \description{
-The NMF package provides methods to perform Nonnegative Matrix Factorization (NMF)
-, as well as a framework to develop and test new NMF algorithms.
-
-A number of standard algorithms and seeding methods are implemented.
-Tuned visualisation and post-analysis methods help in the evaluation of the 
-algorithms' performances or in the interpretation of the results.
-
+  This package provides a framework to perform Non-negative
+  Matrix Factorization (NMF). It implements a set of
+  already published algorithms and seeding methods, and
+  provides a framework to test, develop and plug new/custom
+  algorithms. Most of the built-in algorithms have been
+  optimized in C++, and the main interface function
+  provides an easy way of performing parallel computations
+  on multicore machines.
 }
-
-\author{ Renaud Gaujoux \email{renaud@cbio.uct.ac.za} }
-
-\references{
-
-	If you use the 'NMF' package in publications cite:
-
-	Renaud Gaujoux, Cathal Seoighe (2010).
-	A flexible R package for nonnegative matrix factorization.
-	\emph{BMC Bioinformatics} 2010, \bold{11}:367
-	http://www.biomedcentral.com/1471-2105/11/367
-
-	For pointers on further readings, please see references therein.
-
-
-	Definition of Nonnegative Matrix Factorization in its modern formulation:
-	
-	Lee D.D. and Seung H.S. (1999).
-	Learning the parts of objects by non-negative matrix factorization. 
-	\emph{Nature}, \bold{401}, 788--791.
-
-	Historical first definition and algorithms: 
-		
-	Paatero, P., Tapper, U. (1994).
-	Positive matrix factorization: A non-negative factor model with optimal utilization of error estimates of data values.
-	\emph{Environmetrics}, \bold{2}, 111--126
-	, doi:10.1002/env.3170050203.
-	
-}
-
-\keyword{ package }
-\seealso{
-\code{\link{NMF-class}}, \code{\link{nmf}}, \code{\link[Biobase]{Biobase}}
+\details{
+  \code{\link{nmf}} Run a given NMF algorithm
 }
 \examples{
+# generate a synthetic dataset with known classes
+n <- 50; counts <- c(5, 5, 8);
+V <- syntheticNMF(n, counts)
 
-# run default NMF algorithm on a random matrix
-V <- matrix(runif(10000), 500, 20)
+# perform a 3-rank NMF using the default algorithm
 res <- nmf(V, 3)
-res
 
-# compute some quality measures
-summary(res)
-
-# Visualize the results as heatmaps
-\dontrun{metaheatmap(res)} # mixture coefficients
-\dontrun{metaheatmap(res, 'features')} # basis vectors
-
-# run default NMF algorithm on a random matrix with actual patterns
-set.seed(123456)
-V <- syntheticNMF(500, 3, 20, noise=TRUE)
-res <- nmf(V, 3)
-res
-
-# compute some quality measures
-summary(res)
-
-# Visualize the results as heatmaps
-\dontrun{metaheatmap(res)} # mixture coefficients
-\dontrun{metaheatmap(res, 'features')} # basis vectors
-
-
+basismap(res)
+coefmap(res)
+}
+\author{
+  Renaud Gaujoux \email{renaud@cbio.uct.ac.za}
+}
+\references{
+  \url{http://www.r-project.org/}
+}
+\seealso{
+  \code{\link{nmf}}
 }
 \keyword{package}
+

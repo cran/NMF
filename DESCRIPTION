@@ -2,7 +2,7 @@ Package: NMF
 Type: Package
 Title: Algorithms and framework for Nonnegative Matrix Factorization
         (NMF).
-Version: 0.16.2
+Version: 0.16.6
 Date: 2013-02-27
 Author: Renaud Gaujoux, Cathal Seoighe
 Maintainer: Renaud Gaujoux <renaud@mancala.cbio.uct.ac.za>
@@ -22,7 +22,7 @@ Description: This package provides a framework to perform Non-negative
 License: GPL (>= 2)
 URL: http://nmf.r-forge.r-project.org
 LazyLoad: yes
-Depends: R (>= 2.15.2), methods, stats, pkgmaker (>= 0.15.2), rngtools,
+Depends: R (>= 2.15.2), methods, stats, pkgmaker (>= 0.16), rngtools,
         registry, digest, grid
 Imports: graphics, rngtools, stringr, grDevices, gridBase, colorspace,
         RColorBrewer, iterators, foreach, doParallel
@@ -46,7 +46,7 @@ Collate: 'rmatrix.R' 'nmf-package.R' 'utils.R' 'simulation.R'
         'algorithms-siNMF.R' 'seed-ica.R' 'seed-nndsvd.R' 'data.R'
         'tests.R'
 BuildVignettes: no
-Packaged: 2013-03-27 19:12:25 UTC; renaud
+Packaged: 2013-05-13 10:53:39 UTC; renaud
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-03-27 23:22:45
+Date/Publication: 2013-05-13 15:03:53

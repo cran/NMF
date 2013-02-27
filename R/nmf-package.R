@@ -71,7 +71,7 @@ nmfConfig <- mkoptions()
 	pkgEnv <- pkgmaker::packageEnv()
 		
 	# set default number of cores
-	if( pkgmaker::isCRANcheck() ){
+	if( pkgmaker::isCHECK() ){
 		options(cores=2)
 	}else{
 		if( nchar(nc <- Sys.getenv('_R_NMF_CORES_')) > 0 ){
@@ -169,11 +169,14 @@ nmfConfig <- mkoptions()
 	#
 	
 	# FINAL. CRAN FLAG
-	if( pkgmaker::isCRANcheck() ){
+	if( pkgmaker::isCHECK() ){
 		msg <- paste0(msg, ' | CRAN check')
 	}
 	#
-	packageStartupMessage('NMF - ', msg)
+	
+	# print startup message
+	ver <- packageVersion('NMF')
+	packageStartupMessage('NMF [', ver, '] - ', msg)
 	if( !is.null(details) ){
 		packageStartupMessage(paste(details, collapse="\n"))
 	}

@@ -7,6 +7,7 @@
 # Creation: 08-Feb-2011
 ###############################################################################
 
+#' @include utils.R
 #' @import foreach
 #' @import doParallel
 NULL
@@ -23,8 +24,8 @@ getMaxCores <- function(limit=TRUE){
 		else if( n > 2 ) n <- n - 1L # leave one core free if possible
 	}
 	# forces limiting maximum number of cores to 2 during CRAN checks
-	if( n > 2 && isCRANcheck() ){
-		message("# NOTE - CRAN check detected: limiting maximmum number of cores [2/", nt, "]")
+	if( n > 2 && isCHECK() ){
+		message("# NOTE - CRAN check detected: limiting maximum number of cores [2/", nt, "]")
 		n <- 2L
 	}
 	n
@@ -763,7 +764,7 @@ if( .Platform$OS.type != 'windows' ){
 }
 # add new option: shared.memory that indicates if one should try using shared memory
 # to speed-up parallel computations.
-.OPTIONS$newOptions(shared.memory = .Platform$OS.type != 'windows')
+.OPTIONS$newOptions(shared.memory = (.Platform$OS.type != 'windows' && !is.Mac()))
 
 
 #' \code{setupSharedMemory} checks if one can use the packages \emph{bigmemory} and \emph{sychronicity}

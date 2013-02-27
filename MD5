@@ -1,4 +1,4 @@
-c6b8c63cf85853468b29d7c9d4e34edc *DESCRIPTION
+7102fd116e8903461bc4893b623dbb38 *DESCRIPTION
 d68f73e650cea258f8823aeaf4c5c66f *NAMESPACE
 9c7096e6dd4eda93b2e423c51f0149bc *NEWS
 36f8df8c0e7570b7f950d254425b7352 *R/Bioc-layer.R
@@ -211,7 +211,6 @@ b304f97c0e0ae42952ede5918ee63880 *man/types.Rd
 74facf85e6495aea68dd04b725cc6787 *src/divergence.cpp
 e78941582fb2d47fd1f87f9a48a37729 *src/euclidean.cpp
 0678d1eb5e2c82c47e9a296fee622380 *src/utils.cpp
-8284d13b1fab6283e7d1890b6b089133 *tests/doRUnit.R
 289dd6bc1a722221cbce6e0d8ce1293c *vignettes/Makefile
 25250e9f9091d82e2dab93055405ec63 *vignettes/NMF-unitTests.Rnw
 0724169df18880f09973f6ba6369f3d3 *vignettes/NMF-vignette.Rnw

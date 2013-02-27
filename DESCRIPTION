@@ -2,7 +2,7 @@ Package: NMF
 Type: Package
 Title: Algorithms and framework for Nonnegative Matrix Factorization
         (NMF).
-Version: 0.16.1
+Version: 0.16.2
 Date: 2013-02-27
 Author: Renaud Gaujoux, Cathal Seoighe
 Maintainer: Renaud Gaujoux <renaud@mancala.cbio.uct.ac.za>
@@ -46,7 +46,7 @@ Collate: 'rmatrix.R' 'nmf-package.R' 'utils.R' 'simulation.R'
         'algorithms-siNMF.R' 'seed-ica.R' 'seed-nndsvd.R' 'data.R'
         'tests.R'
 BuildVignettes: no
-Packaged: 2013-03-27 08:21:05 UTC; renaud
+Packaged: 2013-03-27 19:12:25 UTC; renaud
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-03-27 11:14:29
+Date/Publication: 2013-03-27 23:22:45

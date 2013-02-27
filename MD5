@@ -1,4 +1,4 @@
-1c1b5c3cddfb54c1de5f6f69cd89ff44 *DESCRIPTION
+73ee6c94500bf799f5a278cc3c25b106 *DESCRIPTION
 d68f73e650cea258f8823aeaf4c5c66f *NAMESPACE
 604c83bc6b2d7858cc828c0025a5298d *NEWS
 36f8df8c0e7570b7f950d254425b7352 *R/Bioc-layer.R
@@ -14,11 +14,11 @@ a6131c2cc78d70c82dc06cd576e2d454 *R/NMFStrategyIterative-class.R
 d4a9ccb2a64df0fcc003732b22087b29 *R/NMFns-class.R
 80b6b01b74429b97af122dbdac7a322b *R/NMFplots.R
 06ce7f9fb62284b85f8faea26cd9bc08 *R/NMFstd-class.R
-ca2e56e9930f3abdb83035d88e1cd34d *R/aheatmap.R
+730c90fd6d0120a33e5c52f71859b5b8 *R/aheatmap.R
 2215efb3fafbbae155830aed6b0b3ae1 *R/algorithmic.R
 5c93753b2b401fd5b8c80b592f93193d *R/algorithms-base.R
 2c3966676e2152d4450ae9064654ad03 *R/algorithms-brunet.R
-63b7c1cb960a4e45350c0aec774ac092 *R/algorithms-lnmf.R
+015a5cef7738322d66ae1f280225f9e6 *R/algorithms-lnmf.R
 74d8ac20d6c68feb8b8880d088dcd5aa *R/algorithms-lsnmf.R
 599b71658bde29550748a28b50478391 *R/algorithms-pe-nmf.R
 c7345e2125689ff69487338672fead40 *R/algorithms-siNMF.R
@@ -30,7 +30,7 @@ d5c1883b5350a8285e19c2772ceb50d8 *R/extractFeatures.R
 eafc45bbbdc3cb00915fe674be19b24a *R/fixed-terms.R
 034bc6990f9dfac60255adbbf04004c8 *R/grid.R
 5cf50ed45523796cab2a7a9533fd6981 *R/heatmaps.R
-42f43d202b1fa32b65b9274a57a16789 *R/nmf-package.R
+2bbb66c54ba0de0db44be448bf356b27 *R/nmf-package.R
 9b4222aeadf5e0ab1ef564adbf5ee3e8 *R/nmf.R
 e80a1bd962298c79fcf8ab45f7753440 *R/nmfModel.R
 f4076c2146618646d3172f7ab58d9eee *R/options.R
@@ -43,7 +43,7 @@ b1d44e778d211021bc1754e90551c7c5 *R/rnmf.R
 dd767a7d1fde7adfe30b3fee7cf86f5b *R/seed-base.R
 f924871fced5c09882f65b8c5ccb91d7 *R/seed-ica.R
 5ae81c6a61fc0e16090acde2f16da5d4 *R/seed-nndsvd.R
-5c089f8e4c650a1621c2a3734c4c3ed9 *R/setNMFClass.R
+71bf9f5ea7e161d5b3604040e37785ad *R/setNMFClass.R
 5017945c10bf9b95560568b58c90559a *R/simulation.R
 610b78f4f8f21a5a85d97967e4577bc8 *R/tests.R
 ee08af1846934d447a66346401663a98 *R/transforms.R
@@ -83,7 +83,7 @@ c29c69b1e6787ea22f8cbd8838995157 *man/Frobenius-nmf.Rd
 2620759d6732ec08d0ee0c007c5e1f50 *man/NMF-class.Rd
 3afb15f1474a46e4086d736a3c871caf *man/NMF-defunct.Rd
 dc30d7f32eb6954c2e9aa946f8b9df26 *man/NMF-deprecated.Rd
-fbc13768bb0ac7b8bfd684c578277069 *man/NMF-package.Rd
+bb8dcad3aa0a08d9c122f486057a33a2 *man/NMF-package.Rd
 06d347a23a138dccfd978daa81ea0e1b *man/NMFList-class.Rd
 ed022fddba8ea1c6d0ab3d815354fd77 *man/NMFOffset-class.Rd
 425940f01b128ed86c081405ae146ab0 *man/NMFSeed-class.Rd
@@ -103,7 +103,7 @@ fbab38ba73159c74a6d9810d167657b6 *man/NMFfitXn-class.Rd
 8b66c7ab49c34b0e5df0c652d45d437f *man/SNMF-nmf.Rd
 923eea4d3b52afd5f8771561381e9596 *man/Strategy-class.Rd
 28877eb83332222d0a67473a16148fbc *man/advanced.Rd
-403972d29f7682e0e7dba0fcae8d742c *man/aheatmap.Rd
+84db72b33ebeb2e7cd5172de2c784730 *man/aheatmap.Rd
 762c9a6fd51a723065df7becaa801083 *man/algorithm-commaNMFList-method.Rd
 23b560ee5c0e22253100cd1f8effe26b *man/algorithm-commaNMFStrategyOctave-method.Rd
 a19ba220e45e14f1e601e706c7b9a947 *man/algorithmic.Rd

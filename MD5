@@ -1,4 +1,4 @@
-6d556e78df7c820313d293df85c82228 *DESCRIPTION
+6a5cc4d950770c11a65e0b382768fefc *DESCRIPTION
 dc463bcaef88f72ce59f851dcea117db *NAMESPACE
 e313c1926360736f87e64d9c041347b2 *NEWS
 692f13aaa3d067ad67c4f9893dfe43f7 *R/Bioc-layer.R
@@ -25,7 +25,7 @@ c7345e2125689ff69487338672fead40 *R/algorithms-siNMF.R
 512da544843f613eeb487c24e73095ce *R/algorithms-snmf.R
 da43e5b962e97c8602f9f34d77284b34 *R/atracks.R
 04c8a4c2f078a8327a068943eef561d6 *R/colorcode.R
-f8400931ad9ba149f6189ce152232c86 *R/data.R
+7872d34875136dc2b2e8c1875ce2caa7 *R/data.R
 d5c1883b5350a8285e19c2772ceb50d8 *R/extractFeatures.R
 ec3cfef0d083ed95661a6c57bd61e660 *R/fixed-terms.R
 1f90bca8a7b53737476d0956b55502ab *R/grid.R
@@ -34,7 +34,7 @@ ec3cfef0d083ed95661a6c57bd61e660 *R/fixed-terms.R
 8cb380f3596ae6bd5f7bd26cfc6dbbdf *R/nmf.R
 b0ef416f59a1be65a4409b9af8d4b9e0 *R/nmfModel.R
 b775850b0cf2d25c9d4f674298030b3a *R/options.R
-eaa1245c7cee77cef4847580acdfa2ac *R/parallel.R
+a93b8bc988adf16cf2b2e28a90d48ddf *R/parallel.R
 8ea29d577c7c4e8f8b4dc34ba4421da4 *R/registry-algorithms.R
 bd61f889b0bb039c703a7de9898e5fbc *R/registry-seed.R
 66ca4afe8515dedd71d07dc05bbcc4d7 *R/registry.R
@@ -50,7 +50,7 @@ f924871fced5c09882f65b8c5ccb91d7 *R/seed-ica.R
 4d204e4cda9cdcb86f26bc220e0c3408 *R/transforms.R
 5328d1ef8da485e6ffc279300ff4da8c *R/utils.R
 77bc2b9255b6a8b6044e67e08ec91284 *R/versions.R
-8fb4afbd611a9c6ffc544aad2e1cc271 *README.md
+ca5b072a375cfc90d9a1b8530a2159dc *README.md
 551e2ca0a05eff9062c105483449fac4 *TODO
 39201ea615c2e77a0082872cea4183ea *build/vignette.rds
 f8015e2bc710fb0bf869d2fdddf90e73 *data/esGolub.rda
@@ -66,7 +66,7 @@ b8685571f46f595488cf8a6811e5a748 *inst/doc/NMF-unitTests.R
 11cdd75b60fc3577bf8e22c73c717cf1 *inst/doc/NMF-vignette.R
 d3a631ff66077530b722b7c779263367 *inst/doc/NMF-vignette.Rnw
 c8ca9dd04271005e6e8253264380d26b *inst/doc/NMF-vignette.pdf
-c6f9437b6954d3e65f7bd3e85c434656 *inst/doc/consensus.pdf
+769f00b5aadbb22a76ba38f7762fc6a6 *inst/doc/consensus.pdf
 5a53da6ca7bf0ae84bae0e8e4ff5984b *inst/doc/heatmaps.R
 117e593dae265395cc28634365848af2 *inst/doc/heatmaps.Rnw
 fb507f8eb6151f14de9b14a629c5d483 *inst/doc/heatmaps.pdf
@@ -80,12 +80,12 @@ ede84a7c14827aaf8388753d3782649b *inst/tests/runit.NMFSet.r
 73ca1b2198fc6359c11cb0e247047bfc *inst/tests/runit.NMFclass.r
 ba38b9bbe7cb50d383f2f9fb021a6d82 *inst/tests/runit.NMFfit-class.r
 c2fe5109fe6867bec03df76785b4a143 *inst/tests/runit.aheatmap.R
-73bb61da86f242ae605f65c317452ac4 *inst/tests/runit.algorithms.r
+69fb12d4a21c13d82b43f472d60adb5f *inst/tests/runit.algorithms.r
 d989ecfa90aef8cc16a84520fb3763f4 *inst/tests/runit.bioc.r
 f252a885bbb0046bd55e59fbd511888b *inst/tests/runit.distance.r
 3ac992c6681a6d2f7b014904db460648 *inst/tests/runit.interface.r
 59b288c96a3b2803f83d5a46c0d0b688 *inst/tests/runit.options.r
-78fe00d318235b5303158b8ad27b8945 *inst/tests/runit.parallel.r
+03df1801f20a8612f71db7cb65772c55 *inst/tests/runit.parallel.r
 a628ceb384967f4f6575999bc1bc6b07 *inst/tests/runit.seed.r
 4fc04c7ba5d73eb1b804a9d25c436a3f *inst/tests/runit.utils.r
 767832f7e470c4704f4b7602d23a7798 *man/Frobenius-nmf.Rd
@@ -141,7 +141,7 @@ ead0bcb1b2960042e6c225abaf312d3f *man/ccSpec.Rd
 d17124d62761eea2293f997a41b3b978 *man/dims.Rd
 0eda8c23e3906c11c2894eee60b12e26 *man/dispersion.Rd
 edcc1d52a2ad50aad945d5d74e65121a *man/dot-fcnnls.Rd
-671104fc64b3e955ca77335eb29e39cb *man/esGolub.Rd
+d2b3dc662a740ac434c42566e8cdee13 *man/esGolub.Rd
 1913aebfe0827011d600e56f33587399 *man/fcnnls.Rd
 26389df3557196423682198ca30e4490 *man/fit.Rd
 c1baa89aba303ba8bd4ef407e184e55c *man/fitted.Rd
@@ -223,7 +223,7 @@ c1dd149f5e75b70b800565157584fe7a *man/utils.Rd
 74facf85e6495aea68dd04b725cc6787 *src/divergence.cpp
 e78941582fb2d47fd1f87f9a48a37729 *src/euclidean.cpp
 0678d1eb5e2c82c47e9a296fee622380 *src/utils.cpp
-4ae4f3e12180fe5ed80e6f6499627184 *tests/doRUnit.R
+75c01c40d5204e71e378b8c27c963959 *tests/doRUnit.R
 888e8d888eefa87589a5d1846a1b4dea *vignettes/NMF-unitTests.Rnw
 d3a631ff66077530b722b7c779263367 *vignettes/NMF-vignette.Rnw
 e80ff821d37969bdb7ff73081b8f7c53 *vignettes/consensus.pdf

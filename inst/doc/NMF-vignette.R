@@ -8,16 +8,16 @@ pkgmaker::latex_bibliography('NMF')
 
 
 ## ----options, echo=FALSE-------------------------------------------------
-options(prompt=' ', width = 60)
-options(continue=' ')
 set.seed(123456)
 library(knitr)
-knit_hooks$set(try = pkgmaker::hook_try)
+knit_hooks$set(try = pkgmaker::hook_try, backspace = pkgmaker::hook_backspace())
 
 
 ## ----load_library, echo=FALSE, include=FALSE-----------------------------
 # Load
 library(NMF)
+# limit number of cores used
+nmf.options(cores = 2)
 
 
 ## ----load_library_fake, eval=FALSE---------------------------------------
@@ -274,7 +274,7 @@ res
 ## 
 
 
-## ----force_seq, cache=TRUE-----------------------------------------------
+## ----force_seq, cache=TRUE, backspace = TRUE-----------------------------
 # parallel execution on 2 cores (if possible)
 res1 <- nmf(esGolub, 3, nrun=5, .opt='vp2', seed=123)
 

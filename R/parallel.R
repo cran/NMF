@@ -67,11 +67,13 @@ registerDoBackend <- function(object, ...){
 #' @rdname foreach
 #' @export
 getDoBackend <- function(){
-	fe <- foreach:::.foreachGlobals
+    fe_ns <- asNamespace('foreach')
+	fe <- ns_get('.foreachGlobals', fe_ns)
 	if( !exists("fun", where = fe, inherits = FALSE) )
 		return(NULL)
 	
-	c(foreach:::getDoPar() # this returns the registered %dopar% function + associated data
+    getDoPar <- ns_get('getDoPar', fe_ns)
+	c(getDoPar() # this returns the registered %dopar% function + associated data
 		# -> add info function from foreach internal environment
 		, info= if( exists("info", where = fe, inherits = FALSE) ){
 					get('info', fe, inherits=FALSE) 
@@ -110,7 +112,7 @@ setDoBackend <- function(data, cleanup=FALSE){
 		setBackendCleanup(bdata)
 	}else{
 		do.call('setDoPar', list(NULL))
-		fe <- foreach:::.foreachGlobals
+		fe <- ns_get('.foreachGlobals', 'foreach')
 		if (exists("fun", envir = fe, inherits = FALSE))
 			remove("fun", envir = fe)
 		setBackendCleanup(NULL)
@@ -122,7 +124,7 @@ setDoBackend <- function(data, cleanup=FALSE){
 # setup cleanup procedure for the current backend
 setBackendCleanup <- function(object, fun, verbose=FALSE){
 	
-	fe <- foreach:::.foreachGlobals
+	fe <- ns_get('.foreachGlobals', 'foreach')
 	name <- getDoParName()
 	if( !is.null(fun <- object$cleanup) ){
 		if( verbose ) message("# Registering cleaning up function for '", name, "'... ", appendLF=FALSE)
@@ -307,30 +309,8 @@ setMethod('ForeachBackend', 'doParallel_backend',
 			isNumber(cl)
 		}
 
-		# On Windows doParallel::registerDoParallel(numeric) will create a 
-		# SOCKcluster with `object` cores.
-		# On non-Windows machines registerDoParallel(numeric) will use 
-		# parallel::mclapply with `object` cores.
-		# => Windows needs a cleanup function that will stop the cluster 
-		# when another backend is registered.
-		#
-		# Fortunately doParallel::registerDoParallel assign the cluster object 
-		# to the global variable `.revoDoParCluster`
-#		if ( register_cleanup ) {
-#			doBackendCleanup(object, function(x, force=FALSE){
-#				# do not cleanup if current backend is the same (TODO: improve this)
-#				if( !force && getDoParName() == 'doParallel') return()
-#				# on Windows: stop cluster stored in global variable `.revoDoParCluster`
-#				if( .Platform$OS.type == "windows" ){
-#					.cl_cleanup(".revoDoParCluster")
-#				}
-#				# on all Platforms: try to cleanup PSOCK
-#				.cl_cleanup('.doParPSOCKCluster')
-#			})
-#		}
-		
 		# required registration data
-		# TODO: a function doParallel:::doParallel should exist and do the same 
+		# NB: a function doParallel:::doParallel should exist and do the same 
 		# thing as parallel::registerDoParallel without registering the backend
 		#object$fun <- doParallel:::doParallel
 		object$info <- doParallel:::info
@@ -376,8 +356,15 @@ cleanupCluster <- function(x, cl, stopFun=NULL){
 		
 		if( is(x, 'doParallel_backend') ){
 			
-			# on Windows: stop cluster stored in global variable `.revoDoParCluster`
-			if( .Platform$OS.type == "windows" ){
+            # On non-Windows machines registerDoParallel(numeric) will use 
+            # parallel::mclapply with `object` cores (no cleanup required).
+            # On Windows doParallel::registerDoParallel(numeric) will create a 
+            # SOCKcluster with `object` cores.
+            # => Windows needs a cleanup function that will stop the cluster 
+            # when another backend is registered.
+            # Fortunately doParallel::registerDoParallel assign the cluster object 
+            # to the global variable `.revoDoParCluster`
+            if( .Platform$OS.type == "windows" ){
 				.cl_cleanup(".revoDoParCluster")
 			}
 		}
@@ -1029,7 +1016,6 @@ setupLibPaths <- function(pkg='NMF', verbose=FALSE){
 				suppressMessages({
 					library(devtools)
 					library(bigmemory)
-					library(rngtools)
 					load_all(p)
 				})
 			})

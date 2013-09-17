@@ -77,8 +77,8 @@ res.R <- nmf(target, method='.R#brunet', seed=start) # plain R
 # We adapted the original MATLAB code obtained to be able to specify 
 # initial values for the matrices W and H.
 # Original MATLAB code: http://www.broadinstitute.org/mpr/publications/projects/NMF/nmf.m
-# Adapted algorithm: matlab/brunet.m
-# MATLAB code to run the test factorization: matlab/brunet-run.m
+# Adapted algorithm: m-files/brunet.m
+# MATLAB code to run the test factorization: m-files/brunet-run.m
 #
 # The results should be saved in a single file named 'ref.brunet.oct'
 #, that contains the final values for W and H, in variables named 'W' and 'H'.

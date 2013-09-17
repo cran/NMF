@@ -1,4 +1,56 @@
 *************************************************************************
+Changes in version 0.18
+*************************************************************************
+NEW FEATURES
+    o aheatmap gains distfun methods 'spearman', 'kendall', and, 
+    for completeness, 'pearson' (for which 'correlation' is now an alias), 
+    which specifies the correlation method to use when computing the 
+    distance matrix.
+    
+CHANGES
+    o In order to fully comply with CRAN policies, internals of the 
+    aheatmap function slightly changed. In particular, this brings an 
+    issue when directly plotting to PDF graphic devices, where a first 
+    blank page may appear. See the dedicated section in the man page 
+    ?aheatmap for a work around.
+    
+
+*************************************************************************
+Changes in version 0.17.3
+*************************************************************************
+NEW FEATURES
+    o add silhouette computation for NMF results, which can be performed on 
+    samples, features or consensus matrix.
+    The average silhouette width is also computed by the summary methods.
+    (Thanks to Gordon Robertson for this suggestion)
+    
+    o New runtime option 'shared.memory' (or 'm') for toggling usage of shared 
+    memory (requires package synchronicity).
+    
+CHANGES
+    o some plots are -- finally -- generated using ggplot2
+    This adds an Imports dependency to ggplot2 and reshape2.
+    
+BUG FIXES
+    o fix a bug when running parallel NMF computation with 
+    algorithms defined in other packages (this most probably only affected my 
+    own packages, e.g., CellMix)
+
+*************************************************************************
+Changes in version 0.17.1
+*************************************************************************
+CHANGES
+    o Computations seeded with an NMF object now set slot @seed to 'NMF'
+    o Added unit tests on seeding with an NMF object
+    o Removed some obsolete comments
+    
+BUG FIXES
+    o an error was thrown when running multiple sequential NMF 
+    computations with nrun>=50: object '.MODE_SEQ' not found. 
+    (reported by Kenneth Lopiano) 
+        
+    
+*************************************************************************
 Changes in version 0.16.5
 *************************************************************************
 CHANGES

@@ -1,10 +1,10 @@
 %\VignetteIndexEntry{NMF: generating heatmaps}
-%\VignetteDepends{utils,NMF,RColorBrewer}
+%\VignetteDepends{utils,NMF,RColorBrewer,knitr,bibtex}
 %\VignetteKeyword{aplot}
 %\VignetteCompiler{knitr}
+%\VignetteEngine{knitr::knitr}
+
 \documentclass[a4paper]{article}
-%\usepackage{Sweave}
-%\SweaveOpts{keep.source=TRUE}
 
 %\usepackage[OT1]{fontenc}
 \usepackage[colorlinks]{hyperref}
@@ -33,7 +33,6 @@ pkgmaker::latex_preamble()
 <<bibliofile, echo=FALSE, results='asis'>>=
 pkgmaker::latex_bibliography('NMF')	
 @
-\bibliography{Rpackages}
 \newcommand{\citet}[1]{\textcite{#1}}
 \renewcommand{\cite}[1]{\parencite{#1}}
 \DefineBibliographyStrings{english}{%
@@ -72,7 +71,6 @@ pkgmaker::latex_bibliography('NMF')
 #options(prompt=' ')
 #options(continue=' ')
 set.seed(123456)
-if( Sys.info()['user'] == 'renaud' ) .libPaths(c('./loclib', .libPaths()))
 library(NMF)
 @
 
@@ -192,6 +190,7 @@ covariates <- data.frame(a, X$pData, c)
 
 %\SweaveOpts{fig.width=14,fig.height=7}
 <<figoptions, include=FALSE>>=
+library(knitr)
 opts_chunk$set(fig.width=14, fig.height=7)
 @
 Note that in the code above, the object \code{X} returned by \code{syntheticNMF} \emph{really is} a matrix object, but wrapped through the function \code{ExposedAttribute} object, which exposes its attributes via a more friendly and access controlled interface \code{\$}.
@@ -426,7 +425,7 @@ value of the rank in range $\ldbrack 2, 7\rdbrack]$.
 The method of \code{consensusmap} defined for class \code{'NMF.rank'}, 
 which plots all the consensus matrices on the same plot: 
 
-<<consensusmap_estimate>>=
+<<consensusmap_estimate, fig.keep='last'>>=
 consensusmap(res2_7)
 @
 
@@ -455,7 +454,7 @@ is essentially a named list, that contains each fits and the CPU time required
 by the whole computation.
 As previously, the sequence of consensus matrices is plotted with \code{consensusmap}:
 
-<<consensusmap_methods, fig.width=10, fig.height=7>>=
+<<consensusmap_methods, fig.width=10, fig.height=7, fig.keep='last'>>=
 consensusmap(res_methods)	
 @
 

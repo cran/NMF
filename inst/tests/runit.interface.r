@@ -187,10 +187,28 @@ test.nmf.method <- function(){
 	nmf(V, r, 'lee')
 	checkIdentical( new.rseed, getRNG(), "RNG setting after the run is the same as if one has run only the last method" )
 	
+    # list of methods
 	res <- nmf(V, r, list('ns', 'br', 'lee'), nrun=3)
 	checkIdentical(names(res), c('nsNMF', 'brunet', 'lee'), "Argument list() + multiple run: names are set correctly to the complete method names")
 	checkTrue( all(sapply(res, function(x) identical(getRNG1(x), getRNG1(res[[1]])))),
 			"Argument list() + multiple runs: Initial RNG settings are the same for each method")
+    
+    ml <- list('ns', 'brunet', 'lee')
+    checkException(nmf(V, r, ml, .parameters = 2:3), "Error if argument .parameters not a list")
+    checkException(nmf(V, r, ml, .parameters = list(list(copy = TRUE))), "Error if argument .parameters has no names")
+    checkException(nmf(V, r, ml, .parameters = list(br = list(), list(copy = TRUE))), "Error if argument .parameters has missing names")
+    checkException(nmf(V, r, ml, .parameters = list(br = list(), brun = list(copy = TRUE))), "Error if argument .parameters has multiple matching names")
+    checkWarning(nmf(V, r, ml, .parameters = list(br = list(aaa = 1))), TRUE, "Error if unused argument in selected method-specific parameters")
+    checkWarning(nmf(V, r, ml, .parameters = list(br = list(), toto = list())), TRUE, "Warning if unused elements in .parameters")
+    checkTrue(all(isNMFfit(res <- nmf(V, r, ml, seed = 123, .parameters = list(br = list(maxIter = 10), ns = list(maxIter = 2)))))
+                , "List of methods working if called with correct .parameters")
+    checkIdentical( niter(res$nsNMF), 2L, )
+    checkIdentical( niter(res$brunet), 10L)
+    res_lee <- nmf(V, r, 'lee', seed = 123)
+    checkTrue( niter(res$lee) > 10L, "Method without method-specific parameter specification correctly runs without them: niter > 10L" )
+    checkIdentical( niter(res$lee), niter(res$lee), "Method without method-specific parameter specification correctly runs without them: niter equal" )
+    checkTrue( nmf.equal(res$lee, res_lee), "Method without method-specific parameter specification correctly runs without them: identical result" )
+    
 }
 
 #' Unit test for multiple rank
@@ -269,8 +287,8 @@ test.nmf.seed.argument <- function(){
 	checkException( nmf(V, r, seed=list('zzz')), "Throw an error when: inexistent seeding method name (passed as list)")
 	checkException( nmf(V, r, seed=list(method='zzz')), "Throw an error when: inexistent seeding method name (passed as named list)")
 	checkException( nmf(V, r, seed=list(toto=1, method='random')), "Throw an error when: unused argument is passed to seeding method")
-	checkException( nmf(V, r, seed=numeric()), "Throw an error when: seed argument is an empty numeric")
-	
+    checkException( nmf(V, r, seed=numeric()), "Throw an error when: seed argument is an empty numeric")
+    
 	checkException( nmf(V, r, seed=c(1,2)), "Throw an error when: seed argument is a numeric of invalid length (2)")
 	checkException( nmf(V, r, seed=rep(5,5)), "Throw an error when: seed argument is an invalid numeric value for .Random.seed (7)")
 	
@@ -371,11 +389,15 @@ test.nmf.seed.argument <- function(){
 	checkIdenticalRNG( res2, res, msg("The best fit's RNG is the same as when keeping all the fits"))
 	checkIdenticalRNG( getRNG1(res2), sRNG[[1]], msg("The first RNG used in the computation of the NMFfitX1 object is given by getRNG1"))
 		
-	# TODO: run nmf with NMF object seed	
-	#obj.s <- nmfModel(r, V)
-	#obj.s <- rnmf(obj.s)
-	#res <- nmf(V, r, seed=obj.s)
-	#check.res('Call with only a NMF object seed', res, V, r, 'NMFstd', 'brunet', 'NMF object')
+    # Seeding with NMF object
+	obj.s <- rnmf(r, V)
+    rngRef <- getRNG()
+	res <- nmf(V, obj.s)
+	check.res('Call with rank = <NMF object>', res, V, r, 'NMFstd', 'brunet', 'NMF', rngref = rngRef)
+    checkTrue( nmf.equal(res, nmf(V, obj.s)), 'Run with rank=<NMF object> is deterministic')
+    res.s <- nmf(V, seed = obj.s)
+    check.res('Call with seed = <NMF object>', res, V, r, 'NMFstd', 'brunet', 'NMF', rngref = rngRef)
+    checkTrue( nmf.equal(res, res.s), 'Run with rank=<NMF object> returns identical result as with seed=<NMF object>')
 	
 	# run nmf with only a seeding method name and some extra parameters 
 	check.res('Call with only a seeding method name and some extra parameters (element method first and not named)'
@@ -516,7 +538,56 @@ test.nmf.model <- function(){
 			, V, r, 'NMFns', 'nsNMF')
 	checkEquals(fit(res)@theta, 0.6
 			, "Call algo:nsNMF with theta in argument 'model': argument correctly passed to model")				
+}
 
+str_dim <- NMF:::str_dim
+
+test.nmfModel.formula <- function(){
+    
+    set.seed(123456)
+    r <- 3
+    V <- .testData(r = r)
+    w <- rmatrix(nrow(V), r)
+    h <- rmatrix(r, ncol(V))
+    cx <- runif(ncol(V))
+    bx <- runif(nrow(V))
+    
+    .check <- function(res, dims, msg, cterm = NULL, bterm = NULL){
+        .msg <- function(...) paste0(msg, ': ', ...)
+        checkTrue(isNMFfit(res), .msg('Result is an NMFfit object'))
+        checkEquals(dim(res), dims, .msg('Dimensions [', str_dim(res), '] are as expected [', str_dim(dims=dims), ']'))
+        
+        # check fixed terms don't change
+        if( !is.null(cterm) ){
+            if( is.null(dim(cterm)) ) cterm <- matrix(cterm, 1L)
+            else if( is.data.frame(cterm) ) t(as.matrix(cterm))
+            else if( !is.matrix(cterm) ) stop("Unexpected error: invalid data type [", class(cterm), ']')
+            n <- nrow(cterm)
+            ft <- coef(res)[tail(1:nbasis(res), n), , drop = FALSE]
+            dimnames(ft) <- NULL
+            checkIdentical(cterm, ft, "Fixed coef term don't change")
+        }
+        if( !is.null(bterm) ){
+            if( is.null(dim(bterm)) ) bterm <- matrix(bterm, ncol = 1L)
+            else if( is.data.frame(bterm) ) as.matrix(bterm)
+            else if( !is.matrix(cterm) ) stop("Unexpected error: invalid data type [", class(bterm), ']')
+            n <- ncol(bterm)
+            ft <- basis(res)[, tail(1:nbasis(res), n), drop = FALSE]
+            dimnames(ft) <- NULL
+            checkIdentical(bterm, ft, "Fixed basis term don't change")
+        }
+    }
+    
+    # coef terms
+    .check(nmf(V ~ cx), c(dim(V), 1L), cterm = cx, 'Single coef term')
+    .check(nmf(V ~ h), c(dim(V), nrow(h)), cterm = h, 'Matrix coef term')
+    .check(nmf(t(V) ~ t(w)), c(dim(t(V)), ncol(w)), cterm = t(w), 'Matrix coef term (transpose)')
+    .check(nmf(V ~ data.frame(t(h))), c(dim(V), nrow(h)), cterm = h, 'Data frame coef term')
+    # basis terms
+#    .check(nmf(V ~ bx), c(dim(V), 1L), bterm = bx, 'Single basis term')
+#    .check(nmf(V ~ w), c(dim(V), ncol(w)), bterm = w, 'Matrix basis term')
+#    .check(nmf(V ~ data.frame(w)), c(dim(V), ncol(w)), bterm = w, 'Data frame basis term')
+    
 }
 
 #' Unit test for the interface function 'nmf': argument '...'

@@ -10,11 +10,11 @@
 
   \S4method{predict}{NMF}(object,
     what = c("columns", "rows", "samples", "features"),
-    prob = FALSE)
+    prob = FALSE, dmatrix = FALSE)
 
   \S4method{predict}{NMFfitX}(object,
-    what = c("columns", "rows", "samples", "features", "consensus", "cmap"),
-    ...)
+    what = c("columns", "rows", "samples", "features", "consensus", "chc"),
+    dmatrix = FALSE, ...)
 }
 \arguments{
   \item{object}{an NMF model}
@@ -29,6 +29,11 @@
   \item{prob}{logical that indicates if the relative
   contributions of/to the dominant basis component should
   be computed and returned. See \emph{Details}.}
+
+  \item{dmatrix}{logical that indicates if a dissimiliarity
+  matrix should be attached to the result. This is notably
+  used internally when computing NMF clustering
+  silhouettes.}
 
   \item{...}{additional arguments affecting the predictions
   produced.}
@@ -95,15 +100,16 @@
   runs.
 
   Argument \code{what} accepts the following extra types:
-  \describe{ \item{\code{'consensus'}}{ returns the cluster
+  \describe{ \item{\code{'chc'}}{ returns the cluster
   membership based on the hierarchical clustering of the
   consensus matrix, as performed by
-  \code{\link{consensushc}}.} \item{\code{'cmap'}}{ same as
-  \code{'consensus'} but the levels of the membership index
-  are re-labeled to match the order of the clusters as they
-  would be displayed on the associated dendrogram, like on
-  the default annotation track in consensus heatmap
-  produced by \code{\link{consensusmap}}.} } }
+  \code{\link{consensushc}}.} \item{\code{'consensus'}}{
+  same as \code{'chc'} but the levels of the membership
+  index are re-labeled to match the order of the clusters
+  as they would be displayed on the associated dendrogram,
+  as re-ordered on the default annotation track in
+  consensus heatmap produced by
+  \code{\link{consensusmap}}.} } }
 
   }
 }

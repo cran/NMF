@@ -15,6 +15,13 @@
 #' @import registry
 nmfRegistry <- function(...) pkgmaker::packageRegistry(...)
 
+# Returns the names of all the packages that contibute to all or a given
+# package's primary registry  
+registryContributors <- function(package, regname = NULL){
+    regs <- packageRegistries(regname = regname, package = package, primary = TRUE)
+    if( length(regs) ) unique(names(unlist(lapply(paste0(package, '::', regs), packageRegistries))))
+}
+
 ###% Return a method stored in the NMF registry.
 ###% 
 ###% @param name the key (a character string) of the method to be retrieved
@@ -32,7 +39,6 @@ nmfGet <- function(regname, name=NULL, ...){
 }
 
 ###% Register a NMF method so that it is accessible via the common interface defined by the \code{nmf} function.
-###% TODO: rewrite the doc (obsolete)
 ###% @param method an NMFStrategy object or a function that defines the method
 ###% @param key a non-empty character string that will be used as an identifier to access the method
 ###% @param overwrite a boolean that specify if an existing method (i.e. with exactly the same \code{key}) should be overwritten or not.

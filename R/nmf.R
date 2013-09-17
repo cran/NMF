@@ -209,6 +209,10 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='NULL'),
 #' This method returns an object of class \code{\linkS4class{NMFList}}, that is  
 #' essentially a list containing each fit.  
 #' 
+#' @param .parameters list of method-specific parameters.
+#' Its elements must have names matching a single method listed in \code{method},
+#' and be lists of named values that are passed to the corresponding method. 
+#' 
 #' @demo 
 #' # compare some NMF algorithms (tracking the approximation error)
 #' res <- nmf(x, 2, list('brunet', 'lee', 'nsNMF'), .options='t')
@@ -219,12 +223,21 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='NULL'),
 #' plot(res)
 #' 
 setMethod('nmf', signature(x='matrix', rank='numeric', method='list'), 
-	function(x, rank, method, ...)
+	function(x, rank, method, ..., .parameters = list())
 	{
 		# apply each NMF algorithm
 		k <- 0
 		n <- length(method)
-		t <- system.time({
+        
+        # setup/check method specific parameters
+        ARGS <- NULL
+        .used.parameters <- character()
+        if( !is.list(.parameters) )
+            stop("NMF::nmf - Invalid value for argument `.parameters`: must be a named list.")
+        if( length(.parameters) && (is.null(names(.parameters)) || any(names(.parameters) == '')) )
+            stop("NMF::nmf - Invalid value for argument `.parameters`: all elements must be named.") 
+        
+        t <- system.time({
 			res <- lapply(method, 
 				function(meth, ...){
 					k <<- k+1
@@ -235,8 +248,26 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='list'),
 					orng <- RNGseed()
 					if( k < n ) on.exit( RNGseed(orng), add = TRUE)
 					
+                    # look for method-specific arguments
+                    i.param <- 0L
+                    if( length(.parameters) ){
+                        i.param <- charmatch(names(.parameters), methname)
+                        if( !length(i.param <- seq_along(.parameters)[!is.na(i.param)]) )
+                            i.param <- 0L
+                        else if( length(i.param) > 1L ){
+                            stop("Method name '", methname, "' matches multiple method-specific parameters "
+                                    , "[", str_out(names(.parameters)[i.param], Inf), "]")
+                        }
+                    }
 					#o <- capture.output( 
-						res <- try( nmf(x, rank, meth, ...) , silent=TRUE) 
+                        if( !i.param ){
+                            res <- try( nmf(x, rank, meth, ...) , silent=TRUE)
+                        }else{
+                            if( is.null(ARGS) ) ARGS <<- list(x, rank, ...)
+                            .used.parameters <<- c(.used.parameters, names(.parameters)[i.param])
+                            res <- try( do.call(nmf, c(ARGS, method = meth, .parameters[[i.param]])) 
+                                        , silent=TRUE)
+                        } 
 					#)
 					if( is(res, 'try-error') )
 						cat("ERROR\n")
@@ -248,7 +279,10 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='list'),
 		})
 		
 		# filter out bad results
-		ok <- sapply(res, isNMFfit)
+		ok <- sapply(res, function(x){
+					if( is(x, 'NMF.rank') ) all(sapply(x$fit, isNMFfit))
+					else isNMFfit(x)
+			})
 		if( any(!ok) ){ # throw warning if some methods raised an error
 			err <- lapply(which(!ok), function(i){ paste("'", method[[i]],"': ", res[[i]], sep='')})
 			warning("NMF::nmf - Incomplete results due to ", sum(!ok), " errors: \n- ", paste(err, collapse="- "), call.=FALSE)
@@ -256,9 +290,20 @@ setMethod('nmf', signature(x='matrix', rank='numeric', method='list'),
 		res <- res[ok]
 		# TODO error if ok is empty
 
+        # not-used parameters
+        if( length(.used.parameters) != length(.parameters) ){
+            warning("NMF::nmf - Did not use methods-specific parameters ", str_out(setdiff(names(.parameters), .used.parameters), Inf))
+        }
+
 		# add names to the result list
-		names(res) <- sapply(res, algorithm)
+		names(res) <- sapply(res, function(x){
+					if( is(x, 'NMF.rank') ) x <- x$fit[[1]]
+					algorithm(x)
+				})
 				
+		# return list as is if surveying multiple ranks 
+		if( length(rank) > 1 ) return(res)
+		
 		# wrap the result in a NMFList object
 		# DO NOT WRAP anymore here: NMFfitX objects are used only for results of multiple runs (single method)
 		# the user can still join on the result if he wants to
@@ -628,21 +673,21 @@ setMethod('nmf', signature(x='matrix', rank='matrix', method='ANY'),
 		}
 		# check compatibility of dimensions
 		newseed <- 
-		if( ncol(rank) == ncol(x) ){
-			# rank is the initial value for the mixture coefficients
-			if( length(model)==0L ) nmfModel(H=rank)
-			else{
-				model$H <- rank
-				do.call('nmfModel', model)
-			}
-		}else if( nrow(rank) == nrow(x) ){
+		if( nrow(rank) == nrow(x) ){
 			# rank is the initial value for the basis vectors
 			if( length(model)==0L ) nmfModel(W=rank)
 			else{
 				model$W <- rank
 				do.call('nmfModel', model)
 			}
-		}else
+		}else if( ncol(rank) == ncol(x) ){
+            # rank is the initial value for the mixture coefficients
+            if( length(model)==0L ) nmfModel(H=rank)
+            else{
+                model$H <- rank
+                do.call('nmfModel', model)
+            }
+        }else
 			stop("nmf - Invalid argument `rank`: matrix dimensions [",str_out(dim(x),sep=' x '),"]"
 				, " are incompatible with the target matrix [", str_out(dim(x),sep=' x '),"].\n"
 				, "  When `rank` is a matrix it must have the same number of rows or columns as the target matrix `x`.")
@@ -931,6 +976,10 @@ checkErrors <- function(object, element=NULL){
 #' the computation cannot be performed in parallel or with the specified number 
 #' of processors.}
 #' 
+#' \item{shared.memory - m}{ toggle usage of shared memory (requires the 
+#' \pkg{synchronicity} package).
+#' Default is as defined by \code{nmf.getOption('shared.memory')}.}
+#' 
 #' \item{restore.seed - r}{ deprecated option since version 0.5.99.
 #' Will throw a warning if used.}
 #' 
@@ -1148,7 +1197,7 @@ function(x, rank, method
 				, k='keep.all', r='restore.seed', f='dry.run'
 				, g='garbage.collect'
 				, c='cleanup', S='simplifyCB'
-				, R='RNGstream'))
+				, R='RNGstream', m='shared.memory'))
 	}
 	
 	# get seeding method from the strategy's defaults if needed
@@ -1204,6 +1253,8 @@ function(x, rank, method
 	
 	# keep results from all runs?
 	keep.all <- .options$keep.all %||% FALSE
+    # shared memory?
+    shared.memory <- if( !is.null(.options$shared.memory) ) .options$shared.memory else nmf.getOption('shared.memory')
 	# use RNG stream
 	.options$RNGstream <- .options$RNGstream %||% TRUE
 	
@@ -1270,7 +1321,7 @@ function(x, rank, method
 	}, add=TRUE)
 
 	# Set debug/verbosity option just for the time of the run
-	old.opt <- nmf.options(debug=debug, verbose=verbose);
+	old.opt <- nmf.options(debug=debug, verbose=verbose, shared.memory = shared.memory);
 	on.exit({
 		if( verbose > 2 ) message("# Restoring NMF options ... ", appendLF=FALSE)
 		nmf.options(old.opt)
@@ -1466,6 +1517,15 @@ function(x, rank, method
 				## 2. RUN
 				# ensure that the package NMF is in each worker's search path
 				.packages <- setupLibPaths('NMF', verbose>3)
+                
+                # export all packages that contribute to NMF registries, 
+                # e.g., algorithms or seeding methods.
+                # This is important so that these can be found in worker nodes
+                # for non-fork clusters.
+                if( !is.null(contribs <- registryContributors(package = 'NMF')) ){
+                    .packages <- c(.packages, contribs)
+                }
+                
 				# export dev environment if in dev mode 
 #				.export <- if( isDevNamespace('NMF') && !is.doSEQ() ) ls(asNamespace('NMF'))
 				
@@ -1619,6 +1679,7 @@ function(x, rank, method
 					res
 				}				
 				## END_FOREACH_LOOP
+				
 				if( verbose && !debug ){
 					if( verbose >= 2 ) cat(" ... DONE\n")
 					else{
@@ -1788,7 +1849,7 @@ function(x, rank, method
 						else if( verbose )
 							cat('%')
 						
-						gc(verbose= .MODE_SEQ && verbose > 3)
+						gc(verbose = verbose > 3)
 					}
 					
 					if( verbose > 1 ) cat("## DONE\n")
@@ -1882,9 +1943,11 @@ function(x, rank, method
 	
 	# CHECK PARAMETERS:	
 	# test for negative values in x only if the method is not mixed
-	if( !is.mixed(method) && min(x) < 0 ) fstop('Input matrix ', substitute(x),' contains some negative entries.');
+	if( !is.mixed(method) && min(x, na.rm = TRUE) < 0 )
+        fstop('Input matrix ', substitute(x),' contains some negative entries.');
 	# test if one row contains only zero entries
-	if( min(rowSums(x)) == 0) fstop('Input matrix ', substitute(x),' contains at least one null row.');	
+    if( min(rowSums(x, na.rm = TRUE), na.rm = TRUE) == 0 )
+        fstop('Input matrix ', substitute(x),' contains at least one null or NA-filled row.');	
 
 	# a priori the parameters for the run are all the one in '...'
 	# => expand with the strategy's defaults (e.g., maxIter)
@@ -1902,7 +1965,7 @@ function(x, rank, method
 			seed <- fit(seed)
 		
 		# Wrap up the seed into a NMFfit object
-		seed <- NMFfit(fit=seed, seed='none')
+		seed <- NMFfit(fit=seed, seed='NMF')
 	}
 	else if( !inherits(seed, 'NMFfit') ){
 		
@@ -2542,25 +2605,24 @@ setMethod('seed', signature(x='ANY', model='numeric', method='NMFSeed'),
 #' 
 #' @export
 #' @examples
-#' 
+#'
+#' if( !isCHECK() ){
+#'  
 #' set.seed(123456)
 #' n <- 50; r <- 3; m <- 20
 #' V <- syntheticNMF(n, r, m)
 #' 
 #' # Use a seed that will be set before each first run
-#' \dontrun{
 #' res <- nmfEstimateRank(V, seq(2,5), method='brunet', nrun=10, seed=123456)
 #' # or equivalently
 #' res <- nmf(V, seq(2,5), method='brunet', nrun=10, seed=123456)
-#' }
 #' 
 #' # plot all the measures
-#' \dontrun{plot(res)}
+#' plot(res)
 #' # or only one: e.g. the cophenetic correlation coefficient
-#' \dontrun{plot(res, 'cophenetic')}
+#' plot(res, 'cophenetic')
 #' 
 #' # run same estimation on randomized data
-#' \dontrun{
 #' rV <- randomize(V)
 #' rand <- nmfEstimateRank(rV, seq(2,5), method='brunet', nrun=10, seed=123456)
 #' plot(res, rand)
@@ -2701,121 +2763,136 @@ nmfEstimateRank <- function(x, range, method=nmf.getOption('default.algorithm')
 	
 }
 
-#' @param na.rm single logical that specifies if the rank for which the
-#' measures are NA values should be removed from the graph or not (default to
-#' \code{FALSE}).  This is useful when plotting results which include NAs due
-#' to error during the estimation process. See argument \code{stop} for
-#' \code{nmfEstimateRank}.
+#' @S3method summary NMF.rank
+summary.NMF.rank <- function(object, ...){
+	s <- summary(new('NMFList', object$fit), ...)
+	# NB: sort measures in the same order as required in ...
+	i <- which(!names(s) %in% names(object$measures))
+	cbind(s[, i], object$measures[match(object$measures$rank, s$rank), ])
+}
+
+
+#' \code{plot.NMF.rank} plots the result of rank estimation survey.
+#' 
+#' In the plot generated by \code{plot.NMF.rank}, each curve represents a 
+#' summary measure over the range of ranks in the survey.
+#' The colours correspond to the type of data to which the measure is related:
+#' coefficient matrix, basis component matrix, best fit, or consensus matrix. 
+#' 
 #' @param y reference object of class \code{NMF.rank}, as returned by
 #' function \code{nmfEstimateRank}. 
 #' The measures contained in \code{y} are used and plotted as a reference.
 #' It is typically used to plot results obtained from randomized data.  
 #' The associated curves are drawn in \emph{red} (and \emph{pink}), 
 #' while those from \code{x} are drawn in \emph{blue} (and \emph{green}).
-#' @param what a \code{character} string that partially matches one of the
-#' following item: \sQuote{all}, \sQuote{cophenetic}, \sQuote{rss},
-#' \sQuote{residuals} , \sQuote{dispersion}.  
+#' @param what a \code{character} vector whose elements partially match 
+#' one of the following item, which correspond to the measures computed
+#' by \code{\link{summary}} on each -- multi-run -- NMF result: 
+#' \sQuote{all}, \sQuote{cophenetic}, \sQuote{rss},
+#' \sQuote{residuals}, \sQuote{dispersion}, \sQuote{evar}, 
+#' \sQuote{silhouette} (and more specific *.coef, *.basis, *.consensus), 
+#' \sQuote{sparseness} (and more specific *.coef, *.basis).
 #' It specifies which measure must be plotted (\code{what='all'} plots 
 #' all the measures).
+#' @param na.rm single logical that specifies if the rank for which the
+#' measures are NA values should be removed from the graph or not (default to
+#' \code{FALSE}).  This is useful when plotting results which include NAs due
+#' to error during the estimation process. See argument \code{stop} for
+#' \code{nmfEstimateRank}.
+#' @param xname,yname legend labels for the curves corresponding to measures from 
+#' \code{x} and \code{y} respectively 
+#' @param xlab x-axis label
+#' @param ylab y-axis label
+#' @param main main title
 #' 
 #' @S3method plot NMF.rank
 #' @rdname nmfEstimateRank
+#' @import ggplot2
+#' @import reshape2
 plot.NMF.rank <- function(x, y=NULL, what=c('all', 'cophenetic', 'rss', 'residuals'
 									, 'dispersion', 'evar', 'sparseness'
-									, 'sparseness.basis', 'sparseness.coef')
-						, na.rm=FALSE, ... ){
+									, 'sparseness.basis', 'sparseness.coef'
+                                    , 'silhouette'
+                                    , 'silhouette.coef', 'silhouette.basis'
+                                    , 'silhouette.consensus')
+						, na.rm=FALSE
+                        , xname = 'x'
+                        , yname = 'y'
+                        , xlab = 'Factorization rank'
+                        , ylab = ''
+                        , main = 'NMF rank survey'
+                        , ... ){
 
 	
+    # trick for convenience 
 	if( is.character(y) && missing(what) ){
 		what <- y
 		y <- NULL
 	}
-	ref <- y
 	
-	# little trick not to display a title when it is not needed
-	if( !exists('.NMF.rank.plot.notitle', parent.frame()) ){
-		.NMF.rank.plot.notitle <- FALSE
-	}
-	else .NMF.rank.plot.notitle <- TRUE
-	
-	what <- match.arg(what)	
-	if( what == 'all' ){
-		opar <- par(mfrow=c(2,3), oma=c(0,0,3,0))
-		on.exit( par(opar), add=TRUE)
-		sapply(c('cophenetic', 'rss', 'residuals'
-				, 'dispersion', 'evar', 'sparseness'),
-				function(w, ...){
-					.NMF.rank.plot.notitle <- TRUE
-					plot(x, ref, w, na.rm, ...) 
-				}
-		)
-		title("NMF rank estimation", outer=TRUE)
-		return(invisible())
-	}
-	
-	measures <- x$measures
-	iwhat <- grep(paste('^',what,sep=''), colnames(measures))
-	
-	# remove NA values if required
-	if( na.rm )
-		measures <- measures[ apply(measures, 1, function(row) !any(is.na(row[iwhat]))), ]
-	
-	vals <- measures[,iwhat, drop=FALSE]
-	x <- as.numeric(measures$rank)
-	xlim <- range(x)
-	
-	vals.ref <- NULL
-	xref <- NULL
-	if( !missing(ref) && is(ref, 'NMF.rank') ){
-		
-		# remove NA values if required
-		if( na.rm )
-			ref$measures <- ref$measures[ apply(ref$measures, 1, function(row) !any(is.na(row[iwhat]))), ]
-			
-		xref <- as.numeric(ref$measures$rank)
-		xlim <- range(xlim, xref)
-		vals.ref <- ref$measures[,iwhat, drop=FALSE]
-	}
-	
-	# compute the ylim from main and ref values
-	ylim <- range(vals, na.rm=TRUE)
-	if( !is.null(vals.ref) )
-		ylim <- range(ylim, vals.ref, na.rm=TRUE)
-	
-	# detect if the values should be between 0 and 1
-	#if( all(ylim >=0 & ylim <= 1) )
-	#	ylim <- c(0,1)
-
-	# retreive the graphical parameters and match them to the sub-sequent call to 'plot.default'
-	graphical.params <- list(...)
-	names(graphical.params) <- .match.call.args(names(graphical.params), 'plot.default', call='NMF::plot.NMF.rank')
-
-	# set default graphical parameters for type 'consensus'
-	graphical.params <- .set.list.defaults(graphical.params
-			, main=paste(if(!.NMF.rank.plot.notitle) "NMF rank estimation\n", "-", what, '-')
-			, ylab=paste('Quality measure:', what)
-			, xlab='Factorization rank'
-			, xlim=xlim, ylim = ylim
-	)
-	
-	#init the plot
-	do.call(plot, c(list(x=NULL, axes=FALSE, frame=TRUE), graphical.params))
-	
-	opar <- par(lwd=2)
-	on.exit( par(opar), add=TRUE)
-	
-	lines(x, vals[,1], type = 'b', col='blue')
-	if( ncol(vals) > 1 ){
-		lines(x, vals[,2], type = 'b', col='green', pch=24)
-		legend('bottomright', legend=colnames(vals), pch=c(1, 24))
-	}
-	if( !is.null(vals.ref) ){
-		lines(xref, vals.ref[,1], type='b', col='red')
-		if( ncol(vals.ref) > 1 )
-			lines(xref, vals.ref[,2], type = 'b', col='pink', pch=24)
-	}
-	axis(1, at=unique(c(x,xref)), ...)
-	axis(2, ...)
-
+	what <- match.arg(what, several.ok=TRUE)
+    if( 'all' %in% what ){
+        what <- c('cophenetic', 'rss', 'residuals', 'dispersion', 'evar', 'sparseness', 'silhouette')
+    }
+    
+    .getvals <- function(x, xname){
+    	measures <- x$measures
+    	iwhat <- unlist(lapply(paste('^',what,sep=''), grep, colnames(measures)))
+    	
+    	# remove NA values if required
+    	if( na.rm )
+    		measures <- measures[ apply(measures, 1, function(row) !any(is.na(row[iwhat]))), ]
+    	
+    	vals <- measures[,iwhat, drop=FALSE]
+    	x <- as.numeric(measures$rank)
+    	xlim <- range(x)
+        
+        # define measure type
+        measure.type <- setNames(rep('Best fit', ncol(measures)), colnames(measures))
+        cons.measures <- c('silhouette.consensus', 'cophenetic', 'cpu.all')
+        measure.type[match(cons.measures, names(measure.type))] <- 'Consensus'
+        measure.type[grep("\\.coef$", names(measure.type))] <- 'Coefficients'
+        measure.type[grep("\\.basis$", names(measure.type))] <- 'Basis'
+        measure.type <- factor(measure.type)
+        
+        pdata <- melt(cbind(rank = x, vals), id.vars = 'rank')
+        # set measure type
+        pdata$Type <- measure.type[as.character(pdata$variable)]
+        # define measure groups
+        pdata$Measure <- gsub("^([^.]+).*", "\\1", pdata$variable)
+        pdata$Data <- xname
+        pdata
+    }
+    
+    pdata <- .getvals(x, xname)
+    
+    # add reference data
+    if( is(y, 'NMF.rank') ){
+        pdata.y <- .getvals(y, yname)
+        pdata <- rbind(pdata, pdata.y)
+    }
+    
+    p <- ggplot(pdata, aes_string(x = 'rank', y = 'value')) +
+            geom_line( aes_string(linetype = 'Data', colour = 'Type') ) +
+            geom_point(size = 2, aes_string(shape = 'Data', colour = 'Type') ) +
+            theme_bw() +
+            scale_x_continuous(xlab, breaks = unique(pdata$rank)) +
+            scale_y_continuous(ylab) +
+            ggtitle(main)
+    # remove legend if not necessary
+    if( !is(y, 'NMF.rank') ){
+        p <- p + scale_shape(guide = 'none') + scale_linetype(guide = 'none')
+    }
+    
+    # use fix set of colors
+    myColors <- brewer.pal(5,"Set1")
+    names(myColors) <- levels(pdata$Type)
+    p <- p + scale_colour_manual(name = "Measure type", values = myColors)
+    
+    # add facet
+    p <- p + facet_wrap( ~ Measure, scales = 'free')
+    
+    # return plot
+    p
 }
 

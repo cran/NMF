@@ -1,10 +1,10 @@
 %\VignetteIndexEntry{An introduction to the package NMF}
-%\VignetteDepends{utils,NMF,Biobase,bigmemory,xtable,RColorBrewer}
+%\VignetteDepends{utils,NMF,Biobase,bigmemory,xtable,RColorBrewer,knitr,bibtex}
 %\VignetteKeyword{math}
 %\VignetteCompiler{knitr}
+%\VignetteEngine{knitr::knitr}
  
 \documentclass[a4paper]{article}
-%\usepackage{Sweave}
 
 %\usepackage[OT1]{fontenc}
 \usepackage[colorlinks]{hyperref} % for hyperlinks
@@ -38,7 +38,6 @@ pkgmaker::latex_preamble()
 <<bibliofile, echo=FALSE, results='asis'>>=
 pkgmaker::latex_bibliography('NMF')
 @
-\bibliography{Rpackages}
 \newcommand{\citet}[1]{\textcite{#1}}
 \renewcommand{\cite}[1]{\parencite{#1}}
 \DefineBibliographyStrings{english}{%
@@ -63,6 +62,8 @@ pkgmaker::latex_bibliography('NMF')
 options(prompt=' ', width = 60)
 options(continue=' ')
 set.seed(123456)
+library(knitr)
+knit_hooks$set(try = pkgmaker::hook_try)
 @
 
 % use cleveref for automatic reference label formatting
@@ -102,6 +103,13 @@ If you use the package \nmfpack in your analysis and publications please cite:
 
 \bigskip
 \todo[inline, backgroundcolor=blue!10!white]{\fullcite{Rpackage:NMF}}
+
+Note that the \nmfpack includes several NMF algorithms, published by different
+authors.
+Please make sure to also cite the paper(s) associated with the algorithm(s)
+you used.
+Citations for those can be found in \cref{tab:algo} and in the dedicated help
+pages \code{?gedAlgorithm.<algorithm>}, e.g., \code{?gedAlgorithm.SNMF\_R}.
 
 \bigskip
 \paragraph{Installation:} The latest stable version of the package can be installed from any
@@ -1077,10 +1085,10 @@ my.algorithm <- function(x, seed, scale.factor=1){
 	# 2. use the absolute values of the first PCs for the metagenes
 	# Note: the factorization rank is stored in object 'start'	
 	factorization.rank <- nbasis(seed)
-	metagenes(fit(seed)) <- abs(pca$rotation[,1:factorization.rank])
+	basis(seed) <- abs(pca$rotation[,1:factorization.rank])
 	# use the rotated matrix to get the mixture coefficient
 	# use a scaling factor (just to illustrate the use of extra parameters)
-	metaprofiles(fit(seed)) <- t(abs(pca$x[,1:factorization.rank])) / scale.factor
+	coef(seed) <- t(abs(pca$x[,1:factorization.rank])) / scale.factor
 	
 	# return updated data
 	return(seed)
@@ -1092,7 +1100,7 @@ Here we apply the algorithm to some matrix \code{V} randomly generated:
 
 <<define_V>>=
 n <- 50; r <- 3; p <- 20
-V <-syntheticNMF(n, r, p, noise=TRUE)
+V <-syntheticNMF(n, r, p)
 @
 
 <<custom_algo_run>>=
@@ -1108,8 +1116,8 @@ If the algorithm is based on another distance measure, this one can be specified
 nmf(V, 3, my.algorithm, scale.factor=10, objective='KL')
 # based on custom distance metric
 nmf(V, 3, my.algorithm, scale.factor=10
-	, objective=function(x, target, ...){ 
-			( sum( (target-fitted(x))^4 ) )^{1/4} 
+	, objective=function(model, target, ...){
+            ( sum( (target-fitted(model))^4 ) )^{1/4} 
 		}
 )
 @
@@ -1136,12 +1144,12 @@ This will skip the sign check of the input data and let the custom algorithm per
  
 As an example, we reuse the previously defined custom algorithm\footnote{As it is defined here, the custom algorithm still returns nonnegative factors, which would not be desirable in a real example, as one would not be able to closely fit the negative entries.}:
 
-<<custom_algo_run_mixed>>=
+<<custom_algo_run_mixed, error = TRUE, try = TRUE>>=
 # put some negative input data 
 V.neg <- V; V.neg[1,] <- -1;
 
 # this generates an error
-nmf(V.neg, 3, my.algorithm, scale.factor=10)
+try( nmf(V.neg, 3, my.algorithm, scale.factor=10) )
 
 # this runs my.algorithm without error
 nmf(V.neg, 3, my.algorithm, mixed=TRUE, scale.factor=10)
@@ -1175,10 +1183,10 @@ my.algorithm.offset <- function(x, seed, scale.factor=1){
 	# 2. use the absolute values of the first PCs for the metagenes
 	# Note: the factorization rank is stored in object 'start'	
 	factorization.rank <- nbasis(data.model)
-	metagenes(data.model) <- abs(pca$rotation[,1:factorization.rank])	
+	basis(data.model) <- abs(pca$rotation[,1:factorization.rank])	
 	# use the rotated matrix to get the mixture coefficient
 	# use a scaling factor (just to illustrate the use of extra parameters)
-	metaprofiles(data.model) <- t(abs(pca$x[,1:factorization.rank])) / scale.factor
+	coef(data.model) <- t(abs(pca$x[,1:factorization.rank])) / scale.factor
 	
 	# 3. Compute the offset as the mean expression
 	data.model@offset <- rowMeans(x)	
@@ -1209,10 +1217,10 @@ my.seeding.method <- function(model, target){
 	
 	# use only the largest columns for W
 	w.cols <- apply(target, 2, function(x) sqrt(sum(x^2)))
-	metagenes(model) <- target[,order(w.cols)[1:nbasis(model)]]
+	basis(model) <- target[,order(w.cols)[1:nbasis(model)]]
 	
 	# initialize H randomly
-	metaprofiles(model) <- matrix(runif(nbasis(model)*ncol(target))
+	coef(model) <- matrix(runif(nbasis(model)*ncol(target))
 						, nbasis(model), ncol(target))
 
 	# return updated object
@@ -1245,7 +1253,7 @@ nmf.options()
 Currently the following options are available:
 
 <<nmf_options, echo=FALSE, results='asis'>>=
-pkgmaker:::RdSection2latex('nmf.options', package='NMF')
+RdSection2latex('nmf.options', package='NMF')
 @
 
 The default/current values of each options can be displayed using the function

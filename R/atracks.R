@@ -129,8 +129,10 @@ alength <- function(x, default.margin){
 
 test.match_atrack <- function(){
 	
+	requireNamespace('RUnit')
 	na <- paste("name_", 1:10, sep='') 
 	mat <- as.matrix(setNames(1:10, na))
+	checkEquals <- RUnit::checkEquals
 	
 	.check <- function(x){		
 		cat(class(x), " [", str_out(x, Inf, use.names=TRUE), "] :\n")

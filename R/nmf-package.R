@@ -62,7 +62,8 @@ NA
 
 devnmf <- function(){
 	.LOCAL_PKG_NAME <- 'NMF'
-	load_all(.LOCAL_PKG_NAME)
+	requireNamespace('devtools')
+	devtools::load_all(.LOCAL_PKG_NAME)
 	compile_src(.LOCAL_PKG_NAME)
 }
 

@@ -1782,7 +1782,9 @@ aheatmap = function(x
 	
 	# convert ExpressionSet into 
 	if( is(x, 'ExpressionSet') ){
-		library(Biobase)
+	
+		requireNamespace('Biobase')
+		#library(Biobase)
 		if( isTRUE(annCol) ) annCol <- atrack(x)
 		x <- Biobase::exprs(x)
 	}

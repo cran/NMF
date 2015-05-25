@@ -44,7 +44,8 @@
 #' }
 nmfReport <- function(x, rank, method, colClass = NULL, ..., output = NULL, template = NULL){
 	
-	library(knitr)
+	requireNamespace('knitr')
+	#library(knitr)
 	if( is.null(template) )
 		template <- system.file('scripts/report.Rmd', package = 'NMF')
 	x <- force(x)
@@ -60,7 +61,7 @@ nmfReport <- function(x, rank, method, colClass = NULL, ..., output = NULL, temp
 	}
     accuracy <- NA
     res <- NA
-	knit2html(template)
+	knitr::knit2html(template)
 	res <- list(fits = res, accuracy = accuracy)
 	saveRDS(res, file = 'report_results.rds')
 	invisible(res)

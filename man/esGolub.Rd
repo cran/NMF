@@ -19,7 +19,7 @@ There is no such information for the AML samples. It is a
   \url{http://www.broadinstitute.org/publications/broad872}
 
   Original data from Golub et al.:\cr
-  \url{http://www-genome.wi.mit.edu/mpr/data_set_ALL_AML.html}
+  \code{http://www-genome.wi.mit.edu/mpr/data_set_ALL_AML.html}
 }
 \description{
   This data comes originally from the gene expression data

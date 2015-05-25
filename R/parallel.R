@@ -913,8 +913,10 @@ NULL
 ts_eval <- function(mutex = synchronicity::boost.mutex(), verbose=FALSE){
 	
 	
-	library(bigmemory)
-	library(synchronicity)
+	requireNamespace('bigmemory')
+	#library(bigmemory)
+	requireNamespace('synchronicity')
+	#library(synchronicity)
 	# describe mutex if necessary
 	.MUTEX_DESC <- 
 			if( is(mutex, 'boost.mutex') ) synchronicity::describe(mutex)
@@ -925,8 +927,10 @@ ts_eval <- function(mutex = synchronicity::boost.mutex(), verbose=FALSE){
 		
 		# load packages once
 		if( loadpkg ){
-			library(bigmemory)
-			library(synchronicity)
+			requireNamespace('bigmemory')
+			#library(bigmemory)
+			requireNamespace('synchronicity')
+			#library(synchronicity)
 			loadpkg <<- FALSE
 		}
 		MUTEX <- synchronicity::attach.mutex(.MUTEX_DESC)
@@ -996,7 +1000,8 @@ gVariable <- function(init, shared=FALSE){
 	if( shared ){ # use bigmemory shared matrices
 		if( !is.matrix(init) )
 			init <- as.matrix(init)
-		library(bigmemory)
+		requireNamespace('bigmemory')
+		#library(bigmemory)
 		DATA <- bigmemory::as.big.matrix(init, type='double', shared=TRUE)
 		DATA_DESC <- bigmemory::describe(DATA)
 	}else{ # use variables assigned to .GlobalEnv
@@ -1009,7 +1014,8 @@ gVariable <- function(init, shared=FALSE){
 		
 		# load packages once
 		if( shared && .loadpkg ){
-			library(bigmemory)
+			requireNamespace('bigmemory')
+			#library(bigmemory)
 			.loadpkg <<- FALSE	
 		}
 		
@@ -1069,9 +1075,11 @@ setupLibPaths <- function(pkg='NMF', verbose=FALSE){
 		times(getDoParWorkers()) %dopar% {
 			capture.output({
 				suppressMessages({
-					library(devtools)
-					library(bigmemory)
-					load_all(p)
+					requireNamespace('devtools')
+					#library(devtools)
+					requireNamespace('bigmemory')
+					#library(bigmemory)
+					devtools::load_all(p)
 				})
 			})
 		}

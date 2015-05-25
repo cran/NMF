@@ -72,7 +72,8 @@ setPackageExtra('install.packages', 'Biobase', pkgs='Biobase')
 if( pkgmaker::require.quiet('Biobase') ){
 
 	# load Biobase package
-	library(Biobase)
+	requireNamespace('Biobase')
+	#library(Biobase)
 
 	#' Performs NMF on an ExpressionSet: the target matrix is the expression matrix \code{exprs(x)}.
 	#' @rdname bioc

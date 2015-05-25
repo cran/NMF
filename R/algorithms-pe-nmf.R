@@ -10,7 +10,7 @@ NULL
 ###% The algorithm minimizes the Frobenius norm, with two regularization terms
 ###% (one for each matrix factor) parametrized by two parameters:
 ###% 
-###% min_{W,H} 1/2 ||V - WH||² 
+###% min_{W,H} 1/2 ||V - WH||^2
 ###% 			+ alpha \sum_{i<>j} W_i^T W_j 
 ###% 			+ beta \sum_{i,j} H_{ij}
 ###% 

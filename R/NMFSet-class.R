@@ -41,14 +41,9 @@ NULL
 #' resm <- nmf(V, 3, nrun=3, maxIter=3L)
 #' isNMFfit(resm)
 #' 
-#' # multiple runs - keeping all fits
-#' resM <- nmf(V, 3, nrun=3, .opt='k', maxIter=3L) 
-#' isNMFfit(resM)
-#' 
 #' # with a list of results
-#' isNMFfit(list(res, resm, resM, 'not a result'))
-#' isNMFfit(list(res, list(resm, resM), 'not a result')) # list of list
-#' isNMFfit(list(res, resm, resM, 'not a result'), recursive=FALSE)
+#' isNMFfit(list(res, resm, 'not a result'))
+#' isNMFfit(list(res, resm, 'not a result'), recursive=FALSE)
 #' 	 
 isNMFfit <- function(object, recursive=TRUE){
 	res <- is(object, 'NMFfit') || is(object, 'NMFfitX')
@@ -219,10 +214,6 @@ as.NMFList <- function(..., unlist=FALSE){
 #' 
 #' # plot a heatmap of the consensus matrix
 #' \dontrun{ consensusmap(res) }
-#' 
-#' # perform multiple runs of one algorithm (keep all the fits)
-#' res <- nmf(V, 3, nrun=3, .options='k')
-#' res
 #'  
 setClass('NMFfitX'
 		, representation(
@@ -1074,7 +1065,8 @@ setMethod('consensus', signature(object='NMFfitXn'),
 	}
 )
 
-#' @S3method plot NMF.consensus 
+#' @method plot NMF.consensus
+#' @export 
 plot.NMF.consensus <- function(x, ...){
 	consensusmap(x, ...)
 }

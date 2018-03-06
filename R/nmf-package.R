@@ -38,7 +38,7 @@ NULL
 #' @name NMF-package
 #' @aliases NMF
 #' @docType package
-#' @useDynLib NMF
+#' @useDynLib NMF, .registration = TRUE
 #' 
 #' @bibliography ~/Documents/articles/library.bib
 #' @references

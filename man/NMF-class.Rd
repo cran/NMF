@@ -202,7 +202,7 @@
   dimension names, or a 1, 2 or 3-length list providing
   names at least for the rows of the basis matrix.
 
-  See \code{\link{dimnames<-,NMF-method}} for more details.
+  See \code{\link{dimnames}} for more details.
   }
 
   \item{.DollarNames}{\code{signature(x = "NMF")}:

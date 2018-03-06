@@ -5,7 +5,7 @@
 ###############################################################################
 
 #' @import RColorBrewer
-#' @import colorspace
+#' @importFrom colorspace sequential_hcl
 #' @import grDevices
 NULL
 

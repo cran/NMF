@@ -132,14 +132,9 @@ isNMFfit(res)
 resm <- nmf(V, 3, nrun=3, maxIter=3L)
 isNMFfit(resm)
 
-# multiple runs - keeping all fits
-resM <- nmf(V, 3, nrun=3, .opt='k', maxIter=3L)
-isNMFfit(resM)
-
 # with a list of results
-isNMFfit(list(res, resm, resM, 'not a result'))
-isNMFfit(list(res, list(resm, resM), 'not a result')) # list of list
-isNMFfit(list(res, resm, resM, 'not a result'), recursive=FALSE)
+isNMFfit(list(res, resm, 'not a result'))
+isNMFfit(list(res, resm, 'not a result'), recursive=FALSE)
 }
 \seealso{
   \code{\linkS4class{NMFfit}},

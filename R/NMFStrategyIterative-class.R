@@ -436,7 +436,7 @@ setMethod('run', signature(object='NMFStrategyIterativeX', y='matrix', x='NMFfit
 })
 
 
-#' @S3method nmfFormals NMFStrategyIterative
+#' @export
 nmfFormals.NMFStrategyIterative <- function(x, runtime=FALSE, ...){
 	
 	strategy <- xifyStrategy(x)

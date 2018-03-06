@@ -177,7 +177,7 @@ setClass('NMF'
 #' @return the target matrix estimate as fitted by the model \code{object} 
 #' @export
 setGeneric('fitted', package='stats')
-#' @template VirtualNMF  
+ 
 setMethod('fitted', signature(object='NMF'),
 		function(object, ...){
 			stop("NMF::fitted is a pure virtual method of interface 'NMF'. It should be overloaded in class '", class(object),"'.")
@@ -227,7 +227,6 @@ setMethod('basis', signature(object='ANY'),
 #' This is relevant only for formula-based NMF models that include fixed basis or 
 #' coefficient terms.
 #' 
-#' @inline
 setMethod('basis', signature(object='NMF'),
 	function(object, all=TRUE, ...){
 		if( all || !length(i <- ibterms(object)) ){
@@ -255,7 +254,7 @@ setMethod('basis', signature(object='NMF'),
 #' @rdname basis-coef-methods
 #' @export
 setGeneric('.basis', function(object, ...) standardGeneric('.basis') )
-#' @template VirtualNMF
+
 setMethod('.basis', signature(object='NMF'),
 	function(object, ...){
 		stop("NMF::.basis is a pure virtual method of interface 'NMF'. It should be overloaded in class '", class(object),"'.")
@@ -264,7 +263,7 @@ setMethod('.basis', signature(object='NMF'),
 
 #' @export
 #' @rdname basis-coef-methods
-#' @inline
+
 setGeneric('basis<-', function(object, ..., value) standardGeneric('basis<-') )
 #' Default methods that calls \code{.basis<-} and check the validity of the 
 #' updated object. 
@@ -312,7 +311,7 @@ setReplaceMethod('basis', signature(object='NMF', value='ANY'),
 #' @rdname basis-coef-methods
 #' @export
 setGeneric('.basis<-', function(object, value) standardGeneric('.basis<-') )
-#' @template VirtualNMF
+
 setReplaceMethod('.basis', signature(object='NMF', value='matrix'), 
 	function(object, value){ 
 		stop("NMF::.basis<- is a pure virtual method of interface 'NMF'. It should be overloaded in class '", class(object),"'.")
@@ -353,7 +352,7 @@ setMethod('loadings', 'NMF', function(x) basis(x) )
 #' @rdname basis-coef-methods
 #' @export
 setGeneric('coef', package='stats')
-#' @inline
+
 setMethod('coef', 'NMF',
 	function(object, all=TRUE, ...){
 		
@@ -375,7 +374,7 @@ setMethod('coef', 'NMF',
 #' @rdname basis-coef-methods
 #' @export
 setGeneric('.coef', function(object, ...) standardGeneric('.coef'))
-#' @template VirtualNMF
+
 setMethod('.coef', signature(object='NMF'),
 	function(object, ...){
 		stop("NMF::.coef is a pure virtual method of interface 'NMF'. It should be overloaded in class '", class(object),"'.")
@@ -384,7 +383,7 @@ setMethod('.coef', signature(object='NMF'),
 
 #' @export
 #' @rdname basis-coef-methods
-#' @inline
+
 setGeneric('coef<-', function(object, ..., value) standardGeneric('coef<-') )
 #' Default methods that calls \code{.coef<-} and check the validity of the 
 #' updated object. 
@@ -426,7 +425,7 @@ setReplaceMethod('coef', signature(object='NMF', value='ANY'),
 #' @export
 #' @rdname basis-coef-methods
 setGeneric('.coef<-', function(object, value) standardGeneric('.coef<-') )
-#' @template VirtualNMF
+
 setReplaceMethod('.coef', signature(object='NMF', value='matrix'), 
 	function(object, value){ 
 		stop("NMF::.coef<- is a pure virtual method of interface 'NMF'. It should be overloaded in class '", class(object),"'.")
@@ -440,7 +439,7 @@ setReplaceMethod('.coef', signature(object='NMF', value='matrix'),
 #' @rdname basis-coef-methods
 setGeneric('coefficients', package='stats')
 #' Alias to \code{coef,NMF}, therefore also pure virtual.
-#' @inline
+
 setMethod('coefficients', signature(object='NMF'), selectMethod('coef', 'NMF'))
 
 #' @description \code{scoef} is similar to \code{coef}, but returns the mixture 
@@ -461,13 +460,13 @@ setMethod('coefficients', signature(object='NMF'), selectMethod('coef', 'NMF'))
 #' scoef(x, 100)
 #' 
 setGeneric('scoef', function(object, ...) standardGeneric('scoef') )
-#' @inline
+
 setMethod('scoef', 'NMF',
 	function(object, scale=1){
 		sweep(coef(object), 2L, colSums(coef(object)) / scale, '/')
 	}
 )
-#' @inline
+
 setMethod('scoef', 'matrix',
 	function(object, scale=1){
 		sweep(object, 2L, colSums(object) / scale, '/')
@@ -508,7 +507,7 @@ unit.test(scoef, {
 #' 
 #' @return an NMF object
 #' 
-#' @S3method scale NMF
+#' @export
 #' @examples
 #' 
 #' # random 3-rank 10x5 NMF model
@@ -640,7 +639,6 @@ unit.test("scale", {
 #' @return An NMF model, i.e. an object that inherits from class 
 #' \code{\linkS4class{NMF}}.
 #' 
-#' @inline
 #' @export
 #' @seealso \code{\link{rmatrix}}
 #' @family NMF-interface
@@ -933,6 +931,7 @@ setGeneric('basisnames', function(x, ...) standardGeneric('basisnames') )
 #' \code{x}, using the \code{basis} method.
 #' 
 #' For NMF objects these also correspond to the row names of the coefficient matrix.
+#' @rdname dimnames
 setMethod('basisnames', signature(x='ANY'), 
 	function(x)
 	{
@@ -949,12 +948,17 @@ setMethod('basisnames', signature(x='ANY'),
 #' Its default method should work for any object, that has suitable \code{basis<-} 
 #' and \code{coef<-} methods method defined for its class.
 #' 
+#' @param x an object with suitable \code{basis} and \code{coef} methods, such 
+#' as an object that inherit from \code{\linkS4class{NMF}}.
+#' @param ...  extra argument to allow extension.
+#' @param value a character vector with  the names of the basis components to be set
 #' @export
-#' @inline
 #' @rdname dimnames 
 setGeneric('basisnames<-', function(x, ..., value) standardGeneric('basisnames<-') )
 #' Default method which sets, respectively, the row and the column names of the basis 
 #' matrix and coefficient matrix of \code{x} to \code{value}.
+#' @export
+#' @rdname dimnames 
 setReplaceMethod('basisnames', 'ANY', 
 	function(x, ..., value)
 	{
@@ -970,9 +974,6 @@ setReplaceMethod('basisnames', 'ANY',
 #' or a 3-length list containing the row names of the basis matrix,
 #' the column names of the mixture coefficient matrix, and the column names of
 #' the basis matrix (i.e. the names of the basis components).
-#' 
-#' @param value a character vector, or \code{NULL} or, in the case of
-#' \code{dimnames<-}, a list 2 or 3-length list of character vectors.
 #'
 #' @rdname dimnames
 #' @export
@@ -988,7 +989,7 @@ setMethod('dimnames', 'NMF',
 		if( all(sapply(l, is.null)) ) NULL else l
 	}
 )
-#' sets the dimension names of the NMF model \code{x}.  
+#' Sets the dimension names of the NMF model \code{x}.  
 #' 
 #' \code{value} can be \code{NULL} which resets all dimension names, or a 
 #' 1, 2 or 3-length list providing names at least for the rows of the basis 
@@ -1235,7 +1236,8 @@ setReplaceMethod('$', 'NMF',
 #' @importFrom utils .DollarNames
 setGeneric('.DollarNames', package='utils')
 
-#' @S3method .DollarNames NMF
+#' @method .DollarNames NMF
+#' @export
 .DollarNames.NMF <- function(x, pattern = "") grep(pattern, names(misc(x)), value=TRUE)
 
 #' Auto-completion for \code{\linkS4class{NMF}} objects
@@ -1938,7 +1940,6 @@ nmfApply <- function(X, MARGIN, FUN, ..., simplify = TRUE, USE.NAMES = TRUE){
 #' @family stats Methods for the Interface Defined in Package stats
 #' 
 #' @cite Brunet2004,Pascual-Montano2006
-#' @inline
 #' @export
 setGeneric('predict', package='stats')
 
@@ -2179,9 +2180,8 @@ setMethod('connectivity', 'numeric',
 )
 #' Computes the connectivity matrix for an NMF model, for which cluster 
 #' membership is given by the most contributing basis component in each sample.
-#' See \code{\link{predict,NMF-method}}.
+#' See \code{\link{predict}}.
 #'
-#' @inline 
 #' @param no.attrib a logical that indicates if attributes containing information 
 #' about the NMF model should be attached to the result (\code{TRUE}) or not
 #' (\code{FALSE}). 
@@ -2230,7 +2230,6 @@ unit.test(connectivity,{
 #' in \code{evar} calls.
 #' 
 #' @return a single numeric value 
-#' @inline
 #' @export
 #' 
 setGeneric('rss', function(object, ...) standardGeneric('rss'))
@@ -2260,7 +2259,7 @@ setMethod('rss', 'matrix',
 		# use the expression matrix if necessary
 		if( inherits(target, 'ExpressionSet') ){
 			# requires Biobase
-			if( !require.quiet(Biobase) ) 
+			if( !require.quiet("Biobase") ) 
 				stop("NMF::rss - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
 			
 			target <- Biobase::exprs(target)
@@ -2338,7 +2337,6 @@ unit.test(rss, {
 #' minimizing the RSS (i.e. maximizing the explained variance), while others do not.
 #' 
 #' @rdname rss
-#' @inline
 #' @export
 #' 
 setGeneric('evar', function(object, ...) standardGeneric('evar'))
@@ -2355,7 +2353,7 @@ setMethod('evar', 'ANY',
 		# use the expression matrix if necessary
 		if( inherits(target, 'ExpressionSet') ){
 			# requires Biobase
-			if( !require.quiet(Biobase) ) 
+			if( !require.quiet("Biobase") ) 
 				stop("NMF::evar - The 'Biobase' package is required to extract expression data from 'ExpressionSet' objects [see ?'nmf-bioc']")
 			
 			target <- Biobase::exprs(target)
@@ -2389,7 +2387,6 @@ setGeneric('deviance', package='stats')
 #' that effectively computes the deviance.
 #' @param ... extra parameters passed to the objective function.
 #' 
-#' @inline 
 #' @family stats
 #' 
 setMethod('deviance', 'NMF', 
@@ -2500,7 +2497,6 @@ setGeneric('nmf.equal', function(x, y, ...) standardGeneric('nmf.equal') )
 #' 
 #' Arguments in \code{...} are used only when \code{identical=FALSE} and are 
 #' passed to \code{all.equal}.
-#' @inline
 setMethod('nmf.equal', signature(x='NMF', y='NMF'), 
 		function(x, y, identical=TRUE, ...){
 			

@@ -7,7 +7,6 @@
 #' @include NMFStrategy-class.R
 #' @include NMFStrategyFunction-class.R
 #' @include NMFStrategyIterative-class.R
-#' @include NMFStrategyOctave-class.R
 NULL
 
 # create sub-registry for NMF algorithm

@@ -35,9 +35,8 @@ coefmap(res)
   Renaud Gaujoux \email{renaud@cbio.uct.ac.za}
 }
 \references{
-  \url{http://cran.r-project.org/}
+  \url{https://cran.r-project.org/}
 
-  \url{http://nmf.r-forge.project.org}
 }
 \seealso{
   \code{\link{nmf}}

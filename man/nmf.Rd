@@ -306,7 +306,7 @@
   parallel or with the specified number of processors.}
 
   \item{shared.memory - m}{ toggle usage of shared memory
-  (requires the \pkg{synchronicity} package). Default is as
+  (requires the package \emph{synchronicity}). Default is as
   defined by \code{nmf.getOption('shared.memory')}.}
 
   \item{restore.seed - r}{ deprecated option since version

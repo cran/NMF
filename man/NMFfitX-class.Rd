@@ -177,10 +177,6 @@ res
 
 # plot a heatmap of the consensus matrix
 \dontrun{ consensusmap(res) }
-
-# perform multiple runs of one algorithm (keep all the fits)
-res <- nmf(V, 3, nrun=3, .options='k')
-res
 }
 \seealso{
   Other multipleNMF: \code{\link{NMFfitX1-class}},

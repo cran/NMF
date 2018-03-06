@@ -1,10 +1,8 @@
 \name{nmf_update.brunet_R}
-\alias{brunet_M-nmf}
 \alias{brunet-nmf}
 \alias{brunet_R-nmf}
 \alias{KL-nmf}
 \alias{nmfAlgorithm.brunet}
-\alias{nmfAlgorithm.brunet_M}
 \alias{nmfAlgorithm.brunet_R}
 \alias{nmfAlgorithm.KL}
 \alias{nmf_update.brunet}
@@ -48,8 +46,6 @@
     copy = FALSE, eps = .Machine$double.eps,
     stationary.th = .Machine$double.eps,
     check.interval = 5 * check.niter, check.niter = 10L)
-
-  nmfAlgorithm.brunet_M(..., object, y, x)
 }
 \arguments{
   \item{i}{current iteration number.}
@@ -97,11 +93,6 @@
 
   \item{maxIter}{maximum number of iterations to perform.}
 
-  \item{object}{an object computed using some algorithm, or
-  that describes an algorithm itself.}
-
-  \item{y}{data object, e.g. a target matrix}
-
   \item{stopconv}{number of iterations intervals over which
   the connectivity matrix must not change for stationarity
   to be achieved.}
@@ -143,9 +134,6 @@
   stationarity of the connectivity matrix
   \code{\link{nmf.stop.connectivity}} as used by
   \sQuote{brunet}.
-
-  \samp{ library(RcppOctave)
-  file.show(system.mfile('brunet.m', package='NMF')) }
 }
 \details{
   \code{nmf_update.brunet_R} implements in pure R a single

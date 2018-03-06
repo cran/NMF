@@ -2,10 +2,10 @@ Package: NMF
 Type: Package
 Title: Algorithms and Framework for Nonnegative Matrix Factorization
         (NMF)
-Version: 0.20.6
-Date: 2015-05-25
+Version: 0.21.0
+Date: 2018-02-18
 Author: Renaud Gaujoux, Cathal Seoighe
-Maintainer: Renaud Gaujoux <renaud@tx.technion.ac.il>
+Maintainer: Nicolas Sauwen <nicolas.sauwen@openanalytics.eu>
 Description: Provides a framework to perform Non-negative Matrix
     Factorization (NMF). The package implements a set of already published algorithms
     and seeding methods, and provides a framework to test, develop and plug
@@ -14,8 +14,6 @@ Description: Provides a framework to perform Non-negative Matrix
     parallel computations on multicore machines.
 License: GPL (>= 2)
 URL: http://renozao.github.io/NMF
-BugReports: http://github.com/renozao/NMF/issues
-SCM: github:renozao, r-forge
 LazyLoad: yes
 VignetteBuilder: knitr
 Depends: R (>= 3.0.0), methods, utils, pkgmaker (>= 0.20), registry,
@@ -23,24 +21,24 @@ Depends: R (>= 3.0.0), methods, utils, pkgmaker (>= 0.20), registry,
 Imports: graphics, stats, stringr (>= 1.0.0), digest, grid, grDevices,
         gridBase, colorspace, RColorBrewer, foreach, doParallel,
         ggplot2, reshape2
-Suggests: RcppOctave (>= 0.11), fastICA, doMPI, bigmemory (>= 4.2),
-        synchronicity, corpcor, xtable, devtools, knitr, bibtex, RUnit,
-        mail, Biobase
-Collate: 'rmatrix.R' 'nmf-package.R' 'utils.R' 'versions.R'
-        'algorithmic.R' 'options.R' 'grid.R' 'colorcode.R' 'atracks.R'
-        'aheatmap.R' 'NMF-class.R' 'transforms.R' 'Bioc-layer.R'
-        'NMFstd-class.R' 'NMFOffset-class.R' 'registry.R' 'heatmaps.R'
+Suggests: fastICA, doMPI, bigmemory (>= 4.2), synchronicity(>= 1.3.2),
+        corpcor, xtable, devtools, knitr, bibtex, RUnit, mail, Biobase
+Collate: 'colorcode.R' 'options.R' 'grid.R' 'atracks.R' 'aheatmap.R'
+        'algorithmic.R' 'nmf-package.R' 'rmatrix.R' 'utils.R'
+        'versions.R' 'NMF-class.R' 'transforms.R' 'Bioc-layer.R'
+        'NMFstd-class.R' 'NMFOffset-class.R' 'heatmaps.R'
         'NMFns-class.R' 'nmfModel.R' 'fixed-terms.R' 'NMFfit-class.R'
-        'NMFSet-class.R' 'NMFStrategy-class.R' 'NMFSeed-class.R'
-        'NMFStrategyFunction-class.R' 'NMFStrategyIterative-class.R'
-        'NMFStrategyOctave-class.R' 'NMFplots.R'
-        'registry-algorithms.R' 'algorithms-base.R'
-        'algorithms-brunet.R' 'algorithms-lnmf.R' 'algorithms-lsnmf.R'
-        'algorithms-pe-nmf.R' 'algorithms-siNMF.R' 'algorithms-snmf.R'
-        'data.R' 'extractFeatures.R' 'registry-seed.R' 'parallel.R'
-        'nmf.R' 'rnmf.R' 'run.R' 'seed-base.R' 'seed-ica.R'
-        'seed-nndsvd.R' 'setNMFClass.R' 'simulation.R' 'tests.R'
-Packaged: 2015-05-25 21:34:47 UTC; renaud
+        'NMFSet-class.R' 'NMFStrategy-class.R' 'registry.R'
+        'NMFSeed-class.R' 'NMFStrategyFunction-class.R'
+        'NMFStrategyIterative-class.R' 'NMFplots.R'
+        'registry-algorithms.R' 'algorithms-base.R' 'algorithms-lnmf.R'
+        'algorithms-lsnmf.R' 'algorithms-pe-nmf.R' 'algorithms-siNMF.R'
+        'algorithms-snmf.R' 'data.R' 'extractFeatures.R' 'parallel.R'
+        'registry-seed.R' 'nmf.R' 'rnmf.R' 'run.R' 'seed-base.R'
+        'seed-ica.R' 'seed-nndsvd.R' 'setNMFClass.R' 'simulation.R'
+        'tests.R'
+Packaged: 2018-03-06 09:53:11 UTC; nsauwen
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2015-05-26 08:12:33
+Date/Publication: 2018-03-06 16:35:36 UTC
+RoxygenNote: 6.0.1

@@ -19,8 +19,8 @@
 }
 \arguments{
   \item{mutex}{a mutex or a mutex descriptor. If missing, a
-  new mutex is created via the function
-  \code{\link[synchronicity]{boost.mutex}}.}
+  new mutex is created via the function \emph{boost.mutex} from 
+  the \emph{synchronicity} package.}
 
   \item{verbose}{a logical that indicates if messages
   should be printed when locking and unlocking the mutex.}
@@ -54,9 +54,9 @@
 
   \code{ts_eval} generates a thread safe version of
   \code{\link{eval}}. It uses boost mutexes provided by the
-  \code{\link[synchronicity]{synchronicity}} package. The
-  generated function has arguments \code{expr} and
-  \code{envir}, which are passed to \code{\link{eval}}.
+  \emph{synchronicity} package. The generated function has 
+  arguments \code{expr} and \code{envir}, which are passed 
+  to \code{\link{eval}}.
 
   \code{ts_tempfile} generates a \emph{unique} temporary
   filename that includes the name of the host machine

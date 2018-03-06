@@ -14,16 +14,5 @@ Commonly used benchmark data and visualization methods are provided to help in t
 ## Conclusions
 The NMF package helps realize the potential of Nonnegative Matrix Factorization, especially in bioinformatics, providing easy access to methods that have already yielded new insights in many applications.
 
-## Availability
-
-Documentation, source code and sample data are available from:
-
-* ![](img/r-icon.jpg) Latest stable release from CRAN: http://cran.r-project.org/package=NMF
-
-* Development versions: 
-	* ![](img/r-forge-icon.png) project: http://r-forge.r-project.org/projects/nmf<br />
-_NOTE: due to some unknown problem on R-forge build system, the package is not being built. Please use the MyCRAN repository until the issue is fixed._<br /><br />
-	* MyCRAN: personal CRAN-like repository at http://web.cbio.uct.ac.za/~renaud/CRAN
-
 -----
 __Travis check:__ [![Build Status](https://travis-ci.org/renozao/NMF.png?branch=devel)](https://travis-ci.org/renozao/NMF)

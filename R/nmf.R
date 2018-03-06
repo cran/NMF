@@ -3,6 +3,7 @@
 #' @include registry-seed.R
 #' @include registry-algorithms.R
 #' @include parallel.R
+
 NULL
 
 #' Running NMF algorithms
@@ -1188,6 +1189,8 @@ function(x, rank, method
 {
 	fwarning <- function(...) nmf_warning('nmf', ...)
 	fstop <- function(...) nmf_stop('nmf', ...)
+	n <- NULL
+	RNGobj <- NULL
 	
 	# if options are given as a character string, translate it into a list of booleans
 	if( is.character(.options) ){
@@ -2763,7 +2766,8 @@ nmfEstimateRank <- function(x, range, method=nmf.getOption('default.algorithm')
 	
 }
 
-#' @S3method summary NMF.rank
+#' @method summary NMF.rank
+#' @export
 summary.NMF.rank <- function(object, ...){
 	s <- summary(new('NMFList', object$fit), ...)
 	# NB: sort measures in the same order as required in ...
@@ -2805,7 +2809,8 @@ summary.NMF.rank <- function(object, ...){
 #' @param ylab y-axis label
 #' @param main main title
 #' 
-#' @S3method plot NMF.rank
+#' @method plot NMF.rank
+#' @export
 #' @rdname nmfEstimateRank
 #' @import ggplot2
 #' @import reshape2

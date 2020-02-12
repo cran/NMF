@@ -1427,8 +1427,8 @@ subset_index <- function(x, margin, subset){
 #' to \code{FALSE} (i.e. not '', 'false' nor 0).
 #' 
 #' @param x numeric matrix of the values to be plotted.
-#' An \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}} objects can also 
-#' be passed, in which case the expression values are plotted (\code{exprs(x)}).
+#' An \emph{ExpressionSet} object can also be passed, in which case the expression values 
+#' are plotted (\code{exprs(x)}).
 #' 
 #' @param color colour specification for the heatmap. Default to palette 
 #' '-RdYlBu2:100', i.e. reversed palette 'RdYlBu2' (a slight modification of 
@@ -1609,8 +1609,7 @@ subset_index <- function(x, margin, subset){
 #' @param annCol specifications of column annotation tracks displayed as coloured 
 #' rows on top of the heatmaps. The annotation tracks are drawn from bottom to top.
 #' A single annotation track can be specified as a single vector; multiple tracks 
-#' are specified as a list, a data frame, or an 
-#' \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}} object, in 
+#' are specified as a list, a data frame, or an \emph{ExpressionSet} object, in 
 #' which case the phenotypic data is used (\code{pData(eset)}).
 #' Character or integer vectors are converted and displayed as factors.
 #' Unnamed tracks are internally renamed into \code{Xi}, with i being incremented for 

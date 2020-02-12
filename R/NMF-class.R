@@ -2314,7 +2314,7 @@ unit.test(rss, {
 	y <- rnmf(3, x) # random compatible model
 	r1 <- rss(y, x)
 	checkIdentical(r, sum((x-fitted(y))^2), 'NMF model')
-	checkIdentical(rss(y, ExpressionSet(x)), sum((x-fitted(y))^2), 'NMF model (ExpressionSet)')
+	checkIdentical(rss(y, Biobase::ExpressionSet(x)), sum((x-fitted(y))^2), 'NMF model (ExpressionSet)')
 	y <- nmf(x, 3)
 	r2 <- rss(y, x)
 	checkIdentical(r2, sum((x-fitted(y))^2), 'Fitted NMF model')

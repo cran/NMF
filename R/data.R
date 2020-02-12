@@ -21,7 +21,7 @@
 #' 
 #' They contain the 5,000 most highly varying genes according to their
 #' coefficient of variation, and were installed in an object of class
-#' \code{\link[Biobase]{ExpressionSet-class}}.
+#' \emph{ExpressionSet}.
 #' 
 #' @format There are 3 covariates listed.
 #' 
@@ -49,7 +49,7 @@
 #' @examples
 #' 
 #' # requires package Biobase to be installed
-#' if( require(Biobase) ){
+#' if(requireNamespace("Biobase", quietly=TRUE)){
 #' 
 #' 	data(esGolub)
 #' 	esGolub

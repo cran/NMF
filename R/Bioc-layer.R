@@ -65,7 +65,8 @@ NULL
 NULL
 
 # add extra package Biobase
-setPackageExtra('install.packages', 'Biobase', pkgs='Biobase')
+#setPackageExtra('install.packages', 'Biobase', pkgs='Biobase')
+if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 
 .onLoad.nmf.bioc <- function(){
 	
@@ -97,8 +98,10 @@ if( pkgmaker::require.quiet('Biobase') ){
 	#' @examples
 	#' # partially seed with an ExpressionSet (requires package Biobase)
 	#' \dontrun{
+	#' if(requireNamespace("Biobase")) BiocManager::install("Biobase"){
 	#' data(esGolub)
 	#' nmf(esGolub, esGolub[,1:3])
+	#' }
 	#' }
 	#' 
 	setMethod('nmf', signature(x='matrix', rank='ExpressionSet', method='ANY'),
@@ -117,8 +120,10 @@ if( pkgmaker::require.quiet('Biobase') ){
 	#' @examples
 	#' # run on an ExpressionSet (requires package Biobase)
 	#' \dontrun{
+	#' if(requireNamespace("Biobase")) BiocManager::install("Biobase"){
 	#' data(esGolub)
 	#' nmf(esGolub, 3)
+	#' }
 	#' }
 	#' 
 	setMethod('seed', signature(x='ExpressionSet', model='ANY', method='ANY'), 
@@ -183,7 +188,7 @@ if( pkgmaker::require.quiet('Biobase') ){
 	#' 
 	#' @examples
 	#' 
-	#' E <- ExpressionSet(x)
+	#' E <- Biobase::ExpressionSet(x)
 	#' nnE <- nneg(e)
 	#' exprs(nnE)
 	#' 
@@ -199,7 +204,7 @@ if( pkgmaker::require.quiet('Biobase') ){
 	#' 
 	#' @examples
 	#' 
-	#' E <- ExpressionSet(x)
+	#' E <- Biobase::ExpressionSet(x)
 	#' nnE <- posneg(E)
 	#' E2 <- rposneg(nnE)
 	#' all.equal(E, E2)

@@ -567,7 +567,7 @@ parse_formula <- function(x){
 #' nmfModel(x ~ 3 + gr + b, data=list(b=runif(10)))
 #' 
 #' # 3-rank model that fits a given ExpressionSet (with fixed coef terms)
-#' e <- ExpressionSet(x)
+#' e <- Biobase::ExpressionSet(x)
 #' pData(e) <- data.frame(a=runif(10))
 #' nmfModel(e ~ 3 + gr + a) # `a` is looked up in the phenotypic data of x pData(x)
 #' 

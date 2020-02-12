@@ -1,18 +1,15 @@
-
 ## ----pkgmaker_preamble, echo=FALSE, results='asis'-----------------------
 pkgmaker::latex_preamble()
-
+if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 
 ## ----bibliofile, echo=FALSE, results='asis'------------------------------
 pkgmaker::latex_bibliography('NMF')	
-
 
 ## ----options, include=FALSE, verbose=TRUE--------------------------------
 #options(prompt=' ')
 #options(continue=' ')
 set.seed(123456)
 library(NMF)
-
 
 ## ----data----------------------------------------------------------------
 # random data that follow an 3-rank NMF model (with quite some noise: sd=2)
@@ -33,22 +30,18 @@ c <- rnorm(p)
 # gather them in a data.frame
 covariates <- data.frame(a, X$pData, c)
 
-
 ## ----figoptions, include=FALSE-------------------------------------------
 library(knitr)
 opts_chunk$set(fig.width=14, fig.height=7)
-
 
 ## ----heatmap_data--------------------------------------------------------
 par(mfrow=c(1,2))
 aheatmap(X, annCol=covariates, annRow=X$fData)
 aheatmap(X)
 
-
 ## ----model, cache=TRUE---------------------------------------------------
 res <- nmf(X, 3, nrun=10)
 res
-
 
 ## ----coefmap_res, fig.keep='last'----------------------------------------
 opar <- par(mfrow=c(1,2))
@@ -58,14 +51,12 @@ coefmap(res)
 coefmap(minfit(res))
 par(opar)
 
-
 ## ----coefmap_default, eval=FALSE-----------------------------------------
-## Rowv = NA
-## Colv = TRUE
-## scale = 'c1'
-## color = 'YlOrRd:50'
-## annCol = predict(object) + predict(object, 'consensus')
-
+#  Rowv = NA
+#  Colv = TRUE
+#  scale = 'c1'
+#  color = 'YlOrRd:50'
+#  annCol = predict(object) + predict(object, 'consensus')
 
 ## ----coefmap_custom, fig.keep='last', tidy=FALSE-------------------------
 opar <- par(mfrow=c(1,2))
@@ -79,7 +70,6 @@ coefmap(res, Colv = 'euclidean'
 	, info = TRUE)
 par(opar)
 
-
 ## ----basismap_res, fig.keep='last'---------------------------------------
 opar <- par(mfrow=c(1,2))
 # default plot
@@ -88,13 +78,11 @@ basismap(res)
 basismap(res, main="Metagenes", annRow=list(d, e), tracks=c(Metagene=':basis'))
 par(opar)
 
-
 ## ----basismap_default, eval=FALSE----------------------------------------
-## Colv = NA
-## scale = 'r1'
-## color = 'YlOrRd:50'
-## annRow = predict(object, 'features')
-
+#  Colv = NA
+#  scale = 'r1'
+#  color = 'YlOrRd:50'
+#  annRow = predict(object, 'features')
 
 ## ----consensusmap_res, fig.keep='last'-----------------------------------
 opar <- par(mfrow=c(1,2))
@@ -106,40 +94,32 @@ consensusmap(res, annCol=covariates, annColors=list(c='blue')
 		, sub='Consensus matrix and all covariates')
 par(opar)
 
-
 ## ----cmap_default, eval=FALSE--------------------------------------------
-## distfun = function(x) as.dist(1-x) # x being the consensus matrix
-## hclustfun = 'average'
-## Rowv = TRUE
-## Colv = "Rowv"
-## color = '-RdYlBu'
-
+#  distfun = function(x) as.dist(1-x) # x being the consensus matrix
+#  hclustfun = 'average'
+#  Rowv = TRUE
+#  Colv = "Rowv"
+#  color = '-RdYlBu'
 
 ## ----estimate, cache=TRUE------------------------------------------------
 res2_7 <- nmf(X, 2:7, nrun=10, .options='v')
 class(res2_7)
 
-
 ## ----consensusmap_estimate, fig.keep='last'------------------------------
 consensusmap(res2_7)
-
 
 ## ----fit_methods, cache=TRUE---------------------------------------------
 res_methods <- nmf(X, 3, list('lee', 'brunet', 'nsNMF'), nrun=10)
 class(res_methods)
 
-
 ## ----consensusmap_methods, fig.width=10, fig.height=7, fig.keep='last'----
 consensusmap(res_methods)	
 
-
 ## ----demo_hm, eval=FALSE-------------------------------------------------
-## demo('aheatmap')
-## # or
-## demo('heatmaps')
-
+#  demo('aheatmap')
+#  # or
+#  demo('heatmaps')
 
 ## ----sessionInfo, echo=FALSE, results='asis'-----------------------------
 toLatex(sessionInfo())
-
 

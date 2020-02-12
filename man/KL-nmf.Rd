@@ -11,8 +11,6 @@
 \source{
   Original MATLAB files and references can be found at:
 
-  \url{http://www.broadinstitute.org/mpr/publications/projects/NMF/nmf.m}
-
   \url{http://www.broadinstitute.org/publications/broad872}
 
   Original license terms:

@@ -37,7 +37,7 @@ NULL
 #' The other methods provides convenient ways of specifying the NMF algorithm(s),  
 #' the factorization rank, or the seed to be used.
 #' Some allow to directly run NMF algorithms on different types of objects, such 
-#' as \code{data.frame} or \code{\link[Biobase]{ExpressionSet}} objects.
+#' as \code{data.frame} or \emph{ExpressionSet} objects.
 #' 
 #' @section Optimized C++ vs. plain R: 
 #' Lee and Seung's multiplicative updates are used by several NMF algorithms. To improve 

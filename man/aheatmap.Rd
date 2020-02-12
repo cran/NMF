@@ -21,8 +21,7 @@
 }
 \arguments{
   \item{x}{numeric matrix of the values to be plotted. An
-  \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}}
-  objects can also be passed, in which case the expression
+  \emph{ExpressionSet} object can also be passed, in which case the expression
   values are plotted (\code{exprs(x)}).}
 
   \item{color}{colour specification for the heatmap.
@@ -224,14 +223,12 @@
   annotation tracks are drawn from bottom to top. A single
   annotation track can be specified as a single vector;
   multiple tracks are specified as a list, a data frame, or
-  an
-  \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}}
-  object, in which case the phenotypic data is used
-  (\code{pData(eset)}). Character or integer vectors are
-  converted and displayed as factors. Unnamed tracks are
-  internally renamed into \code{Xi}, with i being
-  incremented for each unamed track, across both column and
-  row annotation tracks. For each track, if no
+  an  \emph{ExpressionSet} object, in which case the 
+  phenotypic data is used (\code{pData(eset)}). Character or 
+  integer vectors are converted and displayed as factors.
+  Unnamed tracks are internally renamed into \code{Xi}, with
+  i being incremented for each unamed track, across both
+  column and row annotation tracks. For each track, if no
   corresponding colour is specified in argument
   \code{annColors}, a palette or a ramp is automatically
   computed and named after the track's name.}

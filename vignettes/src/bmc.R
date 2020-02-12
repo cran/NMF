@@ -13,6 +13,7 @@ library(NMF, lib=lib.dir)
 .seed <- 123456
 
 # load Golub data
+if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 data(esGolub)
 #esGolub <- syntheticNMF(500, 3, 20, noise=TRUE)
 

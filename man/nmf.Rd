@@ -448,7 +448,7 @@
   algorithm(s), the factorization rank, or the seed to be
   used. Some allow to directly run NMF algorithms on
   different types of objects, such as \code{data.frame} or
-  \code{\link[Biobase]{ExpressionSet}} objects.
+  \emph{ExpressionSet} objects.
 }
 \section{Methods}{
   \describe{

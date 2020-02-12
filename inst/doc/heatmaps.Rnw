@@ -15,6 +15,7 @@
 % add preamble from pkgmaker
 <<pkgmaker_preamble, echo=FALSE, results='asis'>>=
 pkgmaker::latex_preamble()
+if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 @
 
 \newcommand{\nmfpack}{\pkgname{NMF}}

@@ -43,8 +43,7 @@ There is no such information for the AML samples. It is a
 
   They contain the 5,000 most highly varying genes
   according to their coefficient of variation, and were
-  installed in an object of class
-  \code{\link[Biobase]{ExpressionSet-class}}.
+  installed in an object of class  \emph{ExpressionSet}.
 }
 \examples{
 \dontshow{# roxygen generated flag
@@ -52,7 +51,7 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 }
 
 # requires package Biobase to be installed
-if( require(Biobase) ){
+if(requireNamespace("Biobase", quietly=TRUE)){
 
 	data(esGolub)
 	esGolub

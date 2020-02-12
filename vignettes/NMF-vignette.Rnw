@@ -15,6 +15,7 @@
 % add preamble from pkgmaker
 <<pkgmaker_preamble, echo=FALSE, results='asis'>>=
 pkgmaker::latex_preamble()
+if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 @
 
 \newcommand{\nmfpack}{\Rpkg{NMF}}
@@ -387,6 +388,7 @@ meth <- nmfAlgorithm(version='R')
 meth <- c(names(meth), meth)
 meth
 
+if(requireNamespace("Biobase", quietly=TRUE)){
 # load the Golub data
 data(esGolub)
 
@@ -395,6 +397,7 @@ res <- nmf(esGolub, 3, meth, seed=123456)
 
 # extract only the elapsed time
 t <- sapply(res, runtime)[3,]
+}
 @
 
 <<perftable, echo=FALSE, results='asis'>>=
@@ -428,12 +431,14 @@ It was used in several papers on NMF \cite{Brunet2004, Gao2005} and is included 
  Therefore the results shown in the following are not meant to be biologically meaningful, but only illustrative:
 
 <<esGolub>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 data(esGolub)
 esGolub
 esGolub <- esGolub[1:200,]
 
 # remove the uneeded variable 'Sample' from the phenotypic data
 esGolub$Sample <- NULL
+}
 @
 % TODO: pass to 50 genes for dev
 
@@ -445,8 +450,10 @@ esGolub$Sample <- NULL
 To run the default NMF algorithm on data \code{esGolub} with a factorization rank of 3, we call: 
 
 <<algo_default, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # default NMF algorithm
 res <- nmf(esGolub, 3)
+}
 @
 
 Here we did not specify either the algorithm or the seeding method, so that the computation is done using the default algorithm and is seeded by the 
@@ -461,41 +468,52 @@ See also \cref{sec:algo,sec:seed} for how to explicitly specify the algorithm an
 The result of a single NMF run is an object of class \code{NMFfit}, that holds both the fitted NMF model and data about the run:
 
 <<single_show>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 res 
+}
 @
 
 The fitted model can be retrieved via method \code{fit}, which returns an object of class \code{NMF}:
 
 <<single_show_model>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 fit(res)
+}
 @
 
 The estimated target matrix can be retrieved via the generic method \code{fitted}, which returns a -- generally big -- \code{matrix}:
 
 <<single_show_estimate>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 V.hat <- fitted(res)
 dim(V.hat)
+}
 @
 
 Quality and performance measures about the factorization are computed by method \code{summary}:
 
 <<singlerun_summary>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 summary(res)
 
 # More quality measures are computed, if the target matrix is provided: 
 summary(res, target=esGolub)
+}
 @ 
 
 If there is some prior knowledge of classes present in the data, some other measures about the unsupervised clustering's performance are computed (purity, entropy, \ldots).
 Here we use the phenotypic variable \code{Cell} found in the Golub dataset, that gives the samples' cell-types (it is a factor with levels: T-cell, B-cell or \code{NA}):
 
 <<singlerun_summary_factor>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 summary(res, class=esGolub$Cell)
+}
 @
 
 The basis matrix (i.e. matrix $W$ or the metagenes) and the mixture coefficient matrix (i.e matrix $H$ or the metagene expression profiles) are retrieved using methods \code{basis} and \code{coef} respectively:
 
 <<get_matrices>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # get matrix W
 w <- basis(res)
 dim(w)
@@ -503,12 +521,14 @@ dim(w)
 # get matrix H
 h <- coef(res)
 dim(h)
+}
 @
 
 
 If one wants to keep only part of the factorization, one can directly subset on the \code{NMF} object on features and samples (separately or simultaneously).
 The result is a \code{NMF} object composed of the selected rows and/or columns:
 <<subset>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # keep only the first 10 features
 res.subset <- res[1:10,] 
 class(res.subset)
@@ -517,6 +537,7 @@ dim(res.subset)
 dim(res[,1:10])
 # subset both features and samples:
 dim(res[1:20,1:10])
+}
 @ 
 
 \subsubsection{Extracting metagene-specific features}
@@ -529,6 +550,7 @@ Kim and Park \cite{KimH2007} defined a procedure to extract the relevant genes f
 The NMF package implements this procedure in methods \code{featureScore} and \code{extractFeature}:
 
 <<single_extract>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # only compute the scores
 s <- featureScore(res)
 summary(s)
@@ -536,6 +558,7 @@ summary(s)
 # compute the scores and characterize each metagene
 s <- extractFeatures(res)
 str(s)
+}
 @
 
 \subsection{Specifying the algorithm}\label{sec:algo}
@@ -558,24 +581,30 @@ The algorithm used to compute the NMF is specified in the third argument (\code{
 For example, to use the NMF algorithm from Lee and Seung \cite{Lee2001} based on
 the Frobenius euclidean norm, one make the following call:
 <<algo_lee, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # using Lee and Seung's algorithm
 res <- nmf(esGolub, 3, 'lee')
 algorithm(res)
+}
 @
 
 To use the Nonsmooth NMF algorithm from \cite{Pascual-Montano2006}: 
 <<algo_ns, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # using the Nonsmooth NMF algorithm with parameter theta=0.7
 res <- nmf(esGolub, 3, 'ns', theta=0.7)
 algorithm(res)
 fit(res)
+}
 @
 
 Or to use the PE-NMF algorithm from \cite{Zhang2008}:
 <<algo_pe, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # using the PE-NMF algorithm with parameters alpha=0.01, beta=1
 res <- nmf(esGolub, 3, 'pe', alpha=0.01, beta=1)
 res
+}
 @
 
 %\begin{tech}
@@ -614,8 +643,10 @@ nmfSeed()
 To use a specific method to seed the computation of a factorization, one simply passes its name to \code{nmf}:
 
 <<seed, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 res <- nmf(esGolub, 3, seed='nndsvd')
 res
+}
 @
 
 \subsubsection{Numerical seed}\label{sec:numseed}
@@ -630,6 +661,7 @@ Since RNGstream requires a 6-length numeric seed, a random one is generated if o
 Moreover, single runs can also use RNGstream by passing a 6-length seed.
   
 <<seed_numeric, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # single run and single numeric seed
 res <- nmf(esGolub, 3, seed=123456)
 showRNG(res)
@@ -641,6 +673,7 @@ showRNG(res)
 # single run with a 6-length seed
 res <- nmf(esGolub, 3, seed=rep(123456, 6))
 showRNG(res)
+}
 @
 \nbnote{To show the RNG changes happening during the computation use \texttt{.options='v4'} to turn on verbosity at level 4.\\
 In versions prior 0.6, one could specify option \texttt{restore.seed=FALSE} or \texttt{'-r'}, this option is now deprecated.}
@@ -648,12 +681,14 @@ In versions prior 0.6, one could specify option \texttt{restore.seed=FALSE} or \
 \subsubsection{Fixed factorization}
 Yet another option is to completely specify the initial factorization, by passing values for matrices $W$ and $H$:
 <<seed_WH>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # initialize a "constant" factorization based on the target dimension
 init <- nmfModel(3, esGolub, W=0.5, H=0.3)
 head(basis(init))
 
 # fit using this NMF model as a seed
 res <- nmf(esGolub, 3, seed=init)
+}
 @
 
 
@@ -669,8 +704,10 @@ This can be done by setting argument \code{nrun} to the desired value.
 For performance reason we use \code{nrun=5} here, but a typical choice would lies between 100 and 200:  
 
 <<algo_multirun, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 res.multirun <- nmf(esGolub, 3, nrun=5)
 res.multirun
+}
 @
 
 By default, the returned object only contains the best fit over all the runs.
@@ -685,14 +722,18 @@ It can therefore be handled as the result of a single run and benefit from all t
 If one is interested in keeping the results from all the runs, one can set the option \code{keep.all=TRUE}:
 
 <<multirun_keep, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # explicitly setting the option keep.all to TRUE
 res <- nmf(esGolub, 3, nrun=5, .options=list(keep.all=TRUE))
 res
+}
 @
 
 <<multirun_keep_alt, eval=FALSE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # or using letter code 'k' in argument .options
 nmf(esGolub, 3, nrun=5, .options='k')
+}
 @
 
 In this case, the result is an object of class \code{NMFfitXn} that also inherits from class \code{list}.
@@ -774,6 +815,7 @@ The following exmaples are run with \code{.options='v'} which turn on verbosity 
 Although we do not show the output here, the user is recommended to run these commands on his machine to see the internal differences of each call.
 
 <<parallel_multicore_alt, eval=FALSE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # the default call will try to run in parallel using all the cores
 # => will be in parallel if all the requirements are satisfied
 nmf(esGolub, 3, nrun=5, .opt='v')
@@ -786,6 +828,7 @@ nmf(esGolub, 3, nrun=5, .opt='vP')
 
 # require an improbable number of cores => error 
 nmf(esGolub, 3, nrun=5, .opt='vP200')
+}
 @
 
 \subsubsection{High Performance Computing on a cluster}
@@ -798,6 +841,7 @@ the cores computation on each machine.
 <<mpi, eval=FALSE>>=
 # file: mpi.R
 
+if(requireNamespace("Biobase", quietly=TRUE)){
 ## 0. Create and register an MPI cluster
 library(doMPI)
 cl <- startMPIcluster()
@@ -814,7 +858,7 @@ save(res, file='result.RData')
 ## 4. Shutdown the cluster and quit MPI
 closeCluster(cl)
 mpi.quit()
-
+}
 @
 
 Passing the following shell script to \emph{qsub} should launch the execution on a Sun Grid Engine HPC cluster, with OpenMPI.
@@ -843,6 +887,7 @@ This can be done via the option \code{'p1'} to run on a single core , or with
 \code{.pbackend='seq'} to use the foreach backend \code{doSEQ} or to \code{NA} to use a standard \code{sapply} call:
 
 <<force_seq, cache=TRUE, backspace = TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # parallel execution on 2 cores (if possible)
 res1 <- nmf(esGolub, 3, nrun=5, .opt='vp2', seed=123)
 
@@ -858,6 +903,7 @@ res5 <- nmf(esGolub, 3, nrun=5, .opt='v', .pbackend='seq', seed=123)
 
 # all results are all identical
 nmf.equal(list(res1, res2, res3, res4, res5))
+}
 @
 
 
@@ -875,8 +921,10 @@ Whereas the standard NMF procedure usually involves several hundreds of random i
 For performance reason, we perform here only 10 runs for each value of the rank.
 
 <<estimate_rank, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # perform 10 runs for each value of r in range 2:6
 estim.r <- nmf(esGolub, 2:6, nrun=10, seed=123456)
+}
 @
 
 The result is a S3 object of class \code{NMF.rank}, that contains a \code{data.frame} with the quality measures in column, and the values of $r$ in row.
@@ -891,14 +939,18 @@ The results are in fact much cleaner when using the full dataset (\cref{fig:heat
 
 \begin{figure}
 <<estimate_rank_plot, fig.width=10, fig.height=6>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 plot(estim.r)
+}
 @
 \caption{Estimation of the rank: Quality measures computed from 10 runs for each value of $r$. \label{fig:estim_all}}
 \end{figure}
 
 \begin{figure}
 <<estimate_rank_hm_include, fig.width=14, fig.height=7, fig.keep='last'>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 consensusmap(estim.r, annCol=esGolub, labCol=NA, labRow=NA)
+}
 @
 \caption{Estimation of the rank: Consensus matrices computed from 10 runs for each value of $r$. \label{fig:estim_all_hm}}
 \end{figure}
@@ -914,12 +966,14 @@ The rank estimation procedure can then be applied to the randomized data, and th
 
 \begin{figure}
 <<estimate_rank_random, cache=TRUE, fig.width=10, fig.height=6, fig.keep='last'>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # shuffle original data
 V.random <- randomize(esGolub)
 # estimate quality measures from the shuffled data (use default NMF algorithm)
 estim.r.random <- nmf(V.random, 2:6, nrun=10, seed=123456)
 # plot measures on same graph
 plot(estim.r, estim.r.random)
+}
 @
 \caption{Estimation of the rank: Comparison of the quality measures with those obtained from randomized data. 
 The curves for the actual data are in blue and green, those for the randomized data are in red and pink. 
@@ -933,17 +987,21 @@ To enable a fair comparison, a deterministic seeding method should also be used.
 Here we fix the random seed to 123456. 
 
 <<multimethod, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # fit a model for several different methods 
 res.multi.method <- nmf(esGolub, 3, list('brunet', 'lee', 'ns'), seed=123456, .options='t')
+}
 @
 
 Passing the result to method \code{compare} produces a \code{data.frame} that contains summary measures for each method. Again, prior knowledge of classes may be used to compute clustering quality measures:  
 
 <<compare>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 compare(res.multi.method)
 
 # If prior knowledge of classes is available
 compare(res.multi.method, class=esGolub$Cell)
+}
 @
 
 Because the computation was performed with error tracking enabled, an error plot
@@ -958,16 +1016,20 @@ If the NMF computation is performed with error tracking enabled -- using argumen
 This computation is not enabled by default as it induces some overhead. 
 
 <<errorplot_compute, cache=TRUE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # run nmf with .option='t'
 res <- nmf(esGolub, 3, .options='t')
 # or with .options=list(track=TRUE)
+}
 @
 
 The trajectory can be plot with the method \code{plot} (\cref{fig:errorplot}):
 \begin{figure}[!htbp]
 <<errorplot, out.width="0.5\\textwidth", fig.show='hold'>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 plot(res)
 plot(res.multi.method)
+}
 @
 \caption{Error track for a single NMF run (left) and multiple method
 runs (right)}
@@ -1004,11 +1066,13 @@ We refer to the relevant help pages \code{?basismap} and \code{?aheatmap} for mo
 \begin{figure}[!htbp]
 \centering
 <<heatmap_coef_basis_inc, fig.width=14, fig.height=7, fig.keep='last'>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 layout(cbind(1,2))
 # basis components
 basismap(res, subsetRow=TRUE)
 # mixture coefficients
 coefmap(res)
+}
 @
 \caption{Heatmap of the basis and the mixture coefficient matrices. The rows of the basis matrix were selected using the default feature selection method -- described in \cite{KimH2007}.}
 \label{fig:heatmap_coef_basis}
@@ -1019,13 +1083,17 @@ Golub dataset):
 
 \begin{figure}[ht]
 <<heatmap_consensus_inc, out.width="0.49\\textwidth", crop=TRUE, echo=1:2>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 # The cell type is used to label rows and columns 
 consensusmap(res.multirun, annCol=esGolub, tracks=NA)
 plot(1:10)
 f2 <- fig_path("2.pdf")
+}
 @
 <<hack_consensus, include=FALSE>>=
+if(requireNamespace("Biobase", quietly=TRUE)){
 file.copy('consensus.pdf', f2, overwrite=TRUE)
+}
 @
 \caption{Heatmap of consensus matrices from 10 runs on the reduced dataset
 (left) and from 100 runs on the complete Golub dataset (right).}

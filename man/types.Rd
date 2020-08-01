@@ -103,10 +103,8 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 #----------
 # test if an object is an NMF model, i.e. that it implements the NMF interface
 is.nmf(1:4)
-is.nmf('NMFstd')
-is.nmf('NMFblah')
 is.nmf( nmfModel(3) )
-is.nmf( nmf(rmatrix(20,10), 3) )
+is.nmf( nmf(rmatrix(10, 5), 2) )
 
 #----------
 # is.empty.nmf
@@ -129,7 +127,7 @@ res <- nmf(V, 3, maxIter=3L)
 isNMFfit(res)
 
 # multiple runs - keeping single fit
-resm <- nmf(V, 3, nrun=3, maxIter=3L)
+resm <- nmf(V, 3, nrun=2, maxIter=3L)
 isNMFfit(resm)
 
 # with a list of results

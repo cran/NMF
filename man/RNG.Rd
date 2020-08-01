@@ -63,7 +63,7 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 
 # For multiple NMF runs, the RNG settings used for the first run is also stored
 V <- rmatrix(20,10)
-res <- nmf(V, 3, nrun=4)
+res <- nmf(V, 3, nrun=3)
 # RNG used for the best fit
 getRNG(res)
 # RNG used for the first of all fits

@@ -2,8 +2,8 @@ Package: NMF
 Type: Package
 Title: Algorithms and Framework for Nonnegative Matrix Factorization
         (NMF)
-Version: 0.22.0
-Date: 2020-02-02
+Version: 0.23.0
+Date: 2020-07-30
 Author: Renaud Gaujoux, Cathal Seoighe
 Maintainer: Nicolas Sauwen <nicolas.sauwen@openanalytics.eu>
 Description: Provides a framework to perform Non-negative Matrix
@@ -37,8 +37,8 @@ Collate: 'colorcode.R' 'options.R' 'grid.R' 'atracks.R' 'aheatmap.R'
         'registry-seed.R' 'nmf.R' 'rnmf.R' 'run.R' 'seed-base.R'
         'seed-ica.R' 'seed-nndsvd.R' 'setNMFClass.R' 'simulation.R'
         'tests.R'
-Packaged: 2020-02-12 10:44:23 UTC; nsauwen
+Packaged: 2020-07-31 10:09:52 UTC; nsauwen
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2020-02-12 12:40:02 UTC
+Date/Publication: 2020-08-01 05:10:06 UTC
 RoxygenNote: 6.0.1.9000

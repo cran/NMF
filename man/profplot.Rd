@@ -96,19 +96,16 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 }
 
 # create a random target matrix
-v <- rmatrix(50, 10)
+v <- rmatrix(40, 10)
 
 # fit a single NMF model
 res <- nmf(v, 3)
 profplot(res)
 
-# ordering according to first profile
-profplot(res, Colv=1) # increasing
-profplot(res, Colv=-1) # decreasing
-
 # fit a multi-run NMF model
-res2 <- nmf(v, 3, nrun=3)
-profplot(res2)
+res2 <- nmf(v, 3, nrun=2)
+# ordering according to first profile
+profplot(res2, Colv=1) # increasing
 
 # draw a profile correlation plot: this show how the basis components are
 # returned in an unpredictable order

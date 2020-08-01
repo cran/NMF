@@ -37,18 +37,12 @@
 options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 }
 
-x <- rmatrix(100, 20, dimnames = list(paste0('a', 1:100), letters[1:20]))
+x <- rmatrix(75, 15, dimnames = list(paste0('a', 1:75), letters[1:15]))
 # NB: using low value for maxIter for the example purpose only
-res <- nmf(x, 4, nrun = 5, maxIter = 50)
+res <- nmf(x, 4, nrun = 3, maxIter = 20)
 
 # sample clustering from best fit
 plot(silhouette(res))
-
-# from consensus
-plot(silhouette(res, what = 'consensus'))
-
-# feature clustering
-plot(silhouette(res, what = 'features'))
 
 # average silhouette are computed in summary measures
 summary(res)

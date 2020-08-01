@@ -157,14 +157,14 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 }
 
 # generate a synthetic dataset with known classes
-n <- 20; counts <- c(5, 2, 3);
+n <- 15; counts <- c(5, 2, 3);
 V <- syntheticNMF(n, counts)
 
 # get the class factor
 groups <- V$pData$Group
 
 # perform multiple runs of one algorithm, keeping all the fits
-res <- nmf(V, 3, nrun=3, .options='k') # .options=list(keep.all=TRUE) also works
+res <- nmf(V, 3, nrun=2, .options='k') # .options=list(keep.all=TRUE) also works
 res
 
 summary(res)

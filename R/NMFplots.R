@@ -205,19 +205,16 @@ profplot <- function(x, ...){
 #' @examples
 #' 
 #' # create a random target matrix
-#' v <- rmatrix(50, 10)
+#' v <- rmatrix(40, 10)
 #' 
 #' # fit a single NMF model
 #' res <- nmf(v, 3)
 #' profplot(res)
 #' 
-#' # ordering according to first profile
-#' profplot(res, Colv=1) # increasing
-#' profplot(res, Colv=-1) # decreasing
-#' 
 #' # fit a multi-run NMF model
-#' res2 <- nmf(v, 3, nrun=3)
-#' profplot(res2)
+#' res2 <- nmf(v, 3, nrun=2)
+#' # ordering according to first profile
+#' profplot(res2, Colv=1) # increasing
 #' 
 #' # draw a profile correlation plot: this show how the basis components are 
 #' # returned in an unpredictable order 
@@ -567,18 +564,12 @@ profplot.default <- function(x, y, scale=c('none', 'max', 'c1'), match.names=TRU
 #' @import cluster
 #' @examples 
 #' 
-#' x <- rmatrix(100, 20, dimnames = list(paste0('a', 1:100), letters[1:20]))
+#' x <- rmatrix(75, 15, dimnames = list(paste0('a', 1:75), letters[1:15]))
 #' # NB: using low value for maxIter for the example purpose only
-#' res <- nmf(x, 4, nrun = 5, maxIter = 50)
+#' res <- nmf(x, 4, nrun = 3, maxIter = 20)
 #' 
 #' # sample clustering from best fit
 #' plot(silhouette(res))
-#' 
-#' # from consensus
-#' plot(silhouette(res, what = 'consensus'))
-#' 
-#' # feature clustering
-#' plot(silhouette(res, what = 'features')) 
 #' 
 #' # average silhouette are computed in summary measures
 #' summary(res)

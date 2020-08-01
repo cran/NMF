@@ -38,7 +38,7 @@ NULL
 #' isNMFfit(res)
 #' 
 #' # multiple runs - keeping single fit
-#' resm <- nmf(V, 3, nrun=3, maxIter=3L)
+#' resm <- nmf(V, 3, nrun=2, maxIter=3L)
 #' isNMFfit(resm)
 #' 
 #' # with a list of results
@@ -455,7 +455,7 @@ setGeneric('getRNG1', package='rngtools')
 #' @examples
 #' # For multiple NMF runs, the RNG settings used for the first run is also stored
 #' V <- rmatrix(20,10)
-#' res <- nmf(V, 3, nrun=4)
+#' res <- nmf(V, 3, nrun=3)
 #' # RNG used for the best fit
 #' getRNG(res)
 #' # RNG used for the first of all fits
@@ -535,7 +535,7 @@ setMethod('deviance', signature(object='NMFfitX'),
 #' @examples
 #' 
 #' # generate a synthetic dataset with known classes
-#' n <- 20; counts <- c(5, 2, 3);
+#' n <- 15; counts <- c(5, 2, 3);
 #' V <- syntheticNMF(n, counts)
 #' 
 #' # get the class factor
@@ -543,7 +543,7 @@ setMethod('deviance', signature(object='NMFfitX'),
 #' 
 #' # perform multiple runs of one algorithm, keeping only the best fit (default)
 #' #i.e.: the implicit nmf options are .options=list(keep.all=FALSE) or .options='-k'
-#' res <- nmf(V, 3, nrun=3) 
+#' res <- nmf(V, 3, nrun=2) 
 #' res
 #' 
 #' # compute summary measures
@@ -685,14 +685,14 @@ setMethod('nmf.equal', signature(x='NMFfitX1', y='NMFfitX1'),
 #' @examples
 #' 
 #' # generate a synthetic dataset with known classes
-#' n <- 20; counts <- c(5, 2, 3);
+#' n <- 15; counts <- c(5, 2, 3);
 #' V <- syntheticNMF(n, counts)
 #' 
 #' # get the class factor
 #' groups <- V$pData$Group
 #' 
 #' # perform multiple runs of one algorithm, keeping all the fits
-#' res <- nmf(V, 3, nrun=3, .options='k') # .options=list(keep.all=TRUE) also works
+#' res <- nmf(V, 3, nrun=2, .options='k') # .options=list(keep.all=TRUE) also works
 #' res
 #'  
 #' summary(res)

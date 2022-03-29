@@ -141,8 +141,7 @@ res <- fcnnls(X[,1], y)
 }
 \references{
   Original MATLAB code from Van Benthem and Keenan,
-  slightly modified by H. Kim:\cr
-  \url{http://www.cc.gatech.edu/~hpark/software/fcnnls.m}
+  slightly modified by H. Kim:(http://www.cc.gatech.edu/~hpark/software/fcnnls.m)
 
   Van Benthem M and Keenan MR (2004). "Fast algorithm for
   the solution of large-scale non-negativity-constrained

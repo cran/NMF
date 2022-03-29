@@ -16,7 +16,7 @@ There is no such information for the AML samples. It is a
 }}
 \source{
   Web page for \cite{Brunet2004}:\cr
-  \url{http://www.broadinstitute.org/publications/broad872}
+  \url{https://www.broadinstitute.org/publications/broad872}
 
   Original data from Golub et al.:\cr
   \code{http://www-genome.wi.mit.edu/mpr/data_set_ALL_AML.html}

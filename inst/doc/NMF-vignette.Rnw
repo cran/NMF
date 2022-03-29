@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{An introduction to the package NMF}
-%\VignetteDepends{utils,NMF,Biobase,bigmemory,xtable,RColorBrewer,knitr,bibtex}
+%\VignetteDepends{utils,NMF,Biobase,bigmemory,xtable,RColorBrewer,knitr}
 %\VignetteKeyword{math}
 %\VignetteCompiler{knitr}
 %\VignetteEngine{knitr::knitr}
@@ -419,7 +419,7 @@ To view all the package's bibtex citations, including all vignette(s) and manual
 citation('NMF')
 
 # or to get the bibtex entries
-toBibtex(citation('NMF'))
+#toBibtex(citation('NMF'))
 @
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

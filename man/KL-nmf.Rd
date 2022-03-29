@@ -11,7 +11,7 @@
 \source{
   Original MATLAB files and references can be found at:
 
-  \url{http://www.broadinstitute.org/publications/broad872}
+  \url{https://www.broadinstitute.org/publications/broad872}
 
   Original license terms:
 

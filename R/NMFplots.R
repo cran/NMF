@@ -205,7 +205,7 @@ profplot <- function(x, ...){
 #' @examples
 #' 
 #' # create a random target matrix
-#' v <- rmatrix(40, 10)
+#' v <- rmatrix(35, 10)
 #' 
 #' # fit a single NMF model
 #' res <- nmf(v, 3)

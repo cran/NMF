@@ -61,7 +61,7 @@ NULL
 #' @references 
 #' 
 #' Original MATLAB code from Van Benthem and Keenan, slightly modified by H.
-#' Kim:\cr \url{http://www.cc.gatech.edu/~hpark/software/fcnnls.m}
+#' Kim (http://www.cc.gatech.edu/~hpark/software/fcnnls.m)
 #' 
 #' @author 
 #' Original MATLAB code : Van Benthem and Keenan

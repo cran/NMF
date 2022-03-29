@@ -299,7 +299,7 @@ CHANGES
 
     o Add a CITATION file that provides the bibtex entries for citing the 
     BMC Bioinformatics paper for the package 
-    (http://www.biomedcentral.com/1471-2105/11/367), the vignette and manual.
+    (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-367), the vignette and manual.
     See 'citation('NMF')' for complete references.
     
     o New argument 'ncol' in method 'nmfModel' to specify the target dimensions more 

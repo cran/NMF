@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{NMF: generating heatmaps}
-%\VignetteDepends{utils,NMF,RColorBrewer,knitr,bibtex}
+%\VignetteDepends{utils,NMF,RColorBrewer,knitr}
 %\VignetteKeyword{aplot}
 %\VignetteCompiler{knitr}
 %\VignetteEngine{knitr::knitr}

@@ -2,8 +2,8 @@ Package: NMF
 Type: Package
 Title: Algorithms and Framework for Nonnegative Matrix Factorization
         (NMF)
-Version: 0.23.0
-Date: 2020-07-30
+Version: 0.24.0
+Date: 2022-03-28
 Author: Renaud Gaujoux, Cathal Seoighe
 Maintainer: Nicolas Sauwen <nicolas.sauwen@openanalytics.eu>
 Description: Provides a framework to perform Non-negative Matrix
@@ -13,7 +13,7 @@ Description: Provides a framework to perform Non-negative Matrix
     in C++, and the main interface function provides an easy way of performing
     parallel computations on multicore machines.
 License: GPL (>= 2)
-URL: http://renozao.github.io/NMF
+URL: http://renozao.github.io/NMF/
 LazyLoad: yes
 VignetteBuilder: knitr
 Depends: R (>= 3.0.0), methods, utils, pkgmaker (>= 0.20), registry,
@@ -22,7 +22,7 @@ Imports: graphics, stats, stringr (>= 1.0.0), digest, grid, grDevices,
         gridBase, colorspace, RColorBrewer, foreach, doParallel,
         ggplot2, reshape2, BiocManager, Biobase
 Suggests: fastICA, doMPI, bigmemory (>= 4.2), synchronicity(>= 1.3.2),
-        corpcor, xtable, devtools, knitr, bibtex, RUnit, mail
+        corpcor, xtable, devtools, knitr, RUnit, mail
 Collate: 'colorcode.R' 'options.R' 'grid.R' 'atracks.R' 'aheatmap.R'
         'algorithmic.R' 'nmf-package.R' 'rmatrix.R' 'utils.R'
         'versions.R' 'NMF-class.R' 'transforms.R' 'Bioc-layer.R'
@@ -37,8 +37,8 @@ Collate: 'colorcode.R' 'options.R' 'grid.R' 'atracks.R' 'aheatmap.R'
         'registry-seed.R' 'nmf.R' 'rnmf.R' 'run.R' 'seed-base.R'
         'seed-ica.R' 'seed-nndsvd.R' 'setNMFClass.R' 'simulation.R'
         'tests.R'
-Packaged: 2020-07-31 10:09:52 UTC; nsauwen
+Packaged: 2022-03-29 15:44:35 UTC; nsauwen
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2020-08-01 05:10:06 UTC
+Date/Publication: 2022-03-29 22:10:02 UTC
 RoxygenNote: 6.0.1.9000

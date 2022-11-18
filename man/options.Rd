@@ -20,16 +20,10 @@
   that is a named list (see \code{\link{options}}.
 
   For \code{nmf.resetOptions}, this must be the names of
-  the options to reset. Note that \pkg{pkgmaker} version >=
-  0.9.1 is required for this to work correctly, when
-  options other than the default ones have been set after
-  the package is loaded.}
+  the options to reset.}
 
   \item{ALL}{logical that indicates if options that are not
-  part of the default set of options should be removed.
-  Note that in \pkg{pkgmaker <= 0.9} this argument is only
-  taken into account when no other argument is present.
-  This is fixed in version 0.9.1.}
+  part of the default set of options should be removed.}
 
   \item{x}{a character string holding an option name.}
 

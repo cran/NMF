@@ -1,14 +1,113 @@
 ## ----pkgmaker_preamble, echo=FALSE, results='asis'----------------------------
-pkgmaker::latex_preamble()
+library(NMF)
+latex_preamble()
 if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 
 ## ----bibliofile, echo=FALSE, results='asis'-----------------------------------
-pkgmaker::latex_bibliography('NMF')
+latex_bibliography('NMF')
 
 ## ----options, echo=FALSE------------------------------------------------------
 set.seed(123456)
 library(knitr)
-knit_hooks$set(try = pkgmaker::hook_try, backspace = pkgmaker::hook_backspace())
+
+# Helper functions:
+hook_try <- function(before, options, envir){
+	
+	.try_defined <- FALSE
+	
+	# remove hacked version of try
+	if( !before ){
+		if( .try_defined && exists('try', envir = envir, inherits = FALSE) ){
+			remove(list = 'try', envir = envir)
+		}
+		.try_defined <<- FALSE
+		return(invisible())
+	}
+	
+	if( !is.null(options$try) ){
+		
+		# signal
+		do.signal <- isFALSE(options$try)
+		if( isManualVignette() && isTRUE(options$try) ){
+			do.signal <- TRUE
+		}
+		# define hacked version of try()
+		.try <- try_message(do.signal)
+		assign('try', .try, envir)
+		.try_defined <<- TRUE
+	}
+}
+
+chunkOutputHook <- function(name, hook, type = c('output', 'source', 'chunk')){
+	type <- match.arg(type)
+	function(){
+		
+		if( !requireNamespace('knitr', quietly = TRUE) ) 
+			stop("Package 'knitr' is required to setup knit hook '", name, "'")
+		
+		.hook_bkp <- NULL
+		function(before, options, envir){
+			# do nothing if the option is not ON
+			if( is.null(options[[name]]) ) return()
+			
+			# set/unset hook
+			if( before ){
+				# store current hook function
+				if( is.null(.hook_bkp) ) .hook_bkp <<- knitr::knit_hooks$get(type)
+				
+				# define hook wrapper
+				hook_wrapper <- function(x, options){
+					res <- .hook_bkp(x, options)
+					hook(res, options)
+				}
+				
+				args <- list()
+				args[[type]] <- hook_wrapper
+				do.call(knitr::knit_hooks$set, args)
+			}else{
+				args <- list()
+				args[[type]] <- .hook_bkp
+				do.call(knitr::knit_hooks$set, args)
+				.hook_bkp <<- NULL
+			}
+		}
+	}
+}
+
+
+hook_backspace <- chunkOutputHook('backspace', 
+		function(x, options){
+			if( !isTRUE(options$backspace) ) x
+			str_bs(x)
+		}
+)
+
+str_bs <- function(x){
+	# remove leading backspaces
+	x <- gsub("^\b+", "", x)
+	# remove backspaces at beginning of line
+	x <- gsub("\n\b+", '\n', x)
+	while( length(grep('\b', x, fixed = TRUE)) ) 
+		x <- gsub('[^\n\b][\b]', '', x)
+	
+	x
+}
+
+isManualVignette <- function(){
+	isTRUE(getOption('R_RUNNING_MANUAL_VIGNETTE'))
+}
+
+try_message <- function(signal = FALSE){
+	function(expr){
+		tryCatch(expr, error = function(e){
+					if( signal ) message(e)
+					else message('Error: ', conditionMessage(e))
+					invisible()
+				})
+	}
+}
+
+knit_hooks$set(try = hook_try, backspace = hook_backspace())
 
 ## ----load_library, echo=FALSE, include=FALSE----------------------------------
 # Load
@@ -495,9 +594,6 @@ nmf.getOption('default.seed')
 
 # All options
 nmf.options()
-
-## ----nmf_options, echo=FALSE, results='asis'----------------------------------
-RdSection2latex('nmf.options', package='NMF')
 
 ## ----print_options------------------------------------------------------------
 nmf.printOptions()

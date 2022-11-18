@@ -1,29 +1,30 @@
 ## ----pkgmaker_preamble, echo=FALSE, results='asis'----------------------------
-pkgmaker::latex_preamble()
+library(NMF)
+latex_preamble()
 if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 
 ## ----bibliofile, echo=FALSE, results='asis'-----------------------------------
-pkgmaker::latex_bibliography('NMF')	
+latex_bibliography('NMF')	
 
 ## ----options, include=FALSE, verbose=TRUE-------------------------------------
 #options(prompt=' ')
 #options(continue=' ')
 set.seed(123456)
-library(NMF)
 
 ## ----data---------------------------------------------------------------------
 # random data that follow an 3-rank NMF model (with quite some noise: sd=2)
-X <- syntheticNMF(100, 3, 20, noise=2)
+X <- syntheticNMF(100, 3, 20, noise=2, factors = TRUE)
+Xmat <- X[[1]]
 
 # row annotations and covariates
-n <- nrow(X)
+n <- nrow(Xmat)
 d <- rnorm(n)
 e <- unlist(mapply(rep, c('X', 'Y', 'Z'), 10))
 e <- c(e, rep(NA, n-length(e)))
 rdata <- data.frame(Var=d, Type=e)
 
 # column annotations and covariates
-p <- ncol(X)
+p <- ncol(Xmat)
 a <- sample(c('alpha', 'beta', 'gamma'), p, replace=TRUE)
 # define covariates: true groups and some numeric variable
 c <- rnorm(p)
@@ -36,11 +37,11 @@ opts_chunk$set(fig.width=14, fig.height=7)
 
 ## ----heatmap_data-------------------------------------------------------------
 par(mfrow=c(1,2))
-aheatmap(X, annCol=covariates, annRow=X$fData)
-aheatmap(X)
+aheatmap(Xmat, annCol=covariates, annRow=X$fData)
+aheatmap(Xmat)
 
 ## ----model, cache=TRUE--------------------------------------------------------
-res <- nmf(X, 3, nrun=10)
+res <- nmf(Xmat, 3, nrun=10)
 res
 
 ## ----coefmap_res, fig.keep='last'---------------------------------------------
@@ -102,14 +103,14 @@ par(opar)
 #  color = '-RdYlBu'
 
 ## ----estimate, cache=TRUE-----------------------------------------------------
-res2_7 <- nmf(X, 2:7, nrun=10, .options='v')
+res2_7 <- nmf(Xmat, 2:7, nrun=10, .options='v')
 class(res2_7)
 
 ## ----consensusmap_estimate, fig.keep='last'-----------------------------------
 consensusmap(res2_7)
 
 ## ----fit_methods, cache=TRUE--------------------------------------------------
-res_methods <- nmf(X, 3, list('lee', 'brunet', 'nsNMF'), nrun=10)
+res_methods <- nmf(Xmat, 3, list('lee', 'brunet', 'nsNMF'), nrun=10)
 class(res_methods)
 
 ## ----consensusmap_methods, fig.width=10, fig.height=7, fig.keep='last'--------

@@ -100,7 +100,7 @@ setMethod('nmfRegister', signature(key='NMFSeed', method='missing'),
 #' stores them as \code{\linkS4class{NMFSeed}} objects in a dedicated registry.
 #' 
 #' @param ... arguments passed to \code{NMFSeed} and used to initialise slots
-#' in the \code{\linkS4class{NMFSeed}} object, or to \code{\link[pkgmaker]{pkgreg_remove}}.
+#' in the \code{\linkS4class{NMFSeed}} object, or to \code{pkgreg_remove}
 #' @inheritParams setNMFMethod
 #' 
 #' @export

@@ -34,8 +34,8 @@
   warnings.}
 
   \item{...}{extra arguments passed to
-  \code{\link[pkgmaker]{pkgreg_fetch}} or
-  \code{\link[pkgmaker]{pkgreg_remove}}.}
+  \code{pkgreg_fetch} or
+  \code{pkgreg_remove}.}
 
   \item{exact}{a logical that indicates if the access key
   should be matched exactly (\code{TRUE}) or partially

@@ -87,20 +87,20 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 
 # generate a synthetic dataset with known classes
 n <- 15; counts <- c(5, 2, 3);
-V <- syntheticNMF(n, counts)
+V <- syntheticNMF(n, counts, factors = TRUE)
 
 # get the class factor
 groups <- V$pData$Group
 
 # perform multiple runs of one algorithm, keeping only the best fit (default)
 #i.e.: the implicit nmf options are .options=list(keep.all=FALSE) or .options='-k'
-res <- nmf(V, 3, nrun=2)
+res <- nmf(V[[1]], 3, nrun=2)
 res
 
 # compute summary measures
 summary(res)
 # get more info
-summary(res, target=V, class=groups)
+summary(res, target=V[[1]], class=groups)
 
 # show computational time
 runtime.all(res)

@@ -58,7 +58,7 @@
   which each feature contributes the most.} }
 
   Moreover, the result object is an
-  \code{\link{ExposeAttribute}} object, which means that
+  \code{ExposeAttribute} object, which means that
   relevant attributes are accessible via \code{$}, e.g.,
   \code{res$coefficients}. In particular, methods
   \code{\link{coef}} and \code{\link{basis}} will work as

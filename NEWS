@@ -131,7 +131,8 @@ CHANGES
 *************************************************************************
 
 WARNING
-    Due to the major changes made in the internal structure of the standard NMF 
+
+    o Due to the major changes made in the internal structure of the standard NMF 
     models, previous NMF fits are not compatible with this version.
 
 NEW FEATURES

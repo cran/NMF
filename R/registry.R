@@ -11,9 +11,8 @@
 # COMMON REGISTRY
 ###########################################################################
 
-#' @import pkgmaker
 #' @import registry
-nmfRegistry <- function(...) pkgmaker::packageRegistry(...)
+nmfRegistry <- function(...) packageRegistry(...)
 
 # Returns the names of all the packages that contibute to all or a given
 # package's primary registry  
@@ -34,7 +33,7 @@ registryContributors <- function(package, regname = NULL){
 nmfGet <- function(regname, name=NULL, ...){
 	
 	# retrieve from the given package's sub-registry
-	pkgmaker::pkgreg_fetch(regname, key=name, ...)
+	pkgreg_fetch(regname, key=name, ...)
 	
 }
 

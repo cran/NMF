@@ -710,10 +710,10 @@ NMFStop <- function(s, check=TRUE){
 		
 		# first lookup for a `nmf.stop.*` function
 		key2 <- paste('nmf.stop.', key, sep='')
-		e <- pkgmaker::packageEnv()
-		sfun <- getFunction(key2, mustFind=FALSE, where = e)
+		e <- packageEnv()
+		sfun <- get(key2)
 		if( is.null(sfun) ) # lookup for the function as such
-			sfun <- getFunction(key, mustFind = FALSE, where = e)			
+			sfun <- get(key)			
 		if( is.null(sfun) )
 			stop("Invalid key ['", key,"']: could not find functions '",key2, "' or '", key, "'")
 		sfun

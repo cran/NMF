@@ -73,7 +73,7 @@ nmfConfig <- mkoptions()
 .onLoad <- function(libname, pkgname) {
 		
 	# set default number of cores
-	if( pkgmaker::isCHECK() ){
+	if( isCHECK() ){
 		options(cores=2)
 	}else{
 		if( nchar(nc <- Sys.getenv('R_PACKAGE_NMF_CORES')) > 0 ){
@@ -85,7 +85,7 @@ nmfConfig <- mkoptions()
     # use grid patch?
     nmf.options(grid.patch = !isFALSE(Sys.getenv_value('R_PACKAGE_NMF_GRID_PATCH')))
     
-    pkgEnv <- pkgmaker::packageEnv()
+    pkgEnv <- packageEnv()
 	.init.sequence <- function(){
 	
 		## 0. INITIALIZE PACKAGE SPECFIC OPTIONS
@@ -159,7 +159,7 @@ nmfConfig <- mkoptions()
 	#
 	
 	# FINAL. CRAN FLAG
-	if( pkgmaker::isCHECK() ){
+	if( isCHECK() ){
 		msg <- paste0(msg, ' | CRAN check')
 	}
 	#

@@ -84,6 +84,6 @@
   Lee DD and Seung H (2001). "Algorithms for non-negative
   matrix factorization." _Advances in neural information
   processing systems_. <URL:
-  http://scholar.google.com/scholar?q=intitle:Algorithms+for+non-negative+matrix+factorization\#0>.
+  http://scholar.google.com/scholar?q=intitle:Algorithms+for+non-negative+matrix+factorization>.
 }
 

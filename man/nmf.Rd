@@ -752,7 +752,7 @@ res <- nmf(x, 2, .options='v3')
   Lee DD and Seung H (2001). "Algorithms for non-negative
   matrix factorization." _Advances in neural information
   processing systems_. <URL:
-  http://scholar.google.com/scholar?q=intitle:Algorithms+for+non-negative+matrix+factorization\#0>.
+  http://scholar.google.com/scholar?q=intitle:Algorithms+for+non-negative+matrix+factorization>.
 
   Wang G, Kossenkov AV and Ochs MF (2006). "LS-NMF: a
   modified non-negative matrix factorization algorithm

@@ -560,7 +560,7 @@ neq.constraints.inplace <- function(x, constraints, ratio=NULL, value=NULL, copy
 # Taken from package bigmemory 
 ptr_isnil <- function (address) 
 {
-	if (class(address) != "externalptr") 
+	if (!inherits(address, "externalptr")) 
 		stop("address is not an externalptr.")
 	.Call("ptr_isnil", address, PACKAGE='NMF')	
 }

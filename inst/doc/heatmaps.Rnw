@@ -14,7 +14,8 @@
 
 % add preamble from pkgmaker
 <<pkgmaker_preamble, echo=FALSE, results='asis'>>=
-pkgmaker::latex_preamble()
+library(NMF)
+latex_preamble()
 if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 @
 
@@ -32,7 +33,7 @@ if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 , backend=bibtex]{biblatex}
 \AtEveryCitekey{\clearfield{url}}
 <<bibliofile, echo=FALSE, results='asis'>>=
-pkgmaker::latex_bibliography('NMF')	
+latex_bibliography('NMF')	
 @
 \newcommand{\citet}[1]{\textcite{#1}}
 \renewcommand{\cite}[1]{\parencite{#1}}
@@ -72,7 +73,6 @@ pkgmaker::latex_bibliography('NMF')
 #options(prompt=' ')
 #options(continue=' ')
 set.seed(123456)
-library(NMF)
 @
 
 \title{Generating heatmaps for Nonnegative Matrix Factorization\\
@@ -171,17 +171,18 @@ random target matrix, as well as some annotations or covariates:
 
 <<data>>=
 # random data that follow an 3-rank NMF model (with quite some noise: sd=2)
-X <- syntheticNMF(100, 3, 20, noise=2)
+X <- syntheticNMF(100, 3, 20, noise=2, factors = TRUE)
+Xmat <- X[[1]]
 
 # row annotations and covariates
-n <- nrow(X)
+n <- nrow(Xmat)
 d <- rnorm(n)
 e <- unlist(mapply(rep, c('X', 'Y', 'Z'), 10))
 e <- c(e, rep(NA, n-length(e)))
 rdata <- data.frame(Var=d, Type=e)
 
 # column annotations and covariates
-p <- ncol(X)
+p <- ncol(Xmat)
 a <- sample(c('alpha', 'beta', 'gamma'), p, replace=TRUE)
 # define covariates: true groups and some numeric variable
 c <- rnorm(p)
@@ -202,14 +203,14 @@ They are useful to annotate heatmaps and assess the ability of NMF methods to re
 As an example, one can conveniently visualize the target matrix as a heatmap, with or without the relevant sample and feature annotations, using simple calls to the \code{aheatmap} function:
 <<heatmap_data>>=
 par(mfrow=c(1,2))
-aheatmap(X, annCol=covariates, annRow=X$fData)
-aheatmap(X)
+aheatmap(Xmat, annCol=covariates, annRow=X$fData)
+aheatmap(Xmat)
 @
 
 Then, we fit an NMF model using multiple runs, that will be used throughtout this vignette to illustrate the use of NMF heatmaps:
 
 <<model, cache=TRUE>>=
-res <- nmf(X, 3, nrun=10)
+res <- nmf(Xmat, 3, nrun=10)
 res
 @
 
@@ -416,7 +417,7 @@ be called directly.
 See documentation \code{?nmfEstimateRank} for more details on the returned value.}:
 
 <<estimate, cache=TRUE>>=
-res2_7 <- nmf(X, 2:7, nrun=10, .options='v')
+res2_7 <- nmf(Xmat, 2:7, nrun=10, .options='v')
 class(res2_7)
 @
 
@@ -446,7 +447,7 @@ on can fit an NMF model for each method by providing the function \code{nmf} wit
 a \code{list} in argument \code{method}:
 
 <<fit_methods, cache=TRUE>>=
-res_methods <- nmf(X, 3, list('lee', 'brunet', 'nsNMF'), nrun=10)
+res_methods <- nmf(Xmat, 3, list('lee', 'brunet', 'nsNMF'), nrun=10)
 class(res_methods)
 @
 

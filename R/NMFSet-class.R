@@ -536,20 +536,20 @@ setMethod('deviance', signature(object='NMFfitX'),
 #' 
 #' # generate a synthetic dataset with known classes
 #' n <- 15; counts <- c(5, 2, 3);
-#' V <- syntheticNMF(n, counts)
+#' V <- syntheticNMF(n, counts, factors = TRUE)
 #' 
 #' # get the class factor
 #' groups <- V$pData$Group
 #' 
 #' # perform multiple runs of one algorithm, keeping only the best fit (default)
 #' #i.e.: the implicit nmf options are .options=list(keep.all=FALSE) or .options='-k'
-#' res <- nmf(V, 3, nrun=2) 
+#' res <- nmf(V[[1]], 3, nrun=2) 
 #' res
 #' 
 #' # compute summary measures
 #' summary(res)
 #' # get more info
-#' summary(res, target=V, class=groups)
+#' summary(res, target=V[[1]], class=groups)
 #' 
 #' # show computational time
 #' runtime.all(res)
@@ -686,18 +686,18 @@ setMethod('nmf.equal', signature(x='NMFfitX1', y='NMFfitX1'),
 #' 
 #' # generate a synthetic dataset with known classes
 #' n <- 15; counts <- c(5, 2, 3);
-#' V <- syntheticNMF(n, counts)
+#' V <- syntheticNMF(n, counts, factors = TRUE)
 #' 
 #' # get the class factor
 #' groups <- V$pData$Group
 #' 
 #' # perform multiple runs of one algorithm, keeping all the fits
-#' res <- nmf(V, 3, nrun=2, .options='k') # .options=list(keep.all=TRUE) also works
+#' res <- nmf(V[[1]], 3, nrun=2, .options='k') # .options=list(keep.all=TRUE) also works
 #' res
 #'  
 #' summary(res)
 #' # get more info
-#' summary(res, target=V, class=groups)
+#' summary(res, target=V[[1]], class=groups)
 #' 
 #' # compute/show computational times
 #' runtime.all(res)

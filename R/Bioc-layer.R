@@ -69,8 +69,8 @@ NULL
 if(!requireNamespace("Biobase")) BiocManager::install("Biobase")
 
 .onLoad.nmf.bioc <- function(){
-	
-if( pkgmaker::require.quiet('Biobase') ){
+		
+if( require.quiet('Biobase') ){
 
 	# load Biobase package
 	requireNamespace('Biobase')

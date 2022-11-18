@@ -29,7 +29,7 @@
 
   \item{...}{arguments passed to \code{NMFSeed} and used to
   initialise slots in the \code{\linkS4class{NMFSeed}}
-  object, or to \code{\link[pkgmaker]{pkgreg_remove}}.}
+  object, or to \code{pkgreg_remove}.}
 
   \item{name}{name of the seeding method.}
 

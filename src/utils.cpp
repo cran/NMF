@@ -46,7 +46,7 @@ SEXP ptr_address (SEXP x){
 	SEXP ans = R_NilValue;
 	char tmp[15];
 	PROTECT(ans = allocVector(STRSXP, 1));
-	sprintf(tmp, "%p", (void *) x);
+	snprintf(tmp, 15, "%p", (void *) x);
 	SET_STRING_ELT(ans, 0, mkChar(tmp));
 	UNPROTECT(1);
 	return ans;

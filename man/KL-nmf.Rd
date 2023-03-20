@@ -9,10 +9,6 @@
 \alias{nmf_update.brunet_R}
 \title{NMF Algorithm/Updates for Kullback-Leibler Divergence}
 \source{
-  Original MATLAB files and references can be found at:
-
-  \url{https://www.broadinstitute.org/publications/broad872}
-
   Original license terms:
 
   This software and its documentation are copyright 2004 by

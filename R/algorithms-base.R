@@ -46,8 +46,6 @@ NULL
 #' 
 #' \url{http://www.broadinstitute.org/mpr/publications/projects/NMF/nmf.m}
 #' 
-#' \url{https://www.broadinstitute.org/publications/broad872}
-#' 
 #' Original license terms:
 #'  
 #' This software and its documentation are copyright 2004 by the

@@ -3,14 +3,14 @@ if( !exists('meta') || is.null(meta) ) meta <- packageDescription("NMF")
 
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
 vers <- paste("R package version", meta$Version)
-author <- as.personList(meta$Author)
+author <- c(meta$Author)
 url <- sprintf("https://cran.r-project.org/package=%s", meta$Package)
 
 citHeader(sprintf("To cite the package '%s' in publications use:", meta$Package))
 
-citEntry(entry="Article"
+bibentry(bibtype="Article"
 		, title = "A flexible R package for nonnegative matrix factorization"
-		, author = personList(as.person("Renaud Gaujoux"), as.person("Cathal Seoighe"))		
+		, author = c("Renaud Gaujoux", "Cathal Seoighe")		
 		, journal = "BMC Bioinformatics"
 		, year = 2010
 		, volume = 11
@@ -27,7 +27,7 @@ citEntry(entry="Article"
 					, sep=". ")
 )
 
-citEntry(entry="Manual"
+bibentry(bibtype="Manual"
 		, title = vign <- "Using the package NMF"
     	, author = author
     	, publisher = "CRAN"
@@ -38,7 +38,7 @@ citEntry(entry="Manual"
     	, header = "Vignette(s):"
 )
 
-citEntry(entry="Manual"
+bibentry(bibtype="Manual"
 		, title = "The package NMF: manual pages"
     	, author = author
     	, publisher = "CRAN"

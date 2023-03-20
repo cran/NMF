@@ -18,11 +18,9 @@ getMaxCores <- function(limit=TRUE){
 	#ceiling(parallel::detectCores()/2)
 	nt <- n <- parallel::detectCores()
 	# limit to number of cores specified in options if asked for
-	if( limit ){
-		if( !is.null(nc <- getOption('cores')) ) n <- nc # global option
-		else if( !is.null(nc <- nmf.getOption('cores')) ) n <- nc # NMF-specific option
-		else if( n > 2 ) n <- n - 1L # leave one core free if possible
-	}
+	
+	if(n > 2) n <- 2
+	
 	# forces limiting maximum number of cores to 2 during CRAN checks
 	if( n > 2 && isCHECK() ){
 		message("# NOTE - CRAN check detected: limiting maximum number of cores [2/", nt, "]")
@@ -717,6 +715,8 @@ setupBackend <- function(spec, backend, optional=FALSE, verbose=FALSE){
 						spec <- spec[1]
 						if( spec <= 0L )
 							stop("invalid negative number of cores [", spec, "] specified for backend '", str_backend, "'")
+						if( spec > 2L )
+							spec <- 2L # Limit number of cores to 2
 						spec
 					}else # by default use the 'cores' option or half the number of cores
 						getMaxCores() #getOption('cores', ceiling(NCORES/2))

@@ -96,7 +96,7 @@ options(R_CHECK_RUNNING_EXAMPLES_=TRUE)
 }
 
 # create a random target matrix
-v <- rmatrix(35, 10)
+v <- rmatrix(30, 10)
 
 # fit a single NMF model
 res <- nmf(v, 3)

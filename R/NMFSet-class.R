@@ -1315,18 +1315,24 @@ setMethod('entropy', signature(x='NMFfitXn', y='ANY'),
 	}
 )
 
-###% Utility function to aggregate numerical quality measures from \code{NMFfitXn} objects.
-###% 
-###% Given a numerical vector, this function computes an aggregated value using one of the following methods:
-###% - mean: the mean of the measures
-###% - best: the best measure according to the specified sorting order (decreasing or not)
-###%  
-aggregate.measure <- function(measure, method=c('best', 'mean'), decreasing=FALSE){
+#' Utility function to aggregate numerical quality measures from \code{NMFfitXn} objects.
+#' 
+#' Given a numerical vector, this function computes an aggregated value using one of the following methods:
+#' best or mean
+#' 
+#' @param x  a numerical vector
+#' @param method the method to aggregate values. This argument can take two values :
+#' - mean: the mean of the measures
+#' - best: the best measure according to the specified sorting order (decreasing or not)
+#' @param decreasing  logical that specified the sorting order 
+#' @param ... extra arguments to allow extension
+#' 
+aggregate.measure <- function(x, method=c('best', 'mean'), decreasing=FALSE,...){
 	# aggregate the results
 	method <- match.arg(method)
 	res <- switch(method
-			, mean = mean(measure)
-			, best = if( decreasing ) max(measure) else min(measure)
+			, mean = mean(x)
+			, best = if( decreasing ) max(x) else min(x)
 	)
 	
 	# set the name to 

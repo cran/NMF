@@ -543,7 +543,8 @@ str_ns <- function(envir=packageEnv()){
 			" '", packageName(envir, rm.prefix=FALSE), "'")
 }
 
-require.quiet <- function(...){ utils::capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings( res <- withVisible(require(...)))))); if( res$visible ) res$value else invisible(res$value)}
+
+require.quiet <- function(...){utils::capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings( res <- withVisible(require(...)))))); if( res$visible ) res$value else invisible(res$value)}
 
 pkg_calls <- function(){
 	n <- sys.nframe() - 1

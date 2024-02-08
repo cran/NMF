@@ -5,7 +5,7 @@
   ccSpec(x)
 }
 \arguments{
-  \item{a}{character string that specify a colour palette.}
+  \item{x}{character string that specify a colour palette.}
 }
 \value{
   a list with elements: palette, n and rev

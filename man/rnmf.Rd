@@ -259,7 +259,7 @@
   This method is a shortcut for calling
   \code{rnmf,numeric,missing} with a suitable value for
   \code{x} (the rank), when both factors are known:
-  code{rnmf(min(ncol(W), nrow(H)), ..., W=W, H=H)}.
+  \code{rnmf(min(ncol(W), nrow(H)), ..., W=W, H=H)}.
 
   Arguments \code{W} and \code{H} are required. Note that
   calling this method only makes sense for NMF models that

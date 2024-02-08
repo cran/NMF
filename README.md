@@ -15,4 +15,4 @@ Commonly used benchmark data and visualization methods are provided to help in t
 The NMF package helps realize the potential of Nonnegative Matrix Factorization, especially in bioinformatics, providing easy access to methods that have already yielded new insights in many applications.
 
 -----
-__Travis check:__ [![Build Status](https://travis-ci.org/renozao/NMF.png?branch=devel)](https://travis-ci.org/renozao/NMF)
+__Travis check:__ [![Build Status](https://app.travis-ci.com/renozao/NMF.png?branch=devel)](https://app.travis-ci.com/renozao/NMF)

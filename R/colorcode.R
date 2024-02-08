@@ -140,7 +140,7 @@ ccBreaks <- function(x, breaks){
 
 #' Extract Colour Palette Specification
 #' 
-#' @param a character string that specify a colour palette.
+#' @param x character string that specify a colour palette.
 #' @return a list with elements: palette, n and rev
 #' 
 #' @keywords internal

@@ -1005,7 +1005,7 @@ checkErrors <- function(object, element=NULL){
 #' 
 #' }
 #' 
-#' @param .pbackend specification of the \code{\link{foreach}} parallel backend 
+#' @param .pbackend specification of the \code{\link[foreach]{foreach}} parallel backend 
 #' to register and/or use when running in parallel mode. 
 #' See options \code{p} and \code{P} in argument \code{.options} for how to 
 #' enable this mode.
@@ -1017,7 +1017,7 @@ checkErrors <- function(object, element=NULL){
 #' \describe{
 #' 
 #' \item{\sQuote{par}}{ use the backend(s) defined by the package 
-#' \code{\link{doParallel}};}
+#' \code{\link[doParallel]{doParallel}};}
 #' \item{a numeric value}{ use the specified number of cores with \code{doParallel}
 #' backend;}
 #' \item{\sQuote{seq}}{ use the foreach sequential backend \code{doSEQ};}
@@ -2300,7 +2300,7 @@ setGeneric('seed', function(x, model, method, ...) standardGeneric('seed') )
 #' 
 #' @param rng rng setting to use. 
 #' If not missing the RNG settings are set and restored on exit using 
-#' \code{\link{setRNG}}. 
+#' \code{\link[rngtools]{setRNG}}. 
 #' 
 #' All arguments in \code{...} are passed to teh seeding strategy.
 #' 
@@ -2376,7 +2376,7 @@ setMethod('seed', signature(x='ANY', model='ANY', method='NULL'),
 		seed(x, model, 'none', ...)
 	}
 )
-#' Use \code{method} to set the RNG with \code{\link{setRNG}} and use method 
+#' Use \code{method} to set the RNG with \code{\link[rngtools]{setRNG}} and use method 
 #' \dQuote{random} to seed the NMF model.
 #' 
 #' Note that in this case the RNG settings are not restored.

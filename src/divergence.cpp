@@ -17,8 +17,8 @@ extern "C" {
 
 // define the exported versions (for SEXP)
 SEXP divergence_update_H ( SEXP v, SEXP w, SEXP h
-			, SEXP nbterms=ScalarInteger(0), SEXP ncterms=ScalarInteger(0)
-			, SEXP dup=ScalarLogical(1)) {
+			, SEXP nbterms=Rf_ScalarInteger(0), SEXP ncterms=Rf_ScalarInteger(0)
+			, SEXP dup=Rf_ScalarLogical(1)) {
 
 	if( TYPEOF(v) == REALSXP ){
 		return divergence_update_H(NUMERIC_POINTER(v), w, h
@@ -32,8 +32,8 @@ SEXP divergence_update_H ( SEXP v, SEXP w, SEXP h
 }
 
 SEXP divergence_update_W ( SEXP v, SEXP w, SEXP h
-				, SEXP nbterms=ScalarInteger(0), SEXP ncterms=ScalarInteger(0)
-				, SEXP dup=ScalarLogical(1)) {
+				, SEXP nbterms=Rf_ScalarInteger(0), SEXP ncterms=Rf_ScalarInteger(0)
+				, SEXP dup=Rf_ScalarLogical(1)) {
 
 	if( TYPEOF(v) == REALSXP )
 		return divergence_update_W(NUMERIC_POINTER(v), w, h
@@ -79,7 +79,7 @@ static SEXP divergence_update_H ( T_Rnumeric* pV, SEXP w, SEXP h, int nbterms=0,
 	int vr = r - ncterms;
 
 	// duplicate H (keeping attributes) or modify in place
-	PROTECT(res = (dup != 0 ? duplicate(h) : h) ); nprotect++;
+	PROTECT(res = (dup != 0 ? Rf_duplicate(h) : h) ); nprotect++;
 
 	// define internal pointers
 	double* pW = NUMERIC_POINTER(w);
@@ -162,7 +162,7 @@ static SEXP divergence_update_W ( T_Rnumeric* pV, SEXP w, SEXP h, int nbterms=0,
 	int p = INTEGER(GET_DIM(h))[1];
 
 	// duplicate W (keeping attributes)
-	PROTECT(res = (dup != 0 ? duplicate(w) : w) ); nprotect++;
+	PROTECT(res = (dup != 0 ? Rf_duplicate(w) : w) ); nprotect++;
 
 	// define internal pointers
 	double* pW = NUMERIC_POINTER(w);

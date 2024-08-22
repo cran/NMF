@@ -34,7 +34,7 @@
 
   \item{rng}{rng setting to use. If not missing the RNG
   settings are set and restored on exit using
-  \code{\link{setRNG}}.
+  \code{\link[rngtools]{setRNG}}.
 
   All arguments in \code{...} are passed to teh seeding
   strategy.}
@@ -86,7 +86,7 @@
 
   \item{seed}{\code{signature(x = "ANY", model = "ANY",
   method = "numeric")}: Use \code{method} to set the RNG
-  with \code{\link{setRNG}} and use method \dQuote{random}
+  with \code{\link[rngtools]{setRNG}} and use method \dQuote{random}
   to seed the NMF model.
 
   Note that in this case the RNG settings are not restored.

@@ -26,8 +26,8 @@ extern "C" {
 
 // define the exported versions (for SEXP)
 SEXP euclidean_update_H ( SEXP v, SEXP w, SEXP h, SEXP eps
-		, SEXP nbterms=ScalarInteger(0), SEXP ncterms=ScalarInteger(0)
-		, SEXP dup=ScalarLogical(1)){
+		, SEXP nbterms=Rf_ScalarInteger(0), SEXP ncterms=Rf_ScalarInteger(0)
+		, SEXP dup=Rf_ScalarLogical(1)){
 
 	if( TYPEOF(v) == REALSXP ){
 		return euclidean_update_H(NUMERIC_POINTER(v), w, h, eps
@@ -49,19 +49,19 @@ SEXP euclidean_update_H ( SEXP v, SEXP w, SEXP h, SEXP eps
 
 SEXP euclidean_update_W ( SEXP v, SEXP w, SEXP h, SEXP eps
 		, SEXP weight = R_NilValue
-		, SEXP nbterms=ScalarInteger(0), SEXP ncterms=ScalarInteger(0)
-		, SEXP dup=ScalarLogical(1)){
+		, SEXP nbterms=Rf_ScalarInteger(0), SEXP ncterms=Rf_ScalarInteger(0)
+		, SEXP dup=Rf_ScalarLogical(1)){
 
 	int nb = *INTEGER(nbterms), nc = *INTEGER(ncterms);
 	bool copy = *LOGICAL(dup);
 	if( TYPEOF(v) == REALSXP ){
-		if( isNull(weight) ){
+		if( Rf_isNull(weight) ){
 			return euclidean_update_W(NUMERIC_POINTER(v), w, h, eps, nb, nc, copy);
 		}else{
 			return weuclidean_update_W(NUMERIC_POINTER(v), w, h, eps, weight, nb, nc, copy);
 		}
 	}else{
-		if( isNull(weight) ){
+		if( Rf_isNull(weight) ){
 			return euclidean_update_W(INTEGER_POINTER(v), w, h, eps, nb, nc, copy);
 		}else{
 			return weuclidean_update_W(INTEGER_POINTER(v), w, h, eps, weight, nb, nc, copy);
@@ -80,7 +80,7 @@ SEXP euclidean_update_W ( SEXP v, SEXP w, SEXP h, SEXP eps
 #undef NMF_WITH_OFFSET
 
 // define the exported versions (for SEXP)
-SEXP offset_euclidean_update_H ( SEXP v, SEXP w, SEXP h, SEXP offset, SEXP eps, SEXP dup=ScalarLogical(1)){
+SEXP offset_euclidean_update_H ( SEXP v, SEXP w, SEXP h, SEXP offset, SEXP eps, SEXP dup=Rf_ScalarLogical(1)){
 
 	if( TYPEOF(v) == REALSXP )
 		return offset_euclidean_update_H(NUMERIC_POINTER(v), w, h, offset, eps, *LOGICAL(dup));
@@ -88,7 +88,7 @@ SEXP offset_euclidean_update_H ( SEXP v, SEXP w, SEXP h, SEXP offset, SEXP eps, 
 		return offset_euclidean_update_H(INTEGER_POINTER(v), w, h, offset, eps, *LOGICAL(dup));
 }
 
-SEXP offset_euclidean_update_W ( SEXP v, SEXP w, SEXP h, SEXP offset, SEXP eps, SEXP dup=ScalarLogical(1)){
+SEXP offset_euclidean_update_W ( SEXP v, SEXP w, SEXP h, SEXP offset, SEXP eps, SEXP dup=Rf_ScalarLogical(1)){
 
 	if( TYPEOF(v) == REALSXP )
 		return offset_euclidean_update_W(NUMERIC_POINTER(v), w, h, offset, eps, *LOGICAL(dup));
@@ -144,7 +144,7 @@ SEXP euclidean_update_H (
 #endif
 
 	// duplicate H (keeping attributes)
-	PROTECT( res = (dup != 0 ? duplicate(h) : h) ); nprotect++;
+	PROTECT( res = (dup != 0 ? Rf_duplicate(h) : h) ); nprotect++;
 
 	// define internal pointers
 	double* pW = NUMERIC_POINTER(w);
@@ -271,8 +271,8 @@ static SEXP
 	int p = INTEGER(GET_DIM(h))[1];
 
 	// duplicate H (keeping attributes)
-	//PROTECT(res = duplicate(w)); nprotect++;
-	PROTECT(res = (dup != 0 ? duplicate(w) : w) ); nprotect++;
+	//PROTECT(res = Rf_duplicate(w)); nprotect++;
+	PROTECT(res = (dup != 0 ? Rf_duplicate(w) : w) ); nprotect++;
 
 	// define internal pointers to data
 	double* pW = NUMERIC_POINTER(w);
@@ -300,12 +300,12 @@ static SEXP
 
 #ifdef NMF_WITH_WEIGHT
 	// take sample weights into account
-	double* p_weight = !isNull(weight) ? NUMERIC_POINTER(weight) : NULL;
+	double* p_weight = !Rf_isNull(weight) ? NUMERIC_POINTER(weight) : NULL;
 	double beta = -1.0;
 	if( p_weight == NULL ){// <=> no weights
 		beta = 1.0;
 	}
-	else if( length(weight) == 1 ){// all weighted are the same
+	else if( Rf_length(weight) == 1 ){// all weighted are the same
 		// NB: theoretically this is equivalent to weight=1, but may be used
 		// to test it in practice (with the numerical adjustments via eps)
 		beta = *p_weight;

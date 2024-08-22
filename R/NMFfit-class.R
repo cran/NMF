@@ -62,7 +62,7 @@ NULL
 #' Currently the settings are stored as an integer vector, the value of
 #' \code{\link{.Random.seed}} at the time the object is created.  
 #' It is initialized by the \code{initialized} method.  
-#' See \code{\link{getRNG}} for more details.
+#' See \code{\link[rngtools]{getRNG}} for more details.
 #' 
 #' @slot distance either a single \code{"character"} string that
 #' contains the name of the built-in objective function, or a \code{function}

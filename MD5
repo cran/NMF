@@ -1,5 +1,5 @@
-06430dc52248725c435b76726cf3b0e7 *DESCRIPTION
-965081fd97654912fc53d1df9f46e23d *NAMESPACE
+d322e6049bd10355b0d96a871cbe5234 *DESCRIPTION
+ea3c50bbac49c16471651fc2e11e6611 *NAMESPACE
 b02d69ebe418c9ce62a38e8f7536c395 *NEWS
 b20e71f0c5f3f3a4e6fc1cfe6a2c91fa *R/Bioc-layer.R
 faa4fa1fa2ebdd0a0f0926657f4b669a *R/NMF-class.R
@@ -9,7 +9,7 @@ cb92fbe2ad8ed07d3b6988790361cf89 *R/NMFOffset-class.R
 0b026fe9389466c7a387be01aac7372d *R/NMFStrategy-class.R
 b2710b639ac2f35ae198dbd8d355ad85 *R/NMFStrategyFunction-class.R
 0cd21650efeda64af838976dc308efaa *R/NMFStrategyIterative-class.R
-9bfd9b9a7f095d2d23aad3192c7dad93 *R/NMFfit-class.R
+1422a9ee1b421e7f017c095ce01a7dc8 *R/NMFfit-class.R
 d4a9ccb2a64df0fcc003732b22087b29 *R/NMFns-class.R
 454395374f9d4ddd59ec15bc8b87a5aa *R/NMFplots.R
 06ce7f9fb62284b85f8faea26cd9bc08 *R/NMFstd-class.R
@@ -29,7 +29,7 @@ d5c1883b5350a8285e19c2772ceb50d8 *R/extractFeatures.R
 1f90bca8a7b53737476d0956b55502ab *R/grid.R
 5cf50ed45523796cab2a7a9533fd6981 *R/heatmaps.R
 42922f37ef295baaa4b7fa79c08c8197 *R/nmf-package.R
-d560474d39fcc4c122e03c0b77e3d229 *R/nmf.R
+82c70f30bec2c07cf1ab4ae6b06e05af *R/nmf.R
 cf458865933fdc20ae922ec6a7951cf3 *R/nmfModel.R
 bcdc289d001c19141c0b1e9f5dab8420 *R/options.R
 54953d67a8db5505c56279ef6d18bfb6 *R/parallel.R
@@ -51,7 +51,7 @@ fce304c13565e5b26f0abf34bde1e761 *R/transforms.R
 920c4ad193eb48edcadb3a67fc99e8db *R/vignetteFunctions.R
 225fad30710e0f00d2ab7f37db293ab3 *README.md
 551e2ca0a05eff9062c105483449fac4 *TODO
-8fc1d4c2aac9446032bdc0ba821d5f7f *build/vignette.rds
+0aa3ea99a8fc91ef4ee5937a6b7cfb76 *build/vignette.rds
 f8015e2bc710fb0bf869d2fdddf90e73 *data/esGolub.rda
 7ee636d67aaf85d2b38c87f512559c1d *demo/00Index
 5d230c7b9bd8450e8f3621f0fa2e8fe9 *demo/aheatmap.R
@@ -61,11 +61,11 @@ bf17951c06c5437770e8e780d61b23dd *inst/CITATION
 c4d05e519580e330b6c7693b18650773 *inst/REFERENCES.bib
 b4f576ad4747ac8e5c2040f7f801092b *inst/doc/NMF-vignette.R
 a45d2ff3ab24f7d538b720907d09500a *inst/doc/NMF-vignette.Rnw
-88e81a3533da7b6bc7738455de5435a9 *inst/doc/NMF-vignette.pdf
-847d83e6498d5be291466ede7c4cf9c6 *inst/doc/consensus.pdf
+044e04ec26ee3bed64fb5d99108246b5 *inst/doc/NMF-vignette.pdf
+be11f75bb179cd92c7875ad58140813f *inst/doc/consensus.pdf
 b3c02ed25d8acde6c0972f68804fc386 *inst/doc/heatmaps.R
 adfe35c9248a2d1b0ab0c2da6dcdeadb *inst/doc/heatmaps.Rnw
-e631aa560f709512edcacfbde6b04727 *inst/doc/heatmaps.pdf
+12116565f8822067a9a8a0a38256a208 *inst/doc/heatmaps.pdf
 21a62ee5e50af50c0b22f88d167d068c *inst/scripts/grid.R
 2952972c46324b0beb29d6892b7e2e40 *inst/scripts/report.Rmd
 8516263e4f349e976433bf4f4a418b1b *man/Frobenius-nmf.Rd
@@ -81,7 +81,7 @@ c067d1fa1270349d839716420eedd3c5 *man/NMF-package.Rd
 78a5599bceeaad4bfce2d04ce03c8a21 *man/NMFStrategy.Rd
 5c94b9595c875433cb19171da1a62758 *man/NMFStrategyFunction-class.Rd
 a8510138b04563c2338ca55b1f6170c3 *man/NMFStrategyIterative-class.Rd
-3092af863a3f6a9b76f3f2f6fe769335 *man/NMFfit-class.Rd
+b6ac2a1255cdaf9eaa4aa881784adee2 *man/NMFfit-class.Rd
 b45d28a519f4470a137736e70c7afc53 *man/NMFfitX-class.Rd
 d9a31d45444d62f906d662fc8b265426 *man/NMFfitX.Rd
 28ea171d3e0fa853cabb91d2239555fc *man/NMFfitX1-class.Rd
@@ -135,7 +135,7 @@ d99fb97c10c6181d657415a5e129662f *man/isCRANcheck.Rd
 ad4bea9f6bf8da8c5b8af058d4e70581 *man/lverbose.Rd
 83ccd902c78857036785b022791144a5 *man/match_atrack.Rd
 17146cceec053543e3ad16d0570d092d *man/nmf-compare.Rd
-57ec9471c6c28fc390348b3bb17e81f8 *man/nmf.Rd
+3f4c11ef58359a39ae43b49a7c7e4c73 *man/nmf.Rd
 b5a35acf90da3f5d014c3686d234368d *man/nmf.equal.Rd
 625896d5746034a531a4d1da377fcb5f *man/nmfAlgorithm.Rd
 f9cb9d24d68ee319e7593c1d2fee3223 *man/nmfApply.Rd
@@ -173,7 +173,7 @@ e589f075ac5a2404fe136375475ab67c *man/runtime-commaNMFList-method.Rd
 67dd23b7d9dd5739289857be80513bbc *man/runtime.all-commaNMFfitXn-method.Rd
 b20c67b061270a8948c14f30c029d266 *man/scale.NMF.Rd
 0e9aa7fe953cbc4d0b2cdfdd6a61fabb *man/scores.Rd
-b1deacdafd60ed14a2ee40ec5dbffba3 *man/seed.Rd
+cdc912746238c2f9c41e83f4701a4f37 *man/seed.Rd
 0a372ae7c4ebd520f9a087253bf5f5cc *man/setNMFMethod.Rd
 d316289400db8ed5f1504aca95681759 *man/setNMFSeed.Rd
 571ad68968801bbafe7f2d2e25a22550 *man/setup.Rd
@@ -200,11 +200,11 @@ b279c6ba4bf77ce4028e6e99ee3b6fb3 *man/terms.Rd
 8af3bdb9baf9ace2bff7cf278528808e *man/txtProgressBar.Rd
 608427df6c5d9db2129add0bef10d767 *man/types.Rd
 c1dd149f5e75b70b800565157584fe7a *man/utils.Rd
-7cc4426f76a914383e70b17f2f35c312 *src/distance.cpp
-74facf85e6495aea68dd04b725cc6787 *src/divergence.cpp
-e78941582fb2d47fd1f87f9a48a37729 *src/euclidean.cpp
+513c8eb69fc47e2c3f24b242643c37f8 *src/distance.cpp
+fd3b76f3d83b71d1a94e54f668daecc4 *src/divergence.cpp
+3d943efd553a0f82a0a9388daa03a772 *src/euclidean.cpp
 7c22b1b500cab25872924e218f1645f5 *src/registerDynamicSymbol.c
-bfd45e816683586ee5ba4b6a132a6fe0 *src/utils.cpp
+683d03b9ef367e9a336a14f646ba8dea *src/utils.cpp
 a45d2ff3ab24f7d538b720907d09500a *vignettes/NMF-vignette.Rnw
 e80ff821d37969bdb7ff73081b8f7c53 *vignettes/consensus.pdf
 adfe35c9248a2d1b0ab0c2da6dcdeadb *vignettes/heatmaps.Rnw

@@ -84,7 +84,7 @@
   for the fit. Currently the settings are stored as an
   integer vector, the value of \code{\link{.Random.seed}}
   at the time the object is created. It is initialized by
-  the \code{initialized} method. See \code{\link{getRNG}}
+  the \code{initialized} method. See \code{\link[rngtools]{getRNG}}
   for more details.}
 
   \item{distance}{either a single \code{"character"} string

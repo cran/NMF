@@ -38,10 +38,10 @@ SEXP Euclidean_rss ( SEXP x, SEXP y){
 	int n = INTEGER(GET_DIM(x))[0];
 	int p = INTEGER(GET_DIM(x))[1];
 
-    if( INTEGER(GET_DIM(y))[0] != n )
-    	error("non-conformable arrays (rows)");
-    if( INTEGER(GET_DIM(y))[1] != p )
-    	error("non-conformable arrays (columns)");
+	if( INTEGER(GET_DIM(y))[0] != n )
+		perror("non-conformable arrays (rows)");
+	if( INTEGER(GET_DIM(y))[1] != p )
+		perror("non-conformable arrays (columns)");
 
 	if( TYPEOF(x) == REALSXP ){// x is double
 		if( TYPEOF(y) == REALSXP )// x and y are double
@@ -64,10 +64,10 @@ SEXP KL_divergence ( SEXP x, SEXP y){
 	int n = INTEGER(GET_DIM(x))[0];
 	int p = INTEGER(GET_DIM(x))[1];
 
-    if( INTEGER(GET_DIM(y))[0] != n )
-    	error("non-conformable arrays (rows)");
-    if( INTEGER(GET_DIM(y))[1] != p )
-    	error("non-conformable arrays (columns)");
+	if( INTEGER(GET_DIM(y))[0] != n )
+		perror("non-conformable arrays (rows)");
+	if( INTEGER(GET_DIM(y))[1] != p )
+		perror("non-conformable arrays (columns)");
 
 	if( TYPEOF(x) == REALSXP ){// x is double
 		if( TYPEOF(y) == REALSXP )// x and y are double
@@ -115,13 +115,13 @@ SEXP rss(
 					dist += dev * dev;
 					//count++;
 				}
-				else return ScalarReal(NA_REAL);
+				else return Rf_ScalarReal(NA_REAL);
 			}
-			else return ScalarReal(NA_REAL);
+			else return Rf_ScalarReal(NA_REAL);
 		}
     }
-    //if (count == 0) return ScalarReal(NA_REAL);
-    return ScalarReal(dist);
+    //if (count == 0) return Rf_ScalarReal(NA_REAL);
+    return Rf_ScalarReal(dist);
 }
 
 // Internal function that computes the KL divergence
@@ -149,16 +149,16 @@ SEXP KL(
     			dev = yval;
     		else if (both_non_NA(xval, yval))
 				dev = xval * log((double) xval / yval) - xval + yval;
-			else return ScalarReal(NA_REAL);
+			else return Rf_ScalarReal(NA_REAL);
 
     		// only add and continue if the term is not NA
     		if ( R_FINITE(dev) )
     			dist += dev;
     		else
-    			return ScalarReal(dev);
+    			return Rf_ScalarReal(dev);
 		}
     }
-    return ScalarReal(dist);
+    return Rf_ScalarReal(dist);
 }
 
 #endif //END ifndef NMF_DISTANCE_DONE

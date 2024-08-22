@@ -276,7 +276,7 @@
   defined in argument \code{.pbackend}. If this is set to
   \code{'mc'} or \code{'par'} then \code{nmf} tries to
   perform the runs using multiple cores with package
-  \code{link[doParallel]{doParallel}} -- which therefore
+  \code{\link[doParallel]{doParallel}} -- which therefore
   needs to be installed.
 
   If equal to an integer, then \code{nmf} tries to perform
@@ -334,7 +334,7 @@
   }}
 
   \item{.pbackend}{specification of the
-  \code{\link{foreach}} parallel backend to register and/or
+  \code{\link[foreach]{foreach}} parallel backend to register and/or
   use when running in parallel mode. See options \code{p}
   and \code{P} in argument \code{.options} for how to
   enable this mode. Note that any backend that is
@@ -345,7 +345,7 @@
   Currently it accepts the following values: \describe{
 
   \item{\sQuote{par}}{ use the backend(s) defined by the
-  package \code{\link{doParallel}};} \item{a numeric
+  package \code{\link[doParallel]{doParallel}};} \item{a numeric
   value}{ use the specified number of cores with
   \code{doParallel} backend;} \item{\sQuote{seq}}{ use the
   foreach sequential backend \code{doSEQ};}

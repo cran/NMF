@@ -45,9 +45,9 @@ SEXP ptr_address (SEXP x){
 
 	SEXP ans = R_NilValue;
 	char tmp[15];
-	PROTECT(ans = allocVector(STRSXP, 1));
+	PROTECT(ans = Rf_allocVector(STRSXP, 1));
 	snprintf(tmp, 15, "%p", (void *) x);
-	SET_STRING_ELT(ans, 0, mkChar(tmp));
+	SET_STRING_ELT(ans, 0, Rf_mkChar(tmp));
 	UNPROTECT(1);
 	return ans;
 }
@@ -60,18 +60,18 @@ SEXP clone_object (SEXP x){
 
 SEXP ptr_pmax(SEXP x, SEXP y, SEXP skip=R_NilValue){
 
-	int n = length(x);
-	double* p_x = ( isNull(x) ? NULL : NUMERIC_POINTER(x) );
-	double lim = isNull(y) ? -1.0 : *NUMERIC_POINTER(y);
+	int n = Rf_length(x);
+	double* p_x = ( Rf_isNull(x) ? NULL : NUMERIC_POINTER(x) );
+	double lim = Rf_isNull(y) ? -1.0 : *NUMERIC_POINTER(y);
 
 	// backup skipped values
-	int n_skip = length(skip);
-	int ncol = isNull(GET_DIM(x)) ? 1 : INTEGER(GET_DIM(x))[1];
+	int n_skip = Rf_length(skip);
+	int ncol = Rf_isNull(GET_DIM(x)) ? 1 : INTEGER(GET_DIM(x))[1];
 	int nrow = n / ncol;
 	double* old_value = NULL;
 	int* p_skip = NULL;
 
-	if( !isNull(skip) && n_skip > 0 ){
+	if( !Rf_isNull(skip) && n_skip > 0 ){
 		old_value = (double*) R_alloc(n_skip*ncol, sizeof(double));
 		p_skip = INTEGER_POINTER(skip);
 		for(int k=ncol-1; k>=0; --k){
@@ -94,7 +94,7 @@ SEXP ptr_pmax(SEXP x, SEXP y, SEXP skip=R_NilValue){
 	p_x2 = NULL;
 
 	// restore skipped values
-	if( !isNull(skip) && n_skip > 0 ){
+	if( !Rf_isNull(skip) && n_skip > 0 ){
 		for(int k=ncol-1; k>=0; --k){
 			for(int i=n_skip-1; i>=0; --i){
 				//Rprintf("restore %i x %i\n", i, k);
@@ -112,24 +112,24 @@ SEXP ptr_pmax(SEXP x, SEXP y, SEXP skip=R_NilValue){
 /** Apply inequality constraints in place. */
 SEXP ptr_neq_constraints(SEXP x, SEXP constraints, SEXP ratio, SEXP value){
 
-	double* p_x = ( isNull(x) ? NULL : NUMERIC_POINTER(x) );
-	double d_ratio = isNull(ratio) ? 0 : *NUMERIC_POINTER(ratio);
-	double* p_value = ( isNull(value) ? NULL : NUMERIC_POINTER(value) );
+	double* p_x = ( Rf_isNull(x) ? NULL : NUMERIC_POINTER(x) );
+	double d_ratio = Rf_isNull(ratio) ? 0 : *NUMERIC_POINTER(ratio);
+	double* p_value = ( Rf_isNull(value) ? NULL : NUMERIC_POINTER(value) );
 	double eps = sqrt(DBL_EPSILON);
 
 	// get dimensions
-	int ncol = isNull(GET_DIM(x)) ? 1 : INTEGER(GET_DIM(x))[1];
-	int nrow = isNull(GET_DIM(x)) ? length(x) : INTEGER(GET_DIM(x))[0];
-	int nc = length(constraints);
+	int ncol = Rf_isNull(GET_DIM(x)) ? 1 : INTEGER(GET_DIM(x))[1];
+	int nrow = Rf_isNull(GET_DIM(x)) ? Rf_length(x) : INTEGER(GET_DIM(x))[0];
+	int nc = Rf_length(constraints);
 	if( nc != ncol )
-		error("There must be as many elements in list `constraints` as columns in `x`.");
+		perror("There must be as many elements in list `constraints` as columns in `x`.");
 
 	// apply each set of constraints (from first to last)
 	double* _xj = p_x; // pointer to marked column
 	double* _x_last = p_x + (ncol - 1) * nrow; // pointer to last column
 	for(int j=0; j<nc; ++j){
 		SEXP c_j = VECTOR_ELT(constraints, j);
-		int n = length(c_j);
+		int n = Rf_length(c_j);
 		int* p_i = INTEGER_POINTER(c_j);
 
 		// apply the constraint on each row in the set
@@ -213,10 +213,10 @@ SEXP colMin(SEXP x){
 	// check that the argument is a matrix
 	dims = GET_DIM(x);
 	if (dims == R_NilValue)
-		error("a matrix-like object is required as argument to 'colMin'");
+		perror("a matrix-like object is required as argument to 'colMin'");
 	// check that it is a numeric data
-	if (!isNumeric(x))
-		error("a numeric object is required as argument to 'colMin'");
+	if (!Rf_isNumeric(x))
+		perror("a numeric object is required as argument to 'colMin'");
 
 	// get the dimension of the input matrix
 	int n = INTEGER(dims)[0];
@@ -224,13 +224,13 @@ SEXP colMin(SEXP x){
 
 	if( TYPEOF(x) == REALSXP ){
 		// allocate memory for the result (a vector of length the number of columns of x)
-		PROTECT(ans = allocVector(REALSXP, p));
+		PROTECT(ans = Rf_allocVector(REALSXP, p));
 		colMin(NUMERIC_POINTER(x), n, p, NUMERIC_POINTER(ans), NA_REAL);
 		UNPROTECT(1);
 	}
 	else{
 		// allocate memory for the result (a vector of length the number of columns of x)
-		PROTECT(ans = allocVector(INTSXP, p));
+		PROTECT(ans = Rf_allocVector(INTSXP, p));
 		colMin(INTEGER_POINTER(x), n, p, INTEGER_POINTER(ans), NA_INTEGER);
 		UNPROTECT(1);
 	}
@@ -248,10 +248,10 @@ SEXP colMax(SEXP x){
 	// check that the argument is a matrix
 	dims = GET_DIM(x);
 	if (dims == R_NilValue)
-		error("a matrix-like object is required as argument to 'colMax'");
+		perror("a matrix-like object is required as argument to 'colMax'");
 	// check that it is a numeric data
-	if (!isNumeric(x))
-		error("a numeric object is required as argument to 'colMax'");
+	if (!Rf_isNumeric(x))
+		perror("a numeric object is required as argument to 'colMax'");
 
 	// get the dimension of the input matrix
 	int n = INTEGER(dims)[0];
@@ -259,13 +259,13 @@ SEXP colMax(SEXP x){
 
 	if( TYPEOF(x) == REALSXP ){
 		// allocate memory for the result (a vector of length the number of columns of x)
-		PROTECT(ans = allocVector(REALSXP, p));
+		PROTECT(ans = Rf_allocVector(REALSXP, p));
 		colMax(NUMERIC_POINTER(x), n, p, NUMERIC_POINTER(ans), NA_REAL);
 		UNPROTECT(1);
 	}
 	else{
 		// allocate memory for the result (a vector of length the number of columns of x)
-		PROTECT(ans = allocVector(INTSXP, p));
+		PROTECT(ans = Rf_allocVector(INTSXP, p));
 		colMax(INTEGER_POINTER(x), n, p, INTEGER_POINTER(ans), NA_INTEGER);
 		UNPROTECT(1);
 	}
